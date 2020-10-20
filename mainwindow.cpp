@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    initialize();
     restoreAppState();
 
     // MainWindow actions
@@ -22,6 +23,14 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_authorityView;
+    delete m_decisionView;
+}
+
+void MainWindow::initialize()
+{
+    m_authorityView = new AuthorityView(ui->splitter_layout);
+    m_decisionView = new DecisionView(ui->splitter_layout);
 }
 
 void MainWindow::restoreAppState()
@@ -32,7 +41,7 @@ void MainWindow::restoreAppState()
     restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
     restoreState(settings->value("MainWindow/windowState").toByteArray());
 
-    //ui->splitter->restoreState(settings->value("MainWindow/splitter").toByteArray());
+    ui->splitter_layout->restoreState(settings->value("MainWindow/splitter_layout").toByteArray());
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -42,7 +51,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings->beginGroup("MainWindow");
     settings->setValue("geometry", saveGeometry());
     settings->setValue("windowState", saveState());
-    //settings->setValue("splitter", ui->splitter->saveState());
+    settings->setValue("splitter_layout", ui->splitter_layout->saveState());
     settings->endGroup();
 
     QMainWindow::closeEvent(event);

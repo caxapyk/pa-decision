@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "views/authorityview.h"
+#include "views/decisionview.h"
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -18,6 +21,10 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    AuthorityView *m_authorityView;
+    DecisionView *m_decisionView;
+
+    void initialize();
     void restoreAppState();
 
 private slots:

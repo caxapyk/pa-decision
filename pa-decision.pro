@@ -22,17 +22,27 @@ SOURCES += \
     connection.cpp \
     dialogs/connectiondialog.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    models/authoritymodel.cpp \
+    views/authorityview.cpp \
+    views/decisionview.cpp \
+    views/view.cpp
 
 HEADERS += \
     application.h \
     connection.h \
     dialogs/connectiondialog.h \
-    mainwindow.h
+    mainwindow.h \
+    models/authoritymodel.h \
+    views/authorityview.h \
+    views/decisionview.h \
+    views/view.h
 
 FORMS += \
     dialogs/connectiondialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    views/authorityview.ui \
+    views/decisionview.ui
 
 TRANSLATIONS += \
     translations/pa-decision_ru_RU.ts
