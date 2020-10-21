@@ -20,6 +20,16 @@ AuthorityView::~AuthorityView()
 
 void AuthorityView::initialize()
 {
-    m_authorityModel = new AuthorityModel();
+    m_authorityModel = new AuthorityTreeModel();
+    m_authorityModel->select();
     ui->tV_tree->setModel(m_authorityModel);
+    ui->tV_tree->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(ui->tV_tree, &QMenu::customContextMenuRequested, this, &AuthorityView::showContextMenu);
+}
+
+
+void AuthorityView::showContextMenu()
+{
+
 }

@@ -23,7 +23,7 @@ SOURCES += \
     dialogs/connectiondialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    models/authoritymodel.cpp \
+    models/authoritytreemodel.cpp \
     views/authorityview.cpp \
     views/decisionview.cpp \
     views/view.cpp
@@ -33,7 +33,7 @@ HEADERS += \
     connection.h \
     dialogs/connectiondialog.h \
     mainwindow.h \
-    models/authoritymodel.h \
+    models/authoritytreemodel.h \
     views/authorityview.h \
     views/decisionview.h \
     views/view.h

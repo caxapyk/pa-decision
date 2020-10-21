@@ -2,6 +2,7 @@
     <qresource prefix="/icons">
         <file>icons/db-settings-16.png</file>
         <file>icons/icon-16.png</file>
+        <file>icons/folder-16.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>
