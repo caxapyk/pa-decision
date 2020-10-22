@@ -32,11 +32,28 @@ void AuthorityTreeModel::clear()
     endResetModel();
 }
 
+int AuthorityTreeModel::itemMaxNum(int column, const QRegExp &rule) const
+{
+    int max = 1;
+    for(int i = 0; i < rowCount(rootItem()); ++i) {
+        int num = 0;
+        QModelIndex v = index(i, column, rootItem());
+
+        if (rule.isEmpty() || v.data().toString().contains(rule)) {
+            num = v.data().toString().remove(QRegExp("\\D+")).toInt();
+        }
+
+        if (num >= max) {
+            max = num + 1;
+        }
+    }
+
+    return max;
+}
+
 void AuthorityTreeModel::setupModelData()
 {
-    QSqlQuery query("SELECT id, name FROM authority");
-
-    m_cols = query.record().count();
+    QSqlQuery query("SELECT id, name FROM authority ORDER BY name");
 
     while (query.next()) {
         AT_Node *node = new AT_Node;
@@ -81,6 +98,36 @@ QModelIndex AuthorityTreeModel::index(int row, int column, const QModelIndex &pa
     return createIndex(row, column, m_nodeList->at(row));
 }
 
+bool AuthorityTreeModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    QSqlQuery query;
+
+    QVariant pa_name = tr("Public authority %1").arg(itemMaxNum(0, QRegExp("\\D+\\s\\D+\\d+")));
+
+    query.prepare("INSERT INTO authority(name) VALUES (?)");
+    query.bindValue(0, pa_name.toString());
+    query.exec();
+
+    if(query.isActive()) {
+
+       beginInsertRows(parent, row, row + count -1);
+
+       AT_Node *node = new AT_Node();
+       node->append(QVariant(query.lastInsertId()));
+       node->append(pa_name);
+
+       m_nodeList->append(node);
+
+       endInsertRows();
+
+       return true;
+    }
+
+    qDebug() << query.lastError().text();
+
+    return false;
+}
+
 QModelIndex AuthorityTreeModel::parent(const QModelIndex &index) const
 {
     if (!index.isValid()) {
@@ -93,6 +140,40 @@ QModelIndex AuthorityTreeModel::parent(const QModelIndex &index) const
     }
 
     return createIndex(0, 0, m_rootNode);
+}
+
+bool AuthorityTreeModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    QSqlQuery query;
+
+    for(int i = row; i < (row + count); ++i) {
+        query.prepare("DELETE FROM authority WHERE id=(?)");
+        query.bindValue(0, m_nodeList->at(row)->at(0));
+        query.exec();
+
+        if(query.isActive()) {
+           beginRemoveRows(parent, row, row + count -1);
+
+           for(int j = 0; j< m_nodeList->at(i)->size(); ++j) {
+               m_nodeList->at(i)->removeAt(j);
+           }
+
+           m_nodeList->removeAt(i);
+
+           endRemoveRows();
+        } else {
+            qDebug() << query.lastError().text();
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+QModelIndex AuthorityTreeModel::rootItem() const
+{
+    return index(0, 0, QModelIndex());
 }
 
 int AuthorityTreeModel::rowCount(const QModelIndex &parent) const
@@ -112,7 +193,7 @@ int AuthorityTreeModel::rowCount(const QModelIndex &parent) const
 
 int AuthorityTreeModel::columnCount(const QModelIndex &) const
 {
-    return m_cols - m_offset;
+    return 1;
 }
 
 QVariant AuthorityTreeModel::data(const QModelIndex &index, int role) const
@@ -121,7 +202,7 @@ QVariant AuthorityTreeModel::data(const QModelIndex &index, int role) const
         case Qt::DisplayRole:
             if(index.parent().isValid()) {
                 const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
-                return currentNode->at(index.column() + m_offset);
+                return currentNode->at(1);
             }
 
             if(index.column() == 0) {
@@ -155,7 +236,7 @@ bool AuthorityTreeModel::setData(const QModelIndex &index, const QVariant &value
                 query.exec();
 
                 if(query.isActive()) {
-                    currentNode->replace(index.column() + m_offset, value);
+                    currentNode->replace(index.column(), value);
                     emit dataChanged(index, index);
 
                     return true;

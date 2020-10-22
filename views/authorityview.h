@@ -6,6 +6,8 @@
 
 #include <QMenu>
 #include <QWidget>
+#include <QAction>
+#include <QIcon>
 
 namespace Ui {
 class AuthorityView;
@@ -24,9 +26,26 @@ private:
 
     AuthorityTreeModel *m_authorityModel;
 
+    QAction openAction;
+    QAction refreshAction;
+    QAction appendAction;
+    QAction editAction;
+    QAction removeAction;
+    QAction infoAction;
+
     void initialize() override;
 
-    void showContextMenu();
+    void contextMenu();
+    QModelIndex currentIndex();
+    void setupActions();
+
+private slots:
+    void open(const QModelIndex &index);
+    void refresh();
+    void insert();
+    void edit(const QModelIndex &index);
+    void remove(const QModelIndex &index);
+    void info();
 };
 
 #endif // AUTHORITYVIEW_H

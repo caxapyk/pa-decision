@@ -3,6 +3,11 @@
         <file>icons/db-settings-16.png</file>
         <file>icons/icon-16.png</file>
         <file>icons/folder-16.png</file>
+        <file>icons/refresh-16.png</file>
+        <file>icons/open-16.png</file>
+        <file>icons/edit-16.png</file>
+        <file>icons/add-16.png</file>
+        <file>icons/remove-16.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>
