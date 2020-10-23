@@ -4,10 +4,10 @@
 #include "models/authoritytreemodel.h"
 #include "views/view.h"
 
-#include <QMenu>
-#include <QWidget>
 #include <QAction>
 #include <QIcon>
+#include <QShortcut>
+#include <QSortFilterProxyModel>
 
 namespace Ui {
 class AuthorityView;
@@ -26,25 +26,24 @@ private:
 
     AuthorityTreeModel *m_authorityModel;
 
-    QAction openAction;
-    QAction refreshAction;
-    QAction appendAction;
-    QAction editAction;
-    QAction removeAction;
-    QAction infoAction;
+    QShortcut *openShortcut;
+    QShortcut *refreshShortcut;
+    QShortcut *insertShortcut;
+    QShortcut *editShortcut;
+    QShortcut *removeShortcut;
 
     void initialize() override;
 
     void contextMenu();
-    QModelIndex currentIndex();
-    void setupActions();
+    void setupShortcuts();
 
 private slots:
-    void open(const QModelIndex &index);
+    void clicked(const QModelIndex &index);
+    void open();
     void refresh();
     void insert();
-    void edit(const QModelIndex &index);
-    void remove(const QModelIndex &index);
+    void edit();
+    void remove();
     void info();
 };
 

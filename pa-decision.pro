@@ -20,6 +20,7 @@ DEFINES += APP_VERSION=$$VERSION
 SOURCES += \
     application.cpp \
     connection.cpp \
+    dialogs/authoritydialog.cpp \
     dialogs/connectiondialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 HEADERS += \
     application.h \
     connection.h \
+    dialogs/authoritydialog.h \
     dialogs/connectiondialog.h \
     mainwindow.h \
     models/authoritytreemodel.h \
@@ -39,6 +41,7 @@ HEADERS += \
     views/view.h
 
 FORMS += \
+    dialogs/authoritydialog.ui \
     dialogs/connectiondialog.ui \
     mainwindow.ui \
     views/authorityview.ui \

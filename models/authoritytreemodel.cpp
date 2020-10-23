@@ -188,7 +188,6 @@ int AuthorityTreeModel::rowCount(const QModelIndex &parent) const
     }
 
     return 0;
-
 }
 
 int AuthorityTreeModel::columnCount(const QModelIndex &) const
@@ -208,14 +207,23 @@ QVariant AuthorityTreeModel::data(const QModelIndex &index, int role) const
             if(index.column() == 0) {
                 return QVariant(tr("All Public Authorities"));
             }
-
         break;
         case Qt::EditRole:
             return data(index, Qt::DisplayRole);
         break;
         case Qt::DecorationRole:
             if (index.column() == 0) {
-                return QIcon(":/icons/icons/folder-16.png");
+                if(index == rootItem())
+                    return QIcon(":/icons/icons/folder-16.png");
+
+                return QIcon(":/icons/icons/icon-16.png");
+            }
+        break;
+        // return id of item
+        case Qt::UserRole:
+            if (index.column() == 0) {
+                const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
+                return currentNode->at(0);
             }
         break;
     }
@@ -236,7 +244,7 @@ bool AuthorityTreeModel::setData(const QModelIndex &index, const QVariant &value
                 query.exec();
 
                 if(query.isActive()) {
-                    currentNode->replace(index.column(), value);
+                    currentNode->replace(1, value);
                     emit dataChanged(index, index);
 
                     return true;

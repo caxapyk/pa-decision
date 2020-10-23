@@ -1,9 +1,11 @@
-#include "application.h"
-
 #include "authorityview.h"
 #include "ui_authorityview.h"
 
+#include "application.h"
+#include "dialogs/authoritydialog.h"
+
 #include <QDebug>
+#include <QMenu>
 #include <QMessageBox>
 
 AuthorityView::AuthorityView(QWidget *parent) :
@@ -13,13 +15,18 @@ AuthorityView::AuthorityView(QWidget *parent) :
     ui->setupUi(this);
 
     initialize();
-    setupActions();
+    setupShortcuts();
 }
 
 AuthorityView::~AuthorityView()
 {
     delete ui;
     delete m_authorityModel;
+    delete openShortcut;
+    delete refreshShortcut;
+    delete insertShortcut;
+    delete editShortcut;
+    delete removeShortcut;
 }
 
 void AuthorityView::initialize()
@@ -28,94 +35,95 @@ void AuthorityView::initialize()
     m_authorityModel->select();
     ui->tV_tree->setModel(m_authorityModel);
     ui->tV_tree->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->tV_tree->expandAll();
+    ui->tV_tree->setCurrentIndex(m_authorityModel->rootItem());
 
     connect(ui->tV_tree, &QMenu::customContextMenuRequested, this, &AuthorityView::contextMenu);
+    connect(ui->tV_tree, &QTreeView::clicked, this, &AuthorityView::clicked);
 }
 
 void AuthorityView::contextMenu()
 {
-    QModelIndex currentIndex = currentIndex();
+    QModelIndex currentIndex = ui->tV_tree->indexAt(ui->tV_tree->viewport()->mapFromGlobal(QCursor().pos()));
+    clicked(currentIndex);
 
     QMenu menu;
 
+    QAction openAction(QIcon(":/icons/icons/open-16.png"), tr("Open"));
+    openAction.setShortcut(openShortcut->key());
+    openAction.setEnabled(openShortcut->isEnabled());
+    connect(&openAction, &QAction::triggered, this, &AuthorityView::open);
     menu.addAction(&openAction);
-    openAction.setEnabled(currentIndex.isValid());
-    connect(&openAction, &QAction::triggered, this, [=] {
-            open(currentIndex);
-        });
 
-    menu.addAction(&refreshAction);
+    QAction refreshAction(QIcon(":/icons/icons/refresh-16.png"), tr("Refresh"));
+    refreshAction.setShortcut(refreshShortcut->key());
+    refreshAction.setEnabled(refreshShortcut->isEnabled());
     connect(&refreshAction, &QAction::triggered, this, &AuthorityView::refresh);
+    menu.addAction(&refreshAction);
 
     menu.addSeparator();
 
-    menu.addAction(&appendAction);
-    appendAction.setEnabled(currentIndex.isValid() && currentIndex == m_authorityModel->rootItem());
-    connect(&appendAction, &QAction::triggered, this, &AuthorityView::insert);
+    QAction insertAction(QIcon(":/icons/icons/add-16.png"), tr("New"));
+    insertAction.setShortcut(insertShortcut->key());
+    insertAction.setEnabled(insertShortcut->isEnabled());
+    connect(&insertAction, &QAction::triggered, this, &AuthorityView::insert);
+    menu.addAction(&insertAction);
 
+    QAction editAction(QIcon(":/icons/icons/edit-16.png"), tr("Edit"));
+    editAction.setShortcut(editShortcut->key());
+    editAction.setEnabled(editShortcut->isEnabled());
+    connect(&editAction, &QAction::triggered, this,  &AuthorityView::edit);
     menu.addAction(&editAction);
-    editAction.setEnabled(currentIndex.isValid() && currentIndex != m_authorityModel->rootItem());
-    connect(&editAction, &QAction::triggered, this, [=] {
-        edit(currentIndex);
-    });
 
+    QAction removeAction(QIcon(":/icons/icons/remove-16.png"), tr("Remove"));
+    removeAction.setShortcut(removeShortcut->key());
+    removeAction.setEnabled(removeShortcut->isEnabled());
+    connect(&removeAction, &QAction::triggered, this,  &AuthorityView::remove);
     menu.addAction(&removeAction);
-    removeAction.setEnabled(currentIndex.isValid() && currentIndex != m_authorityModel->rootItem());
-    connect(&removeAction, &QAction::triggered, this, [=] {
-        remove(currentIndex);
-    });
+
     menu.addSeparator();
 
-
+    QAction infoAction(tr("Info"));
+    infoAction.setEnabled(currentIndex.isValid() && ui->tV_tree->currentIndex() != m_authorityModel->rootItem());
+    connect(&infoAction, &QAction::triggered, this,  &AuthorityView::info);
     menu.addAction(&infoAction);
-    infoAction.setEnabled(currentIndex.isValid() && currentIndex != m_authorityModel->rootItem());
 
     menu.exec(QCursor().pos());
 }
 
-QModelIndex AuthorityView::currentIndex()
+void AuthorityView::setupShortcuts()
 {
-    return ui->tV_tree->indexAt(ui->tV_tree->viewport()->mapFromGlobal(QCursor().pos()));
+    openShortcut = new QShortcut(QKeySequence::Open, ui->tV_tree, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(openShortcut, &QShortcut::activated, this, &AuthorityView::open);
+
+    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_tree, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(refreshShortcut, &QShortcut::activated, this, &AuthorityView::refresh);
+
+    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_tree, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(insertShortcut, &QShortcut::activated, this, &AuthorityView::insert);
+
+    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_tree, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(editShortcut, &QShortcut::activated, this, &AuthorityView::edit);
+
+    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_tree, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(removeShortcut, &QShortcut::activated, this, &AuthorityView::remove);
 }
 
-void AuthorityView::setupActions()
+void AuthorityView::clicked(const QModelIndex &index)
 {
-    openAction.setIcon(QIcon(":/icons/icons/open-16.png"));
-    openAction.setText(tr("Open"));
-    openAction.setShortcut(QKeySequence::Open);
-    //connect(&openAction, &QAction::triggered, this, [=] {
-    //        open(currentIndex);
-    //    });
+    openShortcut->setEnabled((index.isValid() && (index != m_authorityModel->rootItem() || (index == m_authorityModel->rootItem() && !ui->tV_tree->isExpanded(index)))));
+    refreshShortcut->setEnabled(index.parent() != m_authorityModel->rootItem());
+    insertShortcut->setEnabled(index.isValid() && index == m_authorityModel->rootItem());
+    editShortcut->setEnabled(index.isValid() && index != m_authorityModel->rootItem());
+    removeShortcut->setEnabled(index.isValid() && index != m_authorityModel->rootItem());
 
-    refreshAction.setIcon(QIcon(":/icons/icons/refresh-16.png"));
-    refreshAction.setText(tr("Refresh"));
-    refreshAction.setShortcut(QKeySequence::Refresh);
-    //connect(&refreshAction, &QAction::triggered, this, &AuthorityView::refresh);
-
-    appendAction.setIcon(QIcon(":/icons/icons/add-16.png"));
-    appendAction.setText(tr("New"));
-    appendAction.setShortcut(QKeySequence::New);
-    //connect(&appendAction, &QAction::triggered, this, &AuthorityView::insert);
-
-    editAction.setIcon(QIcon(":/icons/icons/edit-16.png"));
-    editAction.setText(tr("Edit"));
-    editAction.setShortcut(QKeySequence(Qt::Key_F2));
-    //connect(&editAction, &QAction::triggered, this, [=] {
-    //    edit(currentIndex);
-    //});
-
-    removeAction.setIcon(QIcon(":/icons/icons/remove-16.png"));
-    removeAction.setText(tr("Remove"));
-    removeAction.setShortcut(QKeySequence::Delete);
-    //connect(&removeAction, &QAction::triggered, this, [=] {
-    //    remove(currentIndex);
-    //});
-
-     infoAction.setText(tr("Info"));
+    ui->tV_tree->setCurrentIndex(index);
 }
 
-void AuthorityView::open(const QModelIndex &index)
+void AuthorityView::open()
 {
+    QModelIndex index = ui->tV_tree->currentIndex();
+
     if(index == m_authorityModel->rootItem()) {
         ui->tV_tree->expand(m_authorityModel->rootItem());
     } else {
@@ -126,6 +134,8 @@ void AuthorityView::open(const QModelIndex &index)
 void AuthorityView::refresh()
 {
     m_authorityModel->select();
+    ui->tV_tree->expandAll();
+    ui->tV_tree->setCurrentIndex(m_authorityModel->rootItem());
 }
 
 void AuthorityView::insert()
@@ -144,13 +154,17 @@ void AuthorityView::insert()
     }
 }
 
-void AuthorityView::edit(const QModelIndex &index)
+void AuthorityView::edit()
 {
+    QModelIndex index = ui->tV_tree->currentIndex();
+
     ui->tV_tree->edit(index);
 }
 
-void AuthorityView::remove(const QModelIndex &index)
+void AuthorityView::remove()
 {
+    QModelIndex index = ui->tV_tree->currentIndex();
+
     int res = QMessageBox::critical(this,
         tr("Deleting item"),
         tr("Are you shure that you want to delete this item?"),
@@ -174,5 +188,12 @@ void AuthorityView::remove(const QModelIndex &index)
 
 void AuthorityView::info()
 {
+    QModelIndex index = ui->tV_tree->currentIndex();
 
+    AuthorityDialog dialog(index.data(Qt::UserRole));
+    int res = dialog.exec();
+
+    if(res == AuthorityDialog::Accepted) {
+        refresh();
+    }
 }
