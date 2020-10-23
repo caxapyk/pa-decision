@@ -27,7 +27,8 @@ SOURCES += \
     models/authoritytreemodel.cpp \
     views/authorityview.cpp \
     views/decisionview.cpp \
-    views/view.cpp
+    views/view.cpp \
+    widgets/statusbarpanel.cpp
 
 HEADERS += \
     application.h \
@@ -38,14 +39,16 @@ HEADERS += \
     models/authoritytreemodel.h \
     views/authorityview.h \
     views/decisionview.h \
-    views/view.h
+    views/view.h \
+    widgets/statusbarpanel.h
 
 FORMS += \
     dialogs/authoritydialog.ui \
     dialogs/connectiondialog.ui \
     mainwindow.ui \
     views/authorityview.ui \
-    views/decisionview.ui
+    views/decisionview.ui \
+    widgets/statusbarpanel.ui
 
 TRANSLATIONS += \
     translations/pa-decision_ru_RU.ts

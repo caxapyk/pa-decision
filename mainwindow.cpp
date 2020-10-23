@@ -4,8 +4,6 @@
 #include "application.h"
 #include "dialogs/connectiondialog.h"
 
-#include <QSettings>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -14,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     initialize();
     restoreAppState();
+    setupStatusBar();
 
     // MainWindow actions
     connect(ui->action_about, &QAction::triggered, application, &Application::about);
@@ -23,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_statusBarPanel;
     delete m_authorityView;
     delete m_decisionView;
 }
@@ -42,6 +42,15 @@ void MainWindow::restoreAppState()
     restoreState(settings->value("MainWindow/windowState").toByteArray());
 
     ui->splitter_layout->restoreState(settings->value("MainWindow/splitter_layout").toByteArray());
+}
+
+void MainWindow::setupStatusBar()
+{
+    m_statusBarPanel = new StatusBarPanel;
+    m_statusBarPanel->setTotal(0);
+    ui->statusbar->addPermanentWidget(m_statusBarPanel);
+
+    statusBar()->showMessage(tr("Ready"), 2000);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -8,6 +8,8 @@
         <file>icons/edit-16.png</file>
         <file>icons/add-16.png</file>
         <file>icons/remove-16.png</file>
+        <file>icons/connected-16.png</file>
+        <file>icons/icon-24.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>

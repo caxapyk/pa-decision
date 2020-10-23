@@ -70,6 +70,8 @@ void Application::connect()
 
         conn.connect(hostname, database, username, password);
 
+        server_address = hostname;
+
         initMainWindow();
     } catch (ConnectionExeption e) {
         qCritical() << QString(e.p);

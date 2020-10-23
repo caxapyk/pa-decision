@@ -3,6 +3,7 @@
 
 #include "views/authorityview.h"
 #include "views/decisionview.h"
+#include "widgets/statusbarpanel.h"
 
 #include <QMainWindow>
 
@@ -20,12 +21,14 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    StatusBarPanel *m_statusBarPanel;
 
     AuthorityView *m_authorityView;
     DecisionView *m_decisionView;
 
     void initialize();
     void restoreAppState();
+    void setupStatusBar();
 
 private slots:
     void openConnection();
