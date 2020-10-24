@@ -8,6 +8,7 @@
 RecordTreeModel::RecordTreeModel()
 {
     rootNode = new RecordNode;
+    setHeaderData(0, Qt::Horizontal, tr("Archive records"));
 }
 
 RecordTreeModel::~RecordTreeModel()
@@ -55,14 +56,14 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
 
     switch (level) {
     case RecordTreeModel::FundLevel:
-        query.prepare("SELECT id, number FROM pad_fund");
+        query.prepare("SELECT id, number FROM pad_fund ORDER BY CAST(number AS UNSIGNED) DESC");
         break;
     case RecordTreeModel::InventoryLevel:
-        query.prepare("SELECT id, number FROM pad_inventory WHERE fund_id=?");
+        query.prepare("SELECT id, number FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) DESC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     case RecordTreeModel::RecordLevel:
-        query.prepare("SELECT id, number FROM pad_record WHERE inventory_id=?");
+        query.prepare("SELECT id, number FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) DESC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     }
@@ -77,16 +78,12 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
             node->number = query.record().value(1);
 
             node->level = level;
-            parentNode->row = query.at();
+            node->row = query.at();
+            node->mapped = false;
+            node->parent = (level != FundLevel) ? parentNode : nullptr;
 
             parentNode->mapped = (level != FundLevel);
-
-            node->parent = parentNode;
             parentNode->children.append(node);
-
-            qDebug() << node->number;
-            qDebug() << node->level;
-            qDebug() << node->mapped;
         }
     } else {
         qDebug() << query.lastError().text();
@@ -113,8 +110,10 @@ bool RecordTreeModel::hasChildren(const QModelIndex &parent) const
         query.prepare("SELECT COUNT(id) FROM pad_record WHERE inventory_id=?");
         query.bindValue(0, parentNode->id.toInt());
         break;
+    case RecordTreeModel::RecordLevel:
+        return false;
+        break;
     default:
-        qDebug() << "here";
         return false;
         break;
     }
@@ -143,6 +142,21 @@ bool RecordTreeModel::canFetchMore(const QModelIndex &parent) const
 void RecordTreeModel::fetchMore(const QModelIndex &parent)
 {
     setupModelData(parent);
+}
+
+QVariant RecordTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if ((section < 0)
+            || ((orientation == Qt::Horizontal) && (section >= columnCount()))
+            || ((orientation == Qt::Vertical) && (section >= rowCount()))) {
+        return QVariant();
+    }
+
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        return columnHeaders.value(section);
+     }
+
+    return QVariant();
 }
 
 QModelIndex RecordTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -184,8 +198,6 @@ int RecordTreeModel::rowCount(const QModelIndex &parent) const
 
     const RecordNode* parentNode = static_cast<const RecordNode*>(parent.internalPointer());
 
-    qDebug() << parentNode->children.at(0)->number << parentNode->children.size() << "dsffffffffff";
-
     return parentNode->children.size();
 }
 
@@ -214,4 +226,21 @@ QVariant RecordTreeModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+bool RecordTreeModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int)
+{
+    if ((section < 0)
+            || ((orientation == Qt::Horizontal) && (section >= columnCount()))
+            || ((orientation == Qt::Vertical) && (section >= rowCount()))) {
+            return false;
+    }
+
+    if (orientation == Qt::Horizontal) {
+        columnHeaders.insert(section, value);
+        emit headerDataChanged(orientation, section, section);
+        return true;
+     }
+
+     return false;
 }
