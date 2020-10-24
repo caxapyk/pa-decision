@@ -12,7 +12,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>330</width>
+    <width>300</width>
     <height>0</height>
    </size>
   </property>
@@ -33,14 +33,33 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>3</number>
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="tabPosition">
+      <enum>QTabWidget::West</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <property name="elideMode">
+      <enum>Qt::ElideNone</enum>
+     </property>
+     <property name="documentMode">
+      <bool>false</bool>
+     </property>
+     <property name="tabBarAutoHide">
+      <bool>false</bool>
+     </property>
      <widget class="QWidget" name="tab_pa">
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/icons/icons/icon-16.png</normaloff>:/icons/icons/icon-16.png</iconset>
+      </attribute>
       <attribute name="title">
        <string>Public authorities</string>
       </attribute>
@@ -67,8 +86,8 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>200</width>
-           <height>200</height>
+           <width>0</width>
+           <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -79,6 +98,9 @@
          </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::EditKeyPressed</set>
@@ -99,11 +121,18 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_grouping">
+     <widget class="QWidget" name="tab_collection">
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/icons/icons/collection-16.png</normaloff>:/icons/icons/collection-16.png</iconset>
+      </attribute>
       <attribute name="title">
-       <string>Grouping</string>
+       <string>Collections</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -117,7 +146,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QTreeView" name="tV_groups">
+        <widget class="QTreeView" name="tV_collection">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -126,20 +155,80 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>200</width>
-           <height>200</height>
+           <width>0</width>
+           <height>0</height>
           </size>
          </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::HLine</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cB_collection">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border:0px;</string>
+         </property>
+         <property name="frame">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Group by archive record</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/icons/icons/record-16.png</normaloff>:/icons/icons/record-16.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Group by year</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/icons/icons/calendar-16.png</normaloff>:/icons/icons/calendar-16.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Group by memebers</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/icons/icons/members-16.png</normaloff>:/icons/icons/members-16.png</iconset>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="tab_search">
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/icons/icons/search-16.png</normaloff>:/icons/icons/search-16.png</iconset>
+      </attribute>
       <attribute name="title">
-       <string>Members</string>
+       <string>Detail search</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="leftMargin">
@@ -159,6 +248,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
         </widget>
        </item>
       </layout>
@@ -167,6 +259,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

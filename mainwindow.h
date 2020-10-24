@@ -4,7 +4,9 @@
 #include "views/authorityview.h"
 #include "views/decisionview.h"
 #include "widgets/statusbarpanel.h"
+#include "widgets/searchpanel.h"
 
+#include <QShortcut>
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -21,14 +23,31 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    StatusBarPanel *m_statusBarPanel;
 
     AuthorityView *m_authorityView;
     DecisionView *m_decisionView;
 
+    StatusBarPanel *m_statusBarPanel;
+    SearchPanel *m_searchPanel;
+
+    QAction *action_new;
+    QAction *action_edit;
+    QAction *action_print;
+    QAction *action_remove;
+    QAction *action_refresh;
+    QAction *action_tree;
+
+    QShortcut *m_editShortcut;
+    QShortcut *m_newShortcut;
+    QShortcut *m_refreshShortcut;
+    QShortcut *m_removeShortcut;
+    QShortcut *m_searchShortcut;
+
     void initialize();
     void restoreAppState();
+    void setupShortcuts();
     void setupStatusBar();
+    void setupToolBar();
 
 private slots:
     void openConnection();

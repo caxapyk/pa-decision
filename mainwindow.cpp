@@ -4,6 +4,8 @@
 #include "application.h"
 #include "dialogs/connectiondialog.h"
 
+#include <QDebug>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -11,8 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     initialize();
-    restoreAppState();
-    setupStatusBar();
 
     // MainWindow actions
     connect(ui->action_about, &QAction::triggered, application, &Application::about);
@@ -22,15 +22,36 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete m_statusBarPanel;
     delete m_authorityView;
     delete m_decisionView;
+    delete m_statusBarPanel;
+    delete m_searchPanel;
+
+    delete action_new;
+    delete action_edit;
+    delete action_print;
+    delete action_remove;
+    delete action_refresh;
+    delete action_tree;
+
+    delete m_editShortcut;
+    delete m_newShortcut;
+    delete m_refreshShortcut;
+    delete m_removeShortcut;
+    delete m_searchShortcut;
 }
 
 void MainWindow::initialize()
 {
     m_authorityView = new AuthorityView(ui->splitter_layout);
     m_decisionView = new DecisionView(ui->splitter_layout);
+
+    ui->splitter_layout->setCollapsible(0, false);
+
+    setupShortcuts();
+    setupToolBar();
+    setupStatusBar();
+    restoreAppState();
 }
 
 void MainWindow::restoreAppState()
@@ -44,13 +65,55 @@ void MainWindow::restoreAppState()
     ui->splitter_layout->restoreState(settings->value("MainWindow/splitter_layout").toByteArray());
 }
 
+void MainWindow::setupShortcuts()
+{
+    m_editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this);
+    m_newShortcut = new QShortcut(QKeySequence::New, this);
+    m_refreshShortcut = new QShortcut(QKeySequence::Refresh, this);
+    m_removeShortcut = new QShortcut(QKeySequence::Delete, this);
+
+    m_searchShortcut = new QShortcut(QKeySequence::Find, this);
+    connect(m_searchShortcut, &QShortcut::activated, this, [=] {
+        m_searchPanel->setFocus();
+    });
+}
+
 void MainWindow::setupStatusBar()
 {
     m_statusBarPanel = new StatusBarPanel;
     m_statusBarPanel->setTotal(0);
     ui->statusbar->addPermanentWidget(m_statusBarPanel);
 
-    statusBar()->showMessage(tr("Ready"), 2000);
+    statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::setupToolBar()
+{
+    action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
+    action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
+    action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
+    action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
+    action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
+
+    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Tree"));
+    action_tree->setCheckable(true);
+    action_tree->setChecked(true);
+    connect(action_tree, &QAction::triggered, this, [=]{
+         ui->splitter_layout->widget(0)->setHidden(!action_tree->isChecked());
+    });
+
+    ui->toolBar->addAction(action_new);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(action_edit);
+    ui->toolBar->addAction(action_remove);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(action_print);
+    ui->toolBar->addAction(action_refresh);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(action_tree);
+
+    m_searchPanel = new SearchPanel();
+    ui->toolBar->addWidget(m_searchPanel);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

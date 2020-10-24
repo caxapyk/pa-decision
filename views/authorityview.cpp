@@ -2,7 +2,7 @@
 #include "ui_authorityview.h"
 
 #include "application.h"
-#include "dialogs/authoritydialog.h"
+#include "dialogs/authoritydetaildialog.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -83,7 +83,7 @@ void AuthorityView::contextMenu()
 
     menu.addSeparator();
 
-    QAction infoAction(tr("Info"));
+    QAction infoAction(tr("Detail"));
     infoAction.setEnabled(currentIndex.isValid() && ui->tV_tree->currentIndex() != m_authorityModel->rootItem());
     connect(&infoAction, &QAction::triggered, this,  &AuthorityView::info);
     menu.addAction(&infoAction);
@@ -190,10 +190,10 @@ void AuthorityView::info()
 {
     QModelIndex index = ui->tV_tree->currentIndex();
 
-    AuthorityDialog dialog(index.data(Qt::UserRole));
+    AuthorityDetailDialog dialog(index.data(Qt::UserRole));
     int res = dialog.exec();
 
-    if(res == AuthorityDialog::Accepted) {
+    if(res == AuthorityDetailDialog::Accepted) {
         refresh();
     }
 }

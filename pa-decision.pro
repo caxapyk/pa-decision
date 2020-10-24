@@ -20,7 +20,7 @@ DEFINES += APP_VERSION=$$VERSION
 SOURCES += \
     application.cpp \
     connection.cpp \
-    dialogs/authoritydialog.cpp \
+    dialogs/authoritydetaildialog.cpp \
     dialogs/connectiondialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -28,26 +28,29 @@ SOURCES += \
     views/authorityview.cpp \
     views/decisionview.cpp \
     views/view.cpp \
+    widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
 
 HEADERS += \
     application.h \
     connection.h \
-    dialogs/authoritydialog.h \
+    dialogs/authoritydetaildialog.h \
     dialogs/connectiondialog.h \
     mainwindow.h \
     models/authoritytreemodel.h \
     views/authorityview.h \
     views/decisionview.h \
     views/view.h \
+    widgets/searchpanel.h \
     widgets/statusbarpanel.h
 
 FORMS += \
-    dialogs/authoritydialog.ui \
+    dialogs/authoritydetaildialog.ui \
     dialogs/connectiondialog.ui \
     mainwindow.ui \
     views/authorityview.ui \
     views/decisionview.ui \
+    widgets/searchpanel.ui \
     widgets/statusbarpanel.ui
 
 TRANSLATIONS += \

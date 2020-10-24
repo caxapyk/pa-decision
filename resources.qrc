@@ -9,7 +9,20 @@
         <file>icons/add-16.png</file>
         <file>icons/remove-16.png</file>
         <file>icons/connected-16.png</file>
-        <file>icons/icon-24.png</file>
+        <file>icons/search-16.png</file>
+        <file>icons/collection-16.png</file>
+        <file>icons/record-16.png</file>
+        <file>icons/members-16.png</file>
+        <file>icons/calendar-16.png</file>
+        <file>icons/new-16.png</file>
+        <file>icons/print-16.png</file>
+        <file>icons/remove-24.png</file>
+        <file>icons/print-24.png</file>
+        <file>icons/new-24.png</file>
+        <file>icons/edit-24.png</file>
+        <file>icons/refresh-24.png</file>
+        <file>icons/tree-24.png</file>
+        <file>icons/icon.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>

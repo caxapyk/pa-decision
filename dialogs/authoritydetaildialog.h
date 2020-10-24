@@ -6,22 +6,22 @@
 #include <QDataWidgetMapper>
 
 namespace Ui {
-class AuthorityDialog;
+class AuthorityDetailDialog;
 }
 
-class AuthorityDialog : public QDialog
+class AuthorityDetailDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit AuthorityDialog(QVariant id, QWidget *parent = nullptr);
-    ~AuthorityDialog();
+    explicit AuthorityDetailDialog(QVariant id, QWidget *parent = nullptr);
+    ~AuthorityDetailDialog();
 
 public slots:
     void reject() override;
 
 private:
-    Ui::AuthorityDialog *ui;
+    Ui::AuthorityDetailDialog *ui;
 
     QSqlTableModel *m_model;
     QDataWidgetMapper *m_mapper;
