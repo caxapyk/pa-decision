@@ -56,14 +56,14 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
 
     switch (level) {
     case RecordTreeModel::FundLevel:
-        query.prepare("SELECT id, number FROM pad_fund ORDER BY CAST(number AS UNSIGNED) DESC");
+        query.prepare("SELECT id, number FROM pad_fund ORDER BY CAST(number AS UNSIGNED) ASC");
         break;
     case RecordTreeModel::InventoryLevel:
-        query.prepare("SELECT id, number FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) DESC");
+        query.prepare("SELECT id, number FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     case RecordTreeModel::RecordLevel:
-        query.prepare("SELECT id, number FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) DESC");
+        query.prepare("SELECT id, number FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     }

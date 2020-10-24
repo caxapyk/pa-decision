@@ -22,6 +22,9 @@ public:
     explicit AuthorityView(QWidget *parent = nullptr);
     ~AuthorityView();
 
+    void restoreViewState() override;
+    void saveViewState() override;
+
 private:
     enum {TabAuthority, TabCollection, TabSearch};
     enum {CollectionRecord, CollectionYear, CollectionMember};

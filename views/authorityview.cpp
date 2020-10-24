@@ -15,11 +15,12 @@ AuthorityView::AuthorityView(QWidget *parent) :
     ui->setupUi(this);
 
     initialize();
-    setupShortcuts();
+
 }
 
 AuthorityView::~AuthorityView()
 {
+    saveViewState();
     delete ui;
 
     delete m_authorityModel;
@@ -46,7 +47,28 @@ void AuthorityView::initialize()
     connect(ui->tV_tree, &QTreeView::clicked, this, &AuthorityView::clicked);
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &AuthorityView::tabSwitch);
+
+    restoreViewState();
+    setupShortcuts();
 }
+
+void AuthorityView::restoreViewState()
+{
+
+    QSettings* settings = application->applicationSettings();
+    ui->tV_collection->header()->restoreState(settings->value("Views/tV_collection").toByteArray());
+}
+
+void AuthorityView::saveViewState()
+{
+
+    QSettings* settings = application->applicationSettings();
+
+    settings->beginGroup("Views");
+    settings->setValue("tV_collection", ui->tV_collection->header()->saveState());
+    settings->endGroup();
+}
+
 
 void AuthorityView::contextMenu()
 {
