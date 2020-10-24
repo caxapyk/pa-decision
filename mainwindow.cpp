@@ -30,6 +30,7 @@ MainWindow::~MainWindow()
     delete action_new;
     delete action_edit;
     delete action_print;
+    delete action_record;
     delete action_remove;
     delete action_refresh;
     delete action_tree;
@@ -92,6 +93,7 @@ void MainWindow::setupToolBar()
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
+    action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
 
@@ -111,6 +113,7 @@ void MainWindow::setupToolBar()
     ui->toolBar->addAction(action_refresh);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_tree);
+    ui->toolBar->addAction(action_record);
 
     m_searchPanel = new SearchPanel();
     ui->toolBar->addWidget(m_searchPanel);

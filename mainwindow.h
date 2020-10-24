@@ -33,6 +33,7 @@ private:
     QAction *action_new;
     QAction *action_edit;
     QAction *action_print;
+    QAction *action_record;
     QAction *action_remove;
     QAction *action_refresh;
     QAction *action_tree;

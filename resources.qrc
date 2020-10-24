@@ -23,6 +23,7 @@
         <file>icons/refresh-24.png</file>
         <file>icons/tree-24.png</file>
         <file>icons/icon.png</file>
+        <file>icons/record-24.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>
