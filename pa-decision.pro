@@ -25,6 +25,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     models/authoritytreemodel.cpp \
+    models/recordtreemodel.cpp \
     views/authorityview.cpp \
     views/decisionview.cpp \
     views/view.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     dialogs/connectiondialog.h \
     mainwindow.h \
     models/authoritytreemodel.h \
+    models/recordtreemodel.h \
     views/authorityview.h \
     views/decisionview.h \
     views/view.h \

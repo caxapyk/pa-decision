@@ -2,6 +2,7 @@
 #define AUTHORITYVIEW_H
 
 #include "models/authoritytreemodel.h"
+#include "models/recordtreemodel.h"
 #include "views/view.h"
 
 #include <QAction>
@@ -22,9 +23,15 @@ public:
     ~AuthorityView();
 
 private:
+    enum {TabAuthority, TabCollection, TabSearch};
+    enum {CollectionRecord, CollectionYear, CollectionMember};
+
     Ui::AuthorityView *ui;
 
     AuthorityTreeModel *m_authorityModel;
+    RecordTreeModel *m_recordModel = nullptr;
+
+    QSortFilterProxyModel *m_recordProxyModel = nullptr;
 
     QShortcut *openShortcut;
     QShortcut *refreshShortcut;
@@ -36,6 +43,9 @@ private:
 
     void contextMenu();
     void setupShortcuts();
+    void tabSwitch(int index);
+    void loadCollection();
+    void initializeRecord();
 
 private slots:
     void clicked(const QModelIndex &index);

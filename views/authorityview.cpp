@@ -21,7 +21,11 @@ AuthorityView::AuthorityView(QWidget *parent) :
 AuthorityView::~AuthorityView()
 {
     delete ui;
+
     delete m_authorityModel;
+    delete m_recordModel;
+    delete m_recordProxyModel;
+
     delete openShortcut;
     delete refreshShortcut;
     delete insertShortcut;
@@ -40,6 +44,8 @@ void AuthorityView::initialize()
 
     connect(ui->tV_tree, &QMenu::customContextMenuRequested, this, &AuthorityView::contextMenu);
     connect(ui->tV_tree, &QTreeView::clicked, this, &AuthorityView::clicked);
+
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &AuthorityView::tabSwitch);
 }
 
 void AuthorityView::contextMenu()
@@ -107,6 +113,45 @@ void AuthorityView::setupShortcuts()
 
     removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_tree, nullptr, nullptr, Qt::WidgetShortcut);
     connect(removeShortcut, &QShortcut::activated, this, &AuthorityView::remove);
+}
+
+void AuthorityView::tabSwitch(int index)
+{
+    switch (index) {
+    case AuthorityView::TabAuthority:
+        break;
+    case AuthorityView::TabCollection:
+        loadCollection();
+        break;
+    case AuthorityView::TabSearch:
+        break;
+
+    }
+}
+
+void AuthorityView::loadCollection()
+{
+    switch(ui->cB_collection->currentIndex()){
+    case AuthorityView::CollectionRecord:
+        if(m_recordModel == nullptr)
+            initializeRecord();
+        break;
+    case AuthorityView::CollectionYear:
+        break;
+    case AuthorityView::CollectionMember:
+        break;
+    }
+}
+
+void AuthorityView::initializeRecord()
+{
+    m_recordModel = new RecordTreeModel;
+    m_recordModel->select();
+
+    m_recordProxyModel = new QSortFilterProxyModel;
+    m_recordProxyModel->setSourceModel(m_recordModel);
+
+    ui->tV_collection->setModel(m_recordProxyModel);
 }
 
 void AuthorityView::clicked(const QModelIndex &index)

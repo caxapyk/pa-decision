@@ -31,7 +31,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     QModelIndex rootItem() const;
     int rowCount(const QModelIndex &parent) const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 private:
     AT_Node *m_rootNode;

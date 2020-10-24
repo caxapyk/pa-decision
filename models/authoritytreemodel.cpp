@@ -51,9 +51,15 @@ int AuthorityTreeModel::itemMaxNum(int column, const QRegExp &rule) const
     return max;
 }
 
+void AuthorityTreeModel::select()
+{
+    clear();
+    setupModelData();
+}
+
 void AuthorityTreeModel::setupModelData()
 {
-    QSqlQuery query("SELECT id, name FROM authority ORDER BY name");
+    QSqlQuery query("SELECT id, name FROM pad_authority ORDER BY name");
 
     while (query.next()) {
         AT_Node *node = new AT_Node;
@@ -63,12 +69,6 @@ void AuthorityTreeModel::setupModelData()
 
         m_nodeList->append(node);
     }
-}
-
-void AuthorityTreeModel::select()
-{
-    clear();
-    setupModelData();
 }
 
 Qt::ItemFlags AuthorityTreeModel::flags(const QModelIndex &index) const
@@ -104,7 +104,7 @@ bool AuthorityTreeModel::insertRows(int row, int count, const QModelIndex &paren
 
     QVariant pa_name = tr("Public authority %1").arg(itemMaxNum(0, QRegExp("\\D+\\s\\D+\\d+")));
 
-    query.prepare("INSERT INTO authority(name) VALUES (?)");
+    query.prepare("INSERT INTO pad_authority(name) VALUES (?)");
     query.bindValue(0, pa_name.toString());
     query.exec();
 
@@ -147,7 +147,7 @@ bool AuthorityTreeModel::removeRows(int row, int count, const QModelIndex &paren
     QSqlQuery query;
 
     for(int i = row; i < (row + count); ++i) {
-        query.prepare("DELETE FROM authority WHERE id=(?)");
+        query.prepare("DELETE FROM pad_authority WHERE id=(?)");
         query.bindValue(0, m_nodeList->at(row)->at(0));
         query.exec();
 
@@ -238,7 +238,7 @@ bool AuthorityTreeModel::setData(const QModelIndex &index, const QVariant &value
                 AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
 
                 QSqlQuery query;
-                query.prepare("UPDATE authority SET name=? WHERE id=?");
+                query.prepare("UPDATE pad_authority SET name=? WHERE id=?");
                 query.bindValue(0, value);
                 query.bindValue(1, currentNode->at(0));
                 query.exec();
