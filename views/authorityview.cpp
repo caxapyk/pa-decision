@@ -170,8 +170,9 @@ void AuthorityView::initializeRecord()
     m_recordModel = new RecordTreeModel;
     m_recordModel->select();
 
-    m_recordProxyModel = new QSortFilterProxyModel;
+    m_recordProxyModel = new RecordProxyModel;
     m_recordProxyModel->setSourceModel(m_recordModel);
+    m_recordProxyModel->setSortRole(Qt::AscendingOrder);
 
     ui->tV_collection->setModel(m_recordProxyModel);
 }

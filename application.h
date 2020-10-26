@@ -27,7 +27,7 @@ public:
     QString server_address;
 
     const QString m_orgName = "GAOO";
-    const QString m_appName = "RA-Decision";
+    const QString m_appName = "pa-decision";
     const QVariant m_version = QVariant(QString::number(APP_VERSION, 'f', 1));
     const QIcon m_icon = QIcon(":/icons/icon-16.png");
 

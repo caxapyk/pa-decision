@@ -1,6 +1,7 @@
 #include "recordtreemodel.h"
 
 #include <QDebug>
+#include <QIcon>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -208,17 +209,44 @@ int RecordTreeModel::columnCount(const QModelIndex &) const
 
 QVariant RecordTreeModel::data(const QModelIndex &index, int role) const
 {
+    const RecordNode* currentNode = static_cast<RecordNode*>(index.internalPointer());
+
     switch (role) {
         case Qt::DisplayRole:
         {
-            const RecordNode* currentNode = static_cast<RecordNode*>(index.internalPointer());
-            return currentNode->number;
-        }
+
+            QString prefix;
+
+            switch (currentNode->level) {
+            case RecordTreeModel::FundLevel:
+                prefix = tr("F. ");
+                break;
+            case RecordTreeModel::InventoryLevel:
+                prefix = tr("Inv. ");
+                break;
+            case RecordTreeModel::RecordLevel:
+                prefix = tr("R. ");
+                break;
+            }
+
+            return QVariant(prefix + currentNode->number.toString());
             break;
+        }
         case Qt::EditRole:
-            return data(index, Qt::DisplayRole);
+            return currentNode->number.toString();
             break;
         case Qt::DecorationRole:
+            switch (currentNode->level) {
+            case RecordTreeModel::FundLevel:
+                return QIcon(":/icons/icons/folder-16.png");
+                break;
+            case RecordTreeModel::InventoryLevel:
+                return QIcon(":/icons/icons/folder-16.png");
+                break;
+            case RecordTreeModel::RecordLevel:
+                return QIcon(":/icons/icons/record-16.png");
+                break;
+            }
             break;
         // return id of item
         case Qt::UserRole:

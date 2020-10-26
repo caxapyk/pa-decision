@@ -3,12 +3,12 @@
 
 #include "models/authoritytreemodel.h"
 #include "models/recordtreemodel.h"
+#include "models/recordproxymodel.h"
 #include "views/view.h"
 
 #include <QAction>
 #include <QIcon>
 #include <QShortcut>
-#include <QSortFilterProxyModel>
 
 namespace Ui {
 class AuthorityView;
@@ -34,7 +34,7 @@ private:
     AuthorityTreeModel *m_authorityModel;
     RecordTreeModel *m_recordModel = nullptr;
 
-    QSortFilterProxyModel *m_recordProxyModel = nullptr;
+    RecordProxyModel *m_recordProxyModel = nullptr;
 
     QShortcut *openShortcut;
     QShortcut *refreshShortcut;
