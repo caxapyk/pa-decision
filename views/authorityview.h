@@ -2,6 +2,7 @@
 #define AUTHORITYVIEW_H
 
 #include "models/authoritytreemodel.h"
+#include "models/authorityproxymodel.h"
 #include "models/recordtreemodel.h"
 #include "models/recordproxymodel.h"
 #include "views/view.h"
@@ -26,15 +27,10 @@ public:
     void saveViewState() override;
 
 private:
-    enum {TabAuthority, TabCollection, TabSearch};
-    enum {CollectionRecord, CollectionYear, CollectionMember};
-
     Ui::AuthorityView *ui;
 
     AuthorityTreeModel *m_authorityModel;
-    RecordTreeModel *m_recordModel = nullptr;
-
-    RecordProxyModel *m_recordProxyModel = nullptr;
+    AuthorityProxyModel *m_authorityProxyModel;
 
     QShortcut *openShortcut;
     QShortcut *refreshShortcut;
@@ -42,13 +38,12 @@ private:
     QShortcut *editShortcut;
     QShortcut *removeShortcut;
 
+    QModelIndex rootItem;
+
     void initialize() override;
 
     void contextMenu();
     void setupShortcuts();
-    void tabSwitch(int index);
-    void loadCollection();
-    void initializeRecord();
 
 private slots:
     void clicked(const QModelIndex &index);

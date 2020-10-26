@@ -22,13 +22,18 @@ SOURCES += \
     connection.cpp \
     dialogs/authoritydetaildialog.cpp \
     dialogs/connectiondialog.cpp \
+    dialogs/recorddialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    models/authorityproxymodel.cpp \
     models/authoritytreemodel.cpp \
     models/recordproxymodel.cpp \
     models/recordtreemodel.cpp \
+    utils/stringsort.cpp \
     views/authorityview.cpp \
+    views/collectionview.cpp \
     views/decisionview.cpp \
+    views/navigatorview.cpp \
     views/view.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
@@ -38,12 +43,17 @@ HEADERS += \
     connection.h \
     dialogs/authoritydetaildialog.h \
     dialogs/connectiondialog.h \
+    dialogs/recorddialog.h \
     mainwindow.h \
+    models/authorityproxymodel.h \
     models/authoritytreemodel.h \
     models/recordproxymodel.h \
     models/recordtreemodel.h \
+    utils/stringsort.h \
     views/authorityview.h \
+    views/collectionview.h \
     views/decisionview.h \
+    views/navigatorview.h \
     views/view.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h
@@ -51,9 +61,12 @@ HEADERS += \
 FORMS += \
     dialogs/authoritydetaildialog.ui \
     dialogs/connectiondialog.ui \
+    dialogs/recorddialog.ui \
     mainwindow.ui \
     views/authorityview.ui \
+    views/collectionview.ui \
     views/decisionview.ui \
+    views/navigatorview.ui \
     widgets/searchpanel.ui \
     widgets/statusbarpanel.ui
 

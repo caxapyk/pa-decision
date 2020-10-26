@@ -10,6 +10,8 @@ AuthorityTreeModel::AuthorityTreeModel()
 {
     m_rootNode = new AT_Node;
     m_nodeList = new AT_NodeList;
+
+    setHeaderData(0, Qt::Horizontal, tr("Public Authorities"));
 }
 
 AuthorityTreeModel::~AuthorityTreeModel()
@@ -59,7 +61,7 @@ void AuthorityTreeModel::select()
 
 void AuthorityTreeModel::setupModelData()
 {
-    QSqlQuery query("SELECT id, name FROM pad_authority ORDER BY name");
+    QSqlQuery query("SELECT id, name FROM pad_authority ORDER BY name ASC");
 
     while (query.next()) {
         AT_Node *node = new AT_Node;
@@ -126,6 +128,21 @@ bool AuthorityTreeModel::insertRows(int row, int count, const QModelIndex &paren
     qDebug() << query.lastError().text();
 
     return false;
+}
+
+QVariant AuthorityTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if ((section < 0)
+            || ((orientation == Qt::Horizontal) && (section >= columnCount()))
+            || ((orientation == Qt::Vertical) && (section >= rowCount()))) {
+        return QVariant();
+    }
+
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        return columnHeaders.value(section);
+     }
+
+    return QVariant();
 }
 
 QModelIndex AuthorityTreeModel::parent(const QModelIndex &index) const
@@ -256,4 +273,21 @@ bool AuthorityTreeModel::setData(const QModelIndex &index, const QVariant &value
     }
 
     return false;
+}
+
+bool AuthorityTreeModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int)
+{
+    if ((section < 0)
+            || ((orientation == Qt::Horizontal) && (section >= columnCount()))
+            || ((orientation == Qt::Vertical) && (section >= rowCount()))) {
+            return false;
+    }
+
+    if (orientation == Qt::Horizontal) {
+        columnHeaders.insert(section, value);
+        emit headerDataChanged(orientation, section, section);
+        return true;
+     }
+
+     return false;
 }

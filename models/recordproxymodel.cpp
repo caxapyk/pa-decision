@@ -1,4 +1,5 @@
 #include "recordproxymodel.h"
+#include "utils/stringsort.h"
 
 RecordProxyModel::RecordProxyModel()
 {
@@ -10,20 +11,5 @@ bool RecordProxyModel::lessThan(const QModelIndex &source_left, const QModelInde
     QString left = source_left.data().toString();
     QString right = source_right.data().toString();
 
-    // is alphabetical
-    bool l_alpha = left.contains(QRegExp("\\D+"));
-    bool r_alpha = right.contains(QRegExp("\\D+"));
-
-    if ((l_alpha && r_alpha) || (!l_alpha && !r_alpha)) {
-        left.remove(QRegExp("\\D+"));
-        right.remove(QRegExp("\\D+"));
-
-        return left.toInt() > right.toInt();
-    } else if (l_alpha && !r_alpha) {
-        return true;
-    } else if (!l_alpha && r_alpha) {
-        return false;
-    }
-
-    return false;
+     return StringSort::lessThen(left, right);
 }

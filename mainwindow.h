@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "views/authorityview.h"
+#include "views/navigatorview.h"
 #include "views/decisionview.h"
 #include "widgets/statusbarpanel.h"
 #include "widgets/searchpanel.h"
@@ -24,7 +24,7 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    AuthorityView *m_authorityView;
+    NavigatorView *m_navigatorView;
     DecisionView *m_decisionView;
 
     StatusBarPanel *m_statusBarPanel;
@@ -52,6 +52,7 @@ private:
 
 private slots:
     void openConnection();
+    void openRecords();
 
 protected:
     void closeEvent(QCloseEvent *event) override;

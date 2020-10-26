@@ -3,6 +3,7 @@
 
 #include "application.h"
 #include "dialogs/connectiondialog.h"
+#include "dialogs/recorddialog.h"
 
 #include <QDebug>
 
@@ -22,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete m_authorityView;
+    delete m_navigatorView;
     delete m_decisionView;
     delete m_statusBarPanel;
     delete m_searchPanel;
@@ -44,7 +45,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
-    m_authorityView = new AuthorityView(ui->splitter_layout);
+    m_navigatorView = new NavigatorView(ui->splitter_layout);
     m_decisionView = new DecisionView(ui->splitter_layout);
 
     ui->splitter_layout->setCollapsible(0, false);
@@ -58,6 +59,8 @@ void MainWindow::initialize()
 void MainWindow::restoreAppState()
 {
     QSettings* settings = application->applicationSettings();
+
+    m_navigatorView->restoreViewState();
 
     //restore main window geometry and states
     restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
@@ -93,7 +96,11 @@ void MainWindow::setupToolBar()
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
+
     action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
+    connect(action_record, &QAction::triggered, this, &MainWindow::openRecords);
+
+
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
 
@@ -123,6 +130,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     QSettings* settings = application->applicationSettings();
 
+    m_navigatorView->saveViewState();
+
     settings->beginGroup("MainWindow");
     settings->setValue("geometry", saveGeometry());
     settings->setValue("windowState", saveState());
@@ -139,5 +148,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::openConnection()
 {
     ConnectionDialog dialog;
+    dialog.exec();
+}
+
+void MainWindow::openRecords()
+{
+    RecordDialog dialog;
     dialog.exec();
 }

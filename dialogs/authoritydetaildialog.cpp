@@ -1,6 +1,7 @@
 #include "authoritydetaildialog.h"
 #include "ui_authoritydetaildialog.h"
 
+#include <QDebug>
 #include <QMessageBox>
 #include <QPushButton>
 
@@ -10,7 +11,7 @@ AuthorityDetailDialog::AuthorityDetailDialog(QVariant id, QWidget *parent) :
 {
     ui->setupUi(this);
     m_model = new QSqlTableModel;
-    m_model->setTable("authority");
+    m_model->setTable("pad_authority");
     m_model->setFilter("id=" + id.toString());
     m_model->select();
 
