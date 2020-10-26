@@ -57,18 +57,17 @@ void AuthorityView::initialize()
     ui->tV_authority->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->tV_authority->expandAll();
 
-    ui->tV_authority->setCurrentIndex(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+    setupShortcuts();
+    changeCurrent(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
 
     connect(ui->tV_authority, &QMenu::customContextMenuRequested, this, &AuthorityView::contextMenu);
-    connect(ui->tV_authority, &QTreeView::clicked, this, &AuthorityView::clicked);
-
-    setupShortcuts();
+    connect(ui->tV_authority, &QTreeView::clicked, this, &AuthorityView::changeCurrent);
 }
 
 void AuthorityView::contextMenu()
 {
     QModelIndex currentIndex = ui->tV_authority->indexAt(ui->tV_authority->viewport()->mapFromGlobal(QCursor().pos()));
-    clicked(currentIndex);
+    changeCurrent(currentIndex);
 
     QMenu menu;
 
@@ -132,13 +131,15 @@ void AuthorityView::setupShortcuts()
     connect(removeShortcut, &QShortcut::activated, this, &AuthorityView::remove);
 }
 
-void AuthorityView::clicked(const QModelIndex &index)
+void AuthorityView::changeCurrent(const QModelIndex &index)
 {
-    openShortcut->setEnabled((index.isValid() && (index != m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()) || (index == m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()) && !ui->tV_authority->isExpanded(index)))));
-    refreshShortcut->setEnabled(index.parent() != m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
-    insertShortcut->setEnabled(index.isValid() && index == m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
-    editShortcut->setEnabled(index.isValid() && index !=m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
-    removeShortcut->setEnabled(index.isValid() && index != m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
+
+    openShortcut->setEnabled((index.isValid() && (index != root || (index == root && !ui->tV_authority->isExpanded(index)))));
+    refreshShortcut->setEnabled(index.parent() != root);
+    insertShortcut->setEnabled(index.isValid() && index == root);
+    editShortcut->setEnabled(index.isValid() && index !=root);
+    removeShortcut->setEnabled(index.isValid() && index != root);
 
     ui->tV_authority->setCurrentIndex(index);
 }
@@ -169,22 +170,18 @@ void AuthorityView::insert()
         ui->tV_authority->expand(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
     }
 
-    bool insert = false;
+    int v = 0;
 
-    if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder) {
-        insert = m_authorityProxyModel->insertRows(
-                    m_authorityProxyModel->rowCount(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem())) - 1, 1, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
-    } else {
-        insert = m_authorityProxyModel->insertRows(0, 1, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
-    }
+    if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder && m_authorityProxyModel->rowCount(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem())) > 0)
+        v = m_authorityProxyModel->rowCount(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem())) - 1;
+
+    bool insert = m_authorityProxyModel->insertRows(v, 1, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
 
     if(insert) {
-        QModelIndex currentIndex;
-        if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder) {
-            currentIndex = m_authorityProxyModel->index(m_authorityProxyModel->rowCount(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem())) - 1, 0, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
-        } else {
-           currentIndex = m_authorityProxyModel->index(0, 0, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
-        }
+        if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder)
+            v += 1;
+
+        QModelIndex currentIndex = m_authorityProxyModel->index(v, 0, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
 
         ui->tV_authority->setCurrentIndex(currentIndex);
         ui->tV_authority->edit(currentIndex);

@@ -46,7 +46,7 @@ private:
     void setupShortcuts();
 
 private slots:
-    void clicked(const QModelIndex &index);
+    void changeCurrent(const QModelIndex &index);
     void open();
     void refresh();
     void insert();
