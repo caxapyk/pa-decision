@@ -41,12 +41,11 @@ private:
     QModelIndex rootItem;
 
     void initialize() override;
-
-    void contextMenu();
     void setupShortcuts();
 
 private slots:
     void changeCurrent(const QModelIndex &current, const QModelIndex &previous);
+    void contextMenu(const QPoint &pos);
     void open();
     void refresh();
     void insert();

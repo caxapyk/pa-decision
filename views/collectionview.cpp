@@ -4,6 +4,7 @@
 #include "application.h"
 
 #include <QDebug>
+#include <QMenu>
 
 CollectionView::CollectionView(QWidget *parent) :
     View(parent),
@@ -11,7 +12,7 @@ CollectionView::CollectionView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    switchModel();
+    initialize();
 }
 
 CollectionView::~CollectionView()
@@ -19,6 +20,7 @@ CollectionView::~CollectionView()
     delete ui;
     delete m_recordModel;
     delete m_recordProxyModel;
+    //delete m_refreshShortcut;
 }
 
 void CollectionView::restoreViewState()
@@ -36,26 +38,60 @@ void CollectionView::saveViewState()
     settings->endGroup();
 }
 
-
-void CollectionView::switchModel()
+void CollectionView::initialize()
 {
-    switch(ui->cB_collection->currentIndex()){
+    ui->tV_collection->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tV_collection, &QMenu::customContextMenuRequested, this, &CollectionView::contextMenu);
+
+    m_refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_collection, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(m_refreshShortcut, &QShortcut::activated, this, [=] {
+        switchModel(ui->cB_collection->currentIndex());
+    });
+
+    connect(ui->cB_collection, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CollectionView::switchModel);
+
+    switchModel(0);
+}
+
+void CollectionView::contextMenu(const QPoint &)
+{
+    QMenu menu;
+
+    QAction refreshAction(QIcon(":/icons/icons/refresh-16.png"), tr("Refresh"));
+    refreshAction.setShortcut(m_refreshShortcut->key());
+    connect(&refreshAction, &QAction::triggered, this, [=] {
+        switchModel(ui->cB_collection->currentIndex());
+    });
+
+    menu.addAction(&refreshAction);
+
+    menu.exec(QCursor().pos());
+}
+
+void CollectionView::switchModel(int index)
+{
+    switch(index){
     case CollectionView::CollectionRecord:
-        if(m_recordModel == nullptr) {
-            m_recordModel = new RecordTreeModel;
-            m_recordModel->select();
-
-            m_recordProxyModel = new RecordProxyModel;
-            m_recordProxyModel->setSourceModel(m_recordModel);
-
-            ui->tV_collection->setModel(m_recordProxyModel);
-        } else {
-            ui->tV_collection->setModel(m_recordProxyModel);
-        }
+        setRecordCollection();
         break;
     case CollectionView::CollectionYear:
         break;
     case CollectionView::CollectionMember:
         break;
     }
+}
+
+void CollectionView::setRecordCollection()
+{
+    if(m_recordModel == nullptr) {
+        m_recordModel = new RecordTreeModel;
+
+        m_recordProxyModel = new RecordProxyModel;
+        m_recordProxyModel->setSourceModel(m_recordModel);
+    }
+
+    m_recordProxyModel->invalidate();
+    m_recordModel->select();
+
+    ui->tV_collection->setModel(m_recordProxyModel);
 }

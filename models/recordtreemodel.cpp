@@ -44,8 +44,12 @@ void RecordTreeModel::recursivelyRemoveNodes(RecordNode *node)
 
 void RecordTreeModel::select()
 {
+    beginResetModel();
+
     clear();
     setupModelData();
+
+    endResetModel();
 }
 
 void RecordTreeModel::setupModelData(const QModelIndex &index)
@@ -88,7 +92,6 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
         }
     } else {
         qDebug() << query.lastError().text();
-        return;
     }
 }
 
@@ -163,7 +166,7 @@ QVariant RecordTreeModel::headerData(int section, Qt::Orientation orientation, i
 QModelIndex RecordTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent)) {
-    return QModelIndex();
+        return QModelIndex();
     }
 
     if (!parent.isValid()) {
@@ -214,7 +217,6 @@ QVariant RecordTreeModel::data(const QModelIndex &index, int role) const
     switch (role) {
         case Qt::DisplayRole:
         {
-
             QString prefix;
 
             switch (currentNode->level) {

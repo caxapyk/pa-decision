@@ -5,6 +5,7 @@
 #include "models/recordproxymodel.h"
 
 #include <QDialog>
+#include <QShortcut>
 
 namespace Ui {
 class RecordDialog;
@@ -23,6 +24,16 @@ private:
 
     RecordTreeModel *m_model;
     RecordProxyModel *m_proxy;
+
+    QShortcut *m_refreshShortcut;
+
+private slots:
+    void contextMenu(const QPoint &pos);
+    void edit();
+    void insert();
+    void refresh();
+    void remove();
+    void title();
 };
 
 #endif // RECORDDIALOG_H

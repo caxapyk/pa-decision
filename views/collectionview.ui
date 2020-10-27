@@ -55,25 +55,18 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::HLine</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Sunken</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QComboBox" name="cB_collection">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>30</height>
+      </size>
+     </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0px;</string>
+      <string notr="true">border:0px;background-color:#333;color:#fff;</string>
      </property>
      <property name="frame">
       <bool>false</bool>

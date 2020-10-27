@@ -17,6 +17,7 @@ public:
 
     AuthorityTreeModel();
     ~AuthorityTreeModel();
+
     void clear();
     int itemMaxNum(int column, const QRegExp &rule) const;
     void select();

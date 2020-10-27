@@ -70,7 +70,36 @@ void AuthorityView::initialize()
     ui->tV_authority->setCurrentIndex(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
 }
 
-void AuthorityView::contextMenu()
+void AuthorityView::setupShortcuts()
+{
+    openShortcut = new QShortcut(QKeySequence::Open, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(openShortcut, &QShortcut::activated, this, &AuthorityView::open);
+
+    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(refreshShortcut, &QShortcut::activated, this, &AuthorityView::refresh);
+
+    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(insertShortcut, &QShortcut::activated, this, &AuthorityView::insert);
+
+    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(editShortcut, &QShortcut::activated, this, &AuthorityView::edit);
+
+    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(removeShortcut, &QShortcut::activated, this, &AuthorityView::remove);
+}
+
+void AuthorityView::changeCurrent(const QModelIndex &current, const QModelIndex &)
+{
+    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
+
+    openShortcut->setEnabled((current.isValid() && (current != root || (current == root && !ui->tV_authority->isExpanded(current)))));
+    refreshShortcut->setEnabled(true);
+    insertShortcut->setEnabled(current.isValid() && current == root);
+    editShortcut->setEnabled(current.isValid() && current !=root);
+    removeShortcut->setEnabled(current.isValid() && current != root);
+}
+
+void AuthorityView::contextMenu(const QPoint &)
 {
     QModelIndex currentIndex = ui->tV_authority->indexAt(ui->tV_authority->viewport()->mapFromGlobal(QCursor().pos()));
     ui->tV_authority->setCurrentIndex(currentIndex);
@@ -119,35 +148,6 @@ void AuthorityView::contextMenu()
     menu.exec(QCursor().pos());
 }
 
-void AuthorityView::setupShortcuts()
-{
-    openShortcut = new QShortcut(QKeySequence::Open, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(openShortcut, &QShortcut::activated, this, &AuthorityView::open);
-
-    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(refreshShortcut, &QShortcut::activated, this, &AuthorityView::refresh);
-
-    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(insertShortcut, &QShortcut::activated, this, &AuthorityView::insert);
-
-    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(editShortcut, &QShortcut::activated, this, &AuthorityView::edit);
-
-    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(removeShortcut, &QShortcut::activated, this, &AuthorityView::remove);
-}
-
-void AuthorityView::changeCurrent(const QModelIndex &current, const QModelIndex &)
-{
-    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
-
-    openShortcut->setEnabled((current.isValid() && (current != root || (current == root && !ui->tV_authority->isExpanded(current)))));
-    refreshShortcut->setEnabled(true);
-    insertShortcut->setEnabled(current.isValid() && current == root);
-    editShortcut->setEnabled(current.isValid() && current !=root);
-    removeShortcut->setEnabled(current.isValid() && current != root);
-}
-
 void AuthorityView::open()
 {
     QModelIndex index = ui->tV_authority->currentIndex();
@@ -162,10 +162,10 @@ void AuthorityView::open()
 
 void AuthorityView::refresh()
 {
-    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
-
     m_authorityProxyModel->invalidate();
     m_authorityModel->select();
+
+    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
 
     ui->tV_authority->expandAll();
     ui->tV_authority->setCurrentIndex(root);

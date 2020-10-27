@@ -68,22 +68,9 @@
        </widget>
       </item>
       <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pB_setName">
+       <widget class="QPushButton" name="pB_title">
         <property name="text">
-         <string>Set name</string>
+         <string>Title</string>
         </property>
        </widget>
       </item>
@@ -100,7 +87,7 @@
         </property>
        </spacer>
       </item>
-      <item>
+      <item alignment="Qt::AlignBottom">
        <widget class="QDialogButtonBox" name="buttonBox">
         <property name="orientation">
          <enum>Qt::Vertical</enum>

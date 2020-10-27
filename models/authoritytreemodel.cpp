@@ -55,8 +55,12 @@ int AuthorityTreeModel::itemMaxNum(int column, const QRegExp &rule) const
 
 void AuthorityTreeModel::select()
 {
+    beginResetModel();
+
     clear();
     setupModelData();
+
+    endResetModel();
 }
 
 void AuthorityTreeModel::setupModelData()
