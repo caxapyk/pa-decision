@@ -39,6 +39,7 @@ void RecordTreeModel::recursivelyRemoveNodes(RecordNode *node)
         recursivelyRemoveNodes(node->children.at(i));
     }
 
+    delete node->number;
     delete node;
 }
 
@@ -56,8 +57,6 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
 {
     RecordNode *parentNode = (index.isValid()) ? static_cast<RecordNode*>(index.internalPointer()) : rootNode;
     int level = (index.isValid()) ? parentNode->level + 1 : RecordTreeModel::FundLevel;
-
-    qDebug() << level;
 
     QSqlQuery query;
 
@@ -82,7 +81,7 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
             RecordNode *node = new RecordNode();
 
             node->id = query.record().value(0);
-            node->number = query.record().value(1);
+            node->number = new QVariant(query.record().value(1));
 
             node->level = level;
             node->row = query.at();
@@ -95,6 +94,15 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
     } else {
         qDebug() << query.lastError().text();
     }
+}
+
+Qt::ItemFlags RecordTreeModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return QAbstractItemModel::flags(index);
+    }
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
 }
 
 bool RecordTreeModel::hasChildren(const QModelIndex &parent) const
@@ -233,11 +241,11 @@ QVariant RecordTreeModel::data(const QModelIndex &index, int role) const
                 break;
             }
 
-            return QVariant(prefix + currentNode->number.toString());
+            return QVariant(prefix + currentNode->number->toString());
             break;
         }
         case Qt::EditRole:
-            return currentNode->number.toString();
+            return currentNode->number->toString();
             break;
         case Qt::DecorationRole:
             switch (currentNode->level) {
@@ -258,6 +266,44 @@ QVariant RecordTreeModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+bool RecordTreeModel::setData(const QModelIndex &index, const QVariant &value, int role){
+    switch (role) {
+        case Qt::EditRole:
+            RecordNode* currentNode = static_cast<RecordNode*>(index.internalPointer());
+            if(value.toString().size() > 0 && value != *currentNode->number) {
+                QSqlQuery query;
+
+                switch (currentNode->level) {
+                case RecordTreeModel::FundLevel:
+                    query.prepare("UPDATE pad_fund SET number=? WHERE id=?");
+                    break;
+                case RecordTreeModel::InventoryLevel:
+                    query.prepare("UPDATE pad_inventory SET number=? WHERE id=?");
+                    break;
+                case RecordTreeModel::RecordLevel:
+                    query.prepare("UPDATE pad_record SET number=? WHERE id=?");
+                    break;
+                }
+
+                query.bindValue(0, value);
+                query.bindValue(1, currentNode->id);
+                query.exec();
+
+                if(query.isActive()) {
+                    currentNode->number = new QVariant(value);
+                    emit dataChanged(index, index);
+
+                    return true;
+                }
+
+                qDebug() << query.lastError().text();
+            }
+        break;
+    }
+
+    return false;
 }
 
 bool RecordTreeModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int)

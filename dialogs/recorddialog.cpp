@@ -91,7 +91,6 @@ void RecordDialog::contextMenu(const QPoint &)
 
     menu.addSeparator();
 
-
     QAction refreshAction(QIcon(":/icons/icons/refresh-16.png"), tr("Refresh"));
     refreshAction.setShortcut(refreshShortcut->key());
     connect(&refreshAction, &QAction::triggered, this, &RecordDialog::refresh);
@@ -101,14 +100,16 @@ void RecordDialog::contextMenu(const QPoint &)
     menu.exec(QCursor().pos());
 }
 
-void RecordDialog::edit()
+void RecordDialog::insert()
 {
 
 }
 
-void RecordDialog::insert()
+void RecordDialog::edit()
 {
+    QModelIndex index = ui->tV_record->currentIndex();
 
+    ui->tV_record->edit(index);
 }
 
 void RecordDialog::refresh()

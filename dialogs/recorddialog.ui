@@ -20,6 +20,9 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QTreeView" name="tV_record">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditKeyPressed</set>
+     </property>
      <property name="sortingEnabled">
       <bool>true</bool>
      </property>

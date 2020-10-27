@@ -46,12 +46,12 @@ private:
 private slots:
     void changeCurrent(const QModelIndex &current, const QModelIndex &previous);
     void contextMenu(const QPoint &pos);
+    void edit();
+    void info();
+    void insert();
     void open();
     void refresh();
-    void insert();
-    void edit();
     void remove();
-    void info();
 };
 
 #endif // AUTHORITYVIEW_H
