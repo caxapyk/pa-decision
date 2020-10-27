@@ -36,10 +36,10 @@ MainWindow::~MainWindow()
     delete action_refresh;
     delete action_tree;
 
-    delete m_editShortcut;
-    delete m_newShortcut;
-    delete m_refreshShortcut;
-    delete m_removeShortcut;
+    //delete m_editShortcut;
+    //delete m_newShortcut;
+    //delete m_refreshShortcut;
+    //delete m_removeShortcut;
     delete m_searchShortcut;
 }
 
@@ -71,10 +71,10 @@ void MainWindow::restoreAppState()
 
 void MainWindow::setupShortcuts()
 {
-    m_editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this);
-    m_newShortcut = new QShortcut(QKeySequence::New, this);
-    m_refreshShortcut = new QShortcut(QKeySequence::Refresh, this);
-    m_removeShortcut = new QShortcut(QKeySequence::Delete, this);
+    //m_editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this);
+    //m_newShortcut = new QShortcut(QKeySequence::New, this);
+    //m_refreshShortcut = new QShortcut(QKeySequence::Refresh, this);
+    //m_removeShortcut = new QShortcut(QKeySequence::Delete, this);
 
     m_searchShortcut = new QShortcut(QKeySequence::Find, this);
     connect(m_searchShortcut, &QShortcut::activated, this, [=] {

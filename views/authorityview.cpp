@@ -5,6 +5,7 @@
 #include "dialogs/authoritydetaildialog.h"
 
 #include <QDebug>
+#include <QItemSelectionModel>
 #include <QMenu>
 #include <QMessageBox>
 
@@ -58,16 +59,21 @@ void AuthorityView::initialize()
     ui->tV_authority->expandAll();
 
     setupShortcuts();
-    changeCurrent(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
 
     connect(ui->tV_authority, &QMenu::customContextMenuRequested, this, &AuthorityView::contextMenu);
-    connect(ui->tV_authority, &QTreeView::clicked, this, &AuthorityView::changeCurrent);
+    connect(ui->tV_authority->selectionModel(), &QItemSelectionModel::currentChanged, this, &AuthorityView::changeCurrent);
+    // change current to root on collapse tree
+    connect(ui->tV_authority, &QTreeView::collapsed, this, [=](const QModelIndex &index){
+        changeCurrent(index, QModelIndex());
+    });
+
+    ui->tV_authority->setCurrentIndex(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
 }
 
 void AuthorityView::contextMenu()
 {
     QModelIndex currentIndex = ui->tV_authority->indexAt(ui->tV_authority->viewport()->mapFromGlobal(QCursor().pos()));
-    changeCurrent(currentIndex);
+    ui->tV_authority->setCurrentIndex(currentIndex);
 
     QMenu menu;
 
@@ -131,25 +137,24 @@ void AuthorityView::setupShortcuts()
     connect(removeShortcut, &QShortcut::activated, this, &AuthorityView::remove);
 }
 
-void AuthorityView::changeCurrent(const QModelIndex &index)
+void AuthorityView::changeCurrent(const QModelIndex &current, const QModelIndex &)
 {
     QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
 
-    openShortcut->setEnabled((index.isValid() && (index != root || (index == root && !ui->tV_authority->isExpanded(index)))));
-    refreshShortcut->setEnabled(index.parent() != root);
-    insertShortcut->setEnabled(index.isValid() && index == root);
-    editShortcut->setEnabled(index.isValid() && index !=root);
-    removeShortcut->setEnabled(index.isValid() && index != root);
-
-    ui->tV_authority->setCurrentIndex(index);
+    openShortcut->setEnabled((current.isValid() && (current != root || (current == root && !ui->tV_authority->isExpanded(current)))));
+    refreshShortcut->setEnabled(true);
+    insertShortcut->setEnabled(current.isValid() && current == root);
+    editShortcut->setEnabled(current.isValid() && current !=root);
+    removeShortcut->setEnabled(current.isValid() && current != root);
 }
 
 void AuthorityView::open()
 {
     QModelIndex index = ui->tV_authority->currentIndex();
+    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
 
-    if(index == m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem())) {
-        ui->tV_authority->expand(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+    if(index == root) {
+        ui->tV_authority->expand(root);
     } else {
         // load data
     }
@@ -157,31 +162,35 @@ void AuthorityView::open()
 
 void AuthorityView::refresh()
 {
+    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
+
     m_authorityProxyModel->invalidate();
     m_authorityModel->select();
 
     ui->tV_authority->expandAll();
-    ui->tV_authority->setCurrentIndex(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+    ui->tV_authority->setCurrentIndex(root);
 }
 
 void AuthorityView::insert()
 {
-    if(!ui->tV_authority->isExpanded(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()))) {
-        ui->tV_authority->expand(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
+
+    if(!ui->tV_authority->isExpanded(root)) {
+        ui->tV_authority->expand(root);
     }
 
     int v = 0;
 
-    if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder && m_authorityProxyModel->rowCount(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem())) > 0)
-        v = m_authorityProxyModel->rowCount(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem())) - 1;
+    if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder && m_authorityProxyModel->rowCount(root) > 0)
+        v = m_authorityProxyModel->rowCount(root) - 1;
 
-    bool insert = m_authorityProxyModel->insertRows(v, 1, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+    bool insert = m_authorityProxyModel->insertRows(v, 1, root);
 
     if(insert) {
         if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder)
             v += 1;
 
-        QModelIndex currentIndex = m_authorityProxyModel->index(v, 0, m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+        QModelIndex currentIndex = m_authorityProxyModel->index(v, 0, root);
 
         ui->tV_authority->setCurrentIndex(currentIndex);
         ui->tV_authority->edit(currentIndex);
@@ -203,6 +212,7 @@ void AuthorityView::edit()
 void AuthorityView::remove()
 {
     QModelIndex index = ui->tV_authority->currentIndex();
+    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
 
     int res = QMessageBox::critical(this,
         tr("Deleting item"),
@@ -210,7 +220,7 @@ void AuthorityView::remove()
         QMessageBox::No | QMessageBox::Yes);
 
     if (res == QMessageBox::Yes) {
-        bool remove = m_authorityProxyModel->removeRow(index.row(), m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+        bool remove = m_authorityProxyModel->removeRow(index.row(), root);
         if (remove) {
             QMessageBox::information(this,
                     tr("Deleting item"),
