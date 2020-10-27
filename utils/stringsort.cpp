@@ -15,7 +15,7 @@ bool StringSort::lessThen(QString left, QString right)
         left.remove(QRegExp("\\D+"));
         right.remove(QRegExp("\\D+"));
 
-        return left.toInt() < right.toInt();
+        return left.toInt() > right.toInt();
     } else if (l_alpha && !r_alpha) {
         return true;
     } else if (!l_alpha && r_alpha) {

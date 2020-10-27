@@ -3,6 +3,8 @@
 
 #include "application.h"
 
+#include <QDebug>
+
 CollectionView::CollectionView(QWidget *parent) :
     View(parent),
     ui(new Ui::CollectionView)

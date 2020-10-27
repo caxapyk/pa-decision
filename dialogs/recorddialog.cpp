@@ -12,7 +12,6 @@ RecordDialog::RecordDialog(QWidget *parent) :
 
     m_proxy = new RecordProxyModel;
     m_proxy->setSourceModel(m_model);
-    m_proxy->setSortRole(Qt::AscendingOrder);
 
     ui->tV_record->setModel(m_proxy);
 }
