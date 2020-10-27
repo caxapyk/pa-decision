@@ -4,6 +4,7 @@
 #include "application.h"
 
 #include <QDebug>
+#include <QKeyEvent>
 #include <QMenu>
 
 CollectionView::CollectionView(QWidget *parent) :
@@ -20,7 +21,7 @@ CollectionView::~CollectionView()
     delete ui;
     delete m_recordModel;
     delete m_recordProxyModel;
-    //delete m_refreshShortcut;
+    delete m_refreshShortcut;
 }
 
 void CollectionView::restoreViewState()

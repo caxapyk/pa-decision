@@ -57,6 +57,8 @@ void RecordTreeModel::setupModelData(const QModelIndex &index)
     RecordNode *parentNode = (index.isValid()) ? static_cast<RecordNode*>(index.internalPointer()) : rootNode;
     int level = (index.isValid()) ? parentNode->level + 1 : RecordTreeModel::FundLevel;
 
+    qDebug() << level;
+
     QSqlQuery query;
 
     switch (level) {

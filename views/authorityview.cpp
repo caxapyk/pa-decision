@@ -181,13 +181,13 @@ void AuthorityView::insert()
 
     int v = 0;
 
-    if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder && m_authorityProxyModel->rowCount(root) > 0)
+    if(m_authorityProxyModel->sortOrder() == Qt::DescendingOrder && m_authorityProxyModel->rowCount(root) > 0)
         v = m_authorityProxyModel->rowCount(root) - 1;
 
     bool insert = m_authorityProxyModel->insertRows(v, 1, root);
 
     if(insert) {
-        if(m_authorityProxyModel->sortOrder() == Qt::AscendingOrder)
+        if(m_authorityProxyModel->sortOrder() == Qt::DescendingOrder)
             v += 1;
 
         QModelIndex currentIndex = m_authorityProxyModel->index(v, 0, root);

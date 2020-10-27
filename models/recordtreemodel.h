@@ -22,7 +22,7 @@ public:
         bool mapped;
     };
 
-    enum {FundLevel, InventoryLevel, RecordLevel};
+    enum Levels {FundLevel, InventoryLevel, RecordLevel};
 
     void clear();
     void select();

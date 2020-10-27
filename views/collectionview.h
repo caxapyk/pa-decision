@@ -39,6 +39,7 @@ private:
 private slots:
     void contextMenu(const QPoint &pos);
     void switchModel(int index);
+
 };
 
 #endif // RECORDVIEW_H

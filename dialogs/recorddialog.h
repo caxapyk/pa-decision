@@ -23,11 +23,17 @@ private:
     Ui::RecordDialog *ui;
 
     RecordTreeModel *m_model;
-    RecordProxyModel *m_proxy;
+    RecordProxyModel *m_proxyModel;
 
-    QShortcut *m_refreshShortcut;
+    QShortcut *insertShortcut;
+    QShortcut *editShortcut;
+    QShortcut *removeShortcut;
+    QShortcut *refreshShortcut;
+
+    void setupShortcuts();
 
 private slots:
+    void changeCurrent(const QModelIndex &current, const QModelIndex &);
     void contextMenu(const QPoint &pos);
     void edit();
     void insert();
