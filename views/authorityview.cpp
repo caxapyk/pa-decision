@@ -173,26 +173,24 @@ void AuthorityView::refresh()
 
 void AuthorityView::insert()
 {
-    QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
+    QModelIndex sourceRoot = m_authorityModel->rootItem();
+    QModelIndex proxyRoot = m_authorityProxyModel->mapFromSource(sourceRoot);
 
-    if(!ui->tV_authority->isExpanded(root)) {
-        ui->tV_authority->expand(root);
+
+    if(!ui->tV_authority->isExpanded(proxyRoot)) {
+        ui->tV_authority->expand(proxyRoot);
     }
 
-    int v = 0;
+    int v = m_authorityProxyModel->sourceModel()->rowCount(sourceRoot) - 1;
 
-    if(m_authorityProxyModel->sortOrder() == Qt::DescendingOrder && m_authorityProxyModel->rowCount(root) > 0)
-        v = m_authorityProxyModel->rowCount(root) - 1;
-
-    bool insert = m_authorityProxyModel->insertRow(v, root);
+    bool insert = m_authorityProxyModel->sourceModel()->insertRow(v, sourceRoot);
 
     if(insert) {
-        if(m_authorityProxyModel->sortOrder() == Qt::DescendingOrder)
-            v += 1;
-
-        QModelIndex currentIndex = m_authorityProxyModel->index(v, 0, root);
+        v += 1;
+        QModelIndex currentIndex = m_authorityProxyModel->mapFromSource(m_authorityProxyModel->sourceModel()->index(v, 0, sourceRoot));
 
         ui->tV_authority->setCurrentIndex(currentIndex);
+        ui->tV_authority->scrollTo(currentIndex);
         ui->tV_authority->edit(currentIndex);
     } else {
         QMessageBox::warning(this,

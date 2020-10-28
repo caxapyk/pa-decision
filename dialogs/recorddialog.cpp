@@ -140,24 +140,23 @@ void RecordDialog::contextMenu(const QPoint &)
 
 void RecordDialog::insert()
 {
-    QModelIndex parent = ui->tV_record->currentIndex();
+    QModelIndex proxyParent = ui->tV_record->currentIndex();
+    QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
 
-    if(!ui->tV_record->isExpanded(parent)) {
-        ui->tV_record->expand(parent);
+    if(!ui->tV_record->isExpanded(proxyParent)) {
+        ui->tV_record->expand(proxyParent);
     }
 
-    int v = 0;
+    int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
 
-    if(m_proxyModel->sortOrder() == Qt::AscendingOrder && m_proxyModel->rowCount(parent) > 0)
-        v = m_proxyModel->rowCount(parent);
-
-    bool insert = m_proxyModel->insertRow(v, parent);
+    bool insert = m_proxyModel->sourceModel()->insertRow(v, sourceParent);
 
     if(insert) {
-        QModelIndex index = m_proxyModel->index(v, 0, parent);
+        QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
 
-        ui->tV_record->setCurrentIndex(index);
-        ui->tV_record->edit(index);
+        ui->tV_record->setCurrentIndex(currentIndex);
+        ui->tV_record->scrollTo(currentIndex);
+        ui->tV_record->edit(currentIndex);
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
@@ -177,16 +176,32 @@ void RecordDialog::editComment()
 {
     QModelIndex index = ui->tV_record->currentIndex();
 
-    bool res;
-    QString text = QInputDialog::getText(
-                this, tr("Comment"), tr("Enter comment:"), QLineEdit::Normal, index.data(Qt::UserRole + 1).toString(), &res);
+    QInputDialog inputDialog;
+    inputDialog.setWindowTitle(tr("Comment"));
+    inputDialog.setLabelText(tr("Enter comment:"));
+    inputDialog.setTextValue(index.data(Qt::UserRole + 2).toString());
+    inputDialog.setTextEchoMode(QLineEdit::Normal);
 
-    if (res && !text.isEmpty()) {
+    inputDialog.setMinimumWidth(480);
+    inputDialog.resize(inputDialog.size());
+
+    bool res = inputDialog.exec();
+
+    if (res && !inputDialog.textValue().isEmpty()) {
         bool set;
-        set = m_model->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), text, Qt::UserRole + 1);
+        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), inputDialog.textValue(), Qt::UserRole + 1);
 
         if(set) {
             setInfoText();
+        } else {
+            bool tooLong = false;
+            if(inputDialog.textValue().length() >= 255) {
+                tooLong = true;
+            }
+            QMessageBox::warning(this,
+                    tr("Comment"),
+                    tr("Could not set the comment data.") + (tooLong ? tr(" Too long.") : ""),
+                    QMessageBox::Ok);
         }
     }
 }
@@ -195,16 +210,32 @@ void RecordDialog::editFundName()
 {
     QModelIndex index = ui->tV_record->currentIndex();
 
-    bool res;
-    QString text = QInputDialog::getText(
-                this, tr("Fund name"), tr("Enter fund name:"), QLineEdit::Normal, index.data(Qt::UserRole + 2).toString(), &res);
+    QInputDialog inputDialog;
+    inputDialog.setWindowTitle(tr("Fund name"));
+    inputDialog.setLabelText(tr("Enter fund name:"));
+    inputDialog.setTextValue(index.data(Qt::UserRole + 2).toString());
+    inputDialog.setTextEchoMode(QLineEdit::Normal);
 
-    if (res && !text.isEmpty()) {
+    inputDialog.setMinimumWidth(480);
+    inputDialog.resize(inputDialog.size());
+
+    bool res = inputDialog.exec();
+
+    if (res && !inputDialog.textValue().isEmpty()) {
         bool set;
-        set = m_model->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), text, Qt::UserRole + 2);
+        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), inputDialog.textValue(), Qt::UserRole + 2);
 
         if(set) {
             setInfoText();
+        } else {
+            bool tooLong = false;
+            if(inputDialog.textValue().length() >= 255) {
+                tooLong = true;
+            }
+            QMessageBox::warning(this,
+                    tr("Fund name"),
+                    tr("Could not set the fund name.") + (tooLong ? tr(" Too long.") : ""),
+                    QMessageBox::Ok);
         }
     }
 }
