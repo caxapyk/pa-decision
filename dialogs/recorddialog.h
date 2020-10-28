@@ -30,12 +30,15 @@ private:
     QShortcut *removeShortcut;
     QShortcut *refreshShortcut;
 
+    void setInfoText();
     void setupShortcuts();
 
 private slots:
     void changeCurrent(const QModelIndex &current, const QModelIndex &);
     void contextMenu(const QPoint &pos);
     void edit();
+    void editComment();
+    void editFundName();
     void insert();
     void refresh();
     void remove();

@@ -2,8 +2,10 @@
 #include "ui_recorddialog.h"
 
 #include <QDebug>
+#include <QInputDialog>
 #include <QItemSelection>
 #include <QMenu>
+#include <QMessageBox>
 
 RecordDialog::RecordDialog(QWidget *parent) :
     QDialog(parent),
@@ -24,6 +26,8 @@ RecordDialog::RecordDialog(QWidget *parent) :
 
     connect(ui->tV_record, &QMenu::customContextMenuRequested, this, &RecordDialog::contextMenu);
     connect(ui->tV_record->selectionModel(), &QItemSelectionModel::currentChanged, this, &RecordDialog::changeCurrent);
+    connect(ui->pB_title, &QPushButton::clicked, this, &RecordDialog::editFundName);
+    connect(ui->pB_comment, &QPushButton::clicked, this, &RecordDialog::editComment);
 }
 
 RecordDialog::~RecordDialog()
@@ -61,7 +65,26 @@ void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
 
-    ui->pB_title->setEnabled(current.isValid() && (node != nullptr && node->level == RecordTreeModel::RecordLevel));
+    ui->pB_title->setEnabled(current.isValid() && (node != nullptr && node->level == RecordTreeModel::FundLevel));
+    ui->pB_comment->setEnabled(current.isValid());
+
+    setInfoText();
+}
+
+void RecordDialog::setInfoText()
+{
+    QModelIndex currentIndex = ui->tV_record->currentIndex();
+
+    if(currentIndex.data(Qt::UserRole + 1).isNull() && currentIndex.data(Qt::UserRole + 2).isNull()) {
+        ui->label_info->setText(tr("No data"));
+    } else {
+        ui->label_info->setText(
+                    currentIndex.data(Qt::UserRole + 2).toString() +
+                    (currentIndex.data(Qt::UserRole + 2).isNull() ? "" : "<br/><br/>") +
+                    "<i style=color:grey>" +
+                    currentIndex.data(Qt::UserRole + 1).toString() +
+                    "</i>");
+    }
 }
 
 void RecordDialog::contextMenu(const QPoint &)
@@ -70,8 +93,23 @@ void RecordDialog::contextMenu(const QPoint &)
     ui->tV_record->setCurrentIndex(currentIndex);
 
     QMenu menu;
+    QString item;
 
-    QAction insertAction(QIcon(":/icons/icons/add-16.png"), tr("New"));
+    if(!currentIndex.isValid()) {
+        item = tr("fund");
+    } else {
+        RecordTreeModel::RecordNode *node = static_cast<RecordTreeModel::RecordNode*>(m_proxyModel->mapToSource(currentIndex).internalPointer());
+        switch (node->level) {
+        case RecordTreeModel::FundLevel:
+            item = tr("inventory");
+            break;
+        case RecordTreeModel::InventoryLevel:
+            item = tr("record");
+            break;
+        }
+    }
+
+    QAction insertAction(QIcon(":/icons/icons/add-16.png"), tr("New %1").arg(item));
     insertAction.setShortcut(insertShortcut->key());
     insertAction.setEnabled(insertShortcut->isEnabled());
     connect(&insertAction, &QAction::triggered, this, &RecordDialog::insert);
@@ -102,7 +140,30 @@ void RecordDialog::contextMenu(const QPoint &)
 
 void RecordDialog::insert()
 {
+    QModelIndex parent = ui->tV_record->currentIndex();
 
+    if(!ui->tV_record->isExpanded(parent)) {
+        ui->tV_record->expand(parent);
+    }
+
+    int v = 0;
+
+    if(m_proxyModel->sortOrder() == Qt::AscendingOrder && m_proxyModel->rowCount(parent) > 0)
+        v = m_proxyModel->rowCount(parent);
+
+    bool insert = m_proxyModel->insertRow(v, parent);
+
+    if(insert) {
+        QModelIndex index = m_proxyModel->index(v, 0, parent);
+
+        ui->tV_record->setCurrentIndex(index);
+        ui->tV_record->edit(index);
+    } else {
+        QMessageBox::warning(this,
+                tr("Creating items"),
+                tr("Could not create item."),
+                QMessageBox::Ok);
+    }
 }
 
 void RecordDialog::edit()
@@ -110,6 +171,42 @@ void RecordDialog::edit()
     QModelIndex index = ui->tV_record->currentIndex();
 
     ui->tV_record->edit(index);
+}
+
+void RecordDialog::editComment()
+{
+    QModelIndex index = ui->tV_record->currentIndex();
+
+    bool res;
+    QString text = QInputDialog::getText(
+                this, tr("Comment"), tr("Enter comment:"), QLineEdit::Normal, index.data(Qt::UserRole + 1).toString(), &res);
+
+    if (res && !text.isEmpty()) {
+        bool set;
+        set = m_model->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), text, Qt::UserRole + 1);
+
+        if(set) {
+            setInfoText();
+        }
+    }
+}
+
+void RecordDialog::editFundName()
+{
+    QModelIndex index = ui->tV_record->currentIndex();
+
+    bool res;
+    QString text = QInputDialog::getText(
+                this, tr("Fund name"), tr("Enter fund name:"), QLineEdit::Normal, index.data(Qt::UserRole + 2).toString(), &res);
+
+    if (res && !text.isEmpty()) {
+        bool set;
+        set = m_model->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), text, Qt::UserRole + 2);
+
+        if(set) {
+            setInfoText();
+        }
+    }
 }
 
 void RecordDialog::refresh()
@@ -122,7 +219,23 @@ void RecordDialog::refresh()
 
 void RecordDialog::remove()
 {
+    QModelIndex index = ui->tV_record->currentIndex();
+    QModelIndex parent = m_proxyModel->parent(index);
 
+    int res = QMessageBox::critical(this,
+        tr("Deleting item"),
+        tr("Are you shure that you want to delete this item?"),
+        QMessageBox::No | QMessageBox::Yes);
+
+    if (res == QMessageBox::Yes) {
+        bool remove = m_proxyModel->removeRow(index.row(), parent);
+        if (!remove) {
+            QMessageBox::warning(this,
+                    tr("Deleting item"),
+                    tr("Could not remove the item."),
+                    QMessageBox::Ok);
+        }
+    }
 }
 
 void RecordDialog::title()
