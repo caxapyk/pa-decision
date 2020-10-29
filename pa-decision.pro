@@ -24,8 +24,6 @@ SOURCES += \
     dialogs/connectiondialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/recorddialog.cpp \
-    dialogs/referencedialoginterface.cpp \
-    helpers/standartviewactions.cpp \
     main.cpp \
     mainwindow.cpp \
     models/authorityproxymodel.cpp \
@@ -49,8 +47,6 @@ HEADERS += \
     dialogs/connectiondialog.h \
     dialogs/doctypedialog.h \
     dialogs/recorddialog.h \
-    dialogs/referencedialoginterface.h \
-    helpers/standartviewactions.h \
     mainwindow.h \
     models/authorityproxymodel.h \
     models/authoritytreemodel.h \
