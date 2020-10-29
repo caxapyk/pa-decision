@@ -75,16 +75,12 @@ void RecordDialog::setInfoText()
 {
     QModelIndex currentIndex = ui->tV_record->currentIndex();
 
-    if(currentIndex.data(Qt::UserRole + 1).isNull() && currentIndex.data(Qt::UserRole + 2).isNull()) {
-        ui->label_info->setText(tr("No data"));
-    } else {
-        ui->label_info->setText(
-                    currentIndex.data(Qt::UserRole + 2).toString() +
-                    (currentIndex.data(Qt::UserRole + 2).isNull() ? "" : "<br/><br/>") +
-                    "<i style=color:grey>" +
-                    currentIndex.data(Qt::UserRole + 1).toString() +
-                    "</i>");
-    }
+    ui->label_info->setText(
+                currentIndex.data(Qt::UserRole + 2).toString() +
+                (currentIndex.data(Qt::UserRole + 2).isNull() ? "" : "<br/><br/>") +
+                "<i style=color:grey>" +
+                currentIndex.data(Qt::UserRole + 1).toString() +
+                "</i>");
 }
 
 void RecordDialog::contextMenu(const QPoint &)
@@ -179,7 +175,7 @@ void RecordDialog::editComment()
     QInputDialog inputDialog;
     inputDialog.setWindowTitle(tr("Comment"));
     inputDialog.setLabelText(tr("Enter comment:"));
-    inputDialog.setTextValue(index.data(Qt::UserRole + 2).toString());
+    inputDialog.setTextValue(index.data(Qt::UserRole + 1).toString());
     inputDialog.setTextEchoMode(QLineEdit::Normal);
 
     inputDialog.setMinimumWidth(480);
