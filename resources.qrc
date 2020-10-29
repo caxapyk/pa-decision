@@ -24,6 +24,9 @@
         <file>icons/tree-24.png</file>
         <file>icons/icon.png</file>
         <file>icons/record-24.png</file>
+        <file>icons/doctype-24.png</file>
+        <file>icons/doctype-16.png</file>
+        <file>icons/info-24.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>

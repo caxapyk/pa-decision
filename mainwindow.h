@@ -30,8 +30,9 @@ private:
     StatusBarPanel *m_statusBarPanel;
     SearchPanel *m_searchPanel;
 
-    QAction *action_new;
+    QAction *action_doctype;
     QAction *action_edit;
+    QAction *action_new;
     QAction *action_print;
     QAction *action_record;
     QAction *action_remove;
@@ -51,6 +52,7 @@ private:
     void setupToolBar();
 
 private slots:
+    void openDoctype();
     void openConnection();
     void openRecords();
 

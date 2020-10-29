@@ -22,11 +22,15 @@ SOURCES += \
     connection.cpp \
     dialogs/authoritydetaildialog.cpp \
     dialogs/connectiondialog.cpp \
+    dialogs/doctypedialog.cpp \
     dialogs/recorddialog.cpp \
+    dialogs/referencedialoginterface.cpp \
+    helpers/standartviewactions.cpp \
     main.cpp \
     mainwindow.cpp \
     models/authorityproxymodel.cpp \
     models/authoritytreemodel.cpp \
+    models/decisionmodel.cpp \
     models/recordproxymodel.cpp \
     models/recordtreemodel.cpp \
     utils/stringsort.cpp \
@@ -43,10 +47,14 @@ HEADERS += \
     connection.h \
     dialogs/authoritydetaildialog.h \
     dialogs/connectiondialog.h \
+    dialogs/doctypedialog.h \
     dialogs/recorddialog.h \
+    dialogs/referencedialoginterface.h \
+    helpers/standartviewactions.h \
     mainwindow.h \
     models/authorityproxymodel.h \
     models/authoritytreemodel.h \
+    models/decisionmodel.h \
     models/recordproxymodel.h \
     models/recordtreemodel.h \
     utils/stringsort.h \
@@ -61,6 +69,7 @@ HEADERS += \
 FORMS += \
     dialogs/authoritydetaildialog.ui \
     dialogs/connectiondialog.ui \
+    dialogs/doctypedialog.ui \
     dialogs/recorddialog.ui \
     mainwindow.ui \
     views/authorityview.ui \

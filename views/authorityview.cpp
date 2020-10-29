@@ -92,7 +92,7 @@ void AuthorityView::changeCurrent(const QModelIndex &current, const QModelIndex 
 {
     QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
 
-    openShortcut->setEnabled((current.isValid() && (current != root || (current == root && !ui->tV_authority->isExpanded(current)))));
+    openShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
     insertShortcut->setEnabled(current.isValid() && current == root);
     editShortcut->setEnabled(current.isValid() && current !=root);
@@ -155,9 +155,9 @@ void AuthorityView::open()
 
     if(index == root) {
         ui->tV_authority->expand(root);
-    } else {
-        // load data
     }
+
+    // load data
 }
 
 void AuthorityView::refresh()

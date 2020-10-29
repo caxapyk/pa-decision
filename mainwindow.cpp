@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "application.h"
+#include "dialogs/doctypedialog.h"
 #include "dialogs/connectiondialog.h"
 #include "dialogs/recorddialog.h"
 
@@ -28,8 +29,9 @@ MainWindow::~MainWindow()
     delete m_statusBarPanel;
     delete m_searchPanel;
 
-    delete action_new;
+    delete action_doctype;
     delete action_edit;
+    delete action_new;
     delete action_print;
     delete action_record;
     delete action_remove;
@@ -94,22 +96,30 @@ void MainWindow::setupStatusBar()
 void MainWindow::setupToolBar()
 {
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
+
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
+    action_print->setDisabled(true);
+
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
+    action_edit->setDisabled(true);
 
     action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
     connect(action_record, &QAction::triggered, this, &MainWindow::openRecords);
 
-
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
+    action_remove->setDisabled(true);
+
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
 
-    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Tree"));
+    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Navigation"));
     action_tree->setCheckable(true);
     action_tree->setChecked(true);
     connect(action_tree, &QAction::triggered, this, [=]{
          ui->splitter_layout->widget(0)->setHidden(!action_tree->isChecked());
     });
+
+    action_doctype = new QAction(QIcon(":/icons/icons/doctype-24.png"), tr("Document types"));
+    connect(action_doctype, &QAction::triggered, this, &MainWindow::openDoctype);
 
     ui->toolBar->addAction(action_new);
     ui->toolBar->addSeparator();
@@ -121,6 +131,7 @@ void MainWindow::setupToolBar()
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_tree);
     ui->toolBar->addAction(action_record);
+    ui->toolBar->addAction(action_doctype);
 
     m_searchPanel = new SearchPanel();
     ui->toolBar->addWidget(m_searchPanel);
@@ -144,6 +155,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 /* *
  * Dialogs
  * */
+
+void MainWindow::openDoctype()
+{
+    DoctypeDialog dialog;
+    dialog.exec();
+}
 
 void MainWindow::openConnection()
 {
