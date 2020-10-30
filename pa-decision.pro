@@ -37,6 +37,7 @@ SOURCES += \
     views/decisionview.cpp \
     views/navigatorview.cpp \
     views/view.cpp \
+    widgets/customcontextmenu.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
 
@@ -59,6 +60,7 @@ HEADERS += \
     views/decisionview.h \
     views/navigatorview.h \
     views/view.h \
+    widgets/customcontextmenu.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h
 

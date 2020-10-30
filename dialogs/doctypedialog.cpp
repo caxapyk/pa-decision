@@ -1,6 +1,8 @@
 #include "doctypedialog.h"
 #include "ui_doctypedialog.h"
 
+#include "widgets/customcontextmenu.h"
+
 #include <QDebug>
 #include <QMenu>
 
@@ -56,38 +58,31 @@ void DoctypeDialog::changeCurrent(const QModelIndex &current, const QModelIndex 
     refreshShortcut->setEnabled(true);
 }
 
-void DoctypeDialog::contextMenu(const QPoint &pos)
+void DoctypeDialog::contextMenu(const QPoint &)
 {
     QModelIndex currentIndex = ui->tV_doctype->indexAt(ui->tV_doctype->viewport()->mapFromGlobal(QCursor().pos()));
     ui->tV_doctype->setCurrentIndex(currentIndex);
 
-    QMenu menu;
+    CustomContextMenu menu(CustomContextMenu::All);
 
-    QAction insertAction(QIcon(":/icons/icons/add-16.png"), tr("New"));
-    insertAction.setShortcut(insertShortcut->key());
-    insertAction.setEnabled(insertShortcut->isEnabled());
-    connect(&insertAction, &QAction::triggered, this, &DoctypeDialog::insert);
-    menu.addAction(&insertAction);
+    QAction *insertAction = menu.action(CustomContextMenu::Insert);
+    insertAction->setShortcut(insertShortcut->key());
+    insertAction->setEnabled(insertShortcut->isEnabled());
+    connect(insertAction, &QAction::triggered, this, &DoctypeDialog::insert);
 
-    QAction editAction(QIcon(":/icons/icons/edit-16.png"), tr("Edit"));
-    editAction.setShortcut(editShortcut->key());
-    editAction.setEnabled(editShortcut->isEnabled());
-    connect(&editAction, &QAction::triggered, this,  &DoctypeDialog::edit);
-    menu.addAction(&editAction);
+    QAction *editAction = menu.action(CustomContextMenu::Edit);
+    editAction->setShortcut(editShortcut->key());
+    editAction->setEnabled(editShortcut->isEnabled());
+    connect(editAction, &QAction::triggered, this,  &DoctypeDialog::edit);
 
-    QAction removeAction(QIcon(":/icons/icons/remove-16.png"), tr("Remove"));
-    removeAction.setShortcut(removeShortcut->key());
-    removeAction.setEnabled(removeShortcut->isEnabled());
-    connect(&removeAction, &QAction::triggered, this,  &DoctypeDialog::remove);
-    menu.addAction(&removeAction);
+    QAction *removeAction = menu.action(CustomContextMenu::Remove);
+    removeAction->setShortcut(removeShortcut->key());
+    removeAction->setEnabled(removeShortcut->isEnabled());
+    connect(removeAction, &QAction::triggered, this,  &DoctypeDialog::remove);
 
-    menu.addSeparator();
-
-    QAction refreshAction(QIcon(":/icons/icons/refresh-16.png"), tr("Refresh"));
-    refreshAction.setShortcut(refreshShortcut->key());
-    connect(&refreshAction, &QAction::triggered, this, &DoctypeDialog::refresh);
-
-    menu.addAction(&refreshAction);
+    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
+    refreshAction->setShortcut(refreshShortcut->key());
+    connect(refreshAction, &QAction::triggered, this, &DoctypeDialog::refresh);
 
     menu.exec(QCursor().pos());
 }

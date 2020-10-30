@@ -1,6 +1,8 @@
 #include "recorddialog.h"
 #include "ui_recorddialog.h"
 
+#include "widgets/customcontextmenu.h"
+
 #include <QDebug>
 #include <QInputDialog>
 #include <QItemSelection>
@@ -88,7 +90,6 @@ void RecordDialog::contextMenu(const QPoint &)
     QModelIndex currentIndex = ui->tV_record->indexAt(ui->tV_record->viewport()->mapFromGlobal(QCursor().pos()));
     ui->tV_record->setCurrentIndex(currentIndex);
 
-    QMenu menu;
     QString item;
 
     if(!currentIndex.isValid()) {
@@ -105,31 +106,27 @@ void RecordDialog::contextMenu(const QPoint &)
         }
     }
 
-    QAction insertAction(QIcon(":/icons/icons/add-16.png"), tr("New %1").arg(item));
-    insertAction.setShortcut(insertShortcut->key());
-    insertAction.setEnabled(insertShortcut->isEnabled());
-    connect(&insertAction, &QAction::triggered, this, &RecordDialog::insert);
-    menu.addAction(&insertAction);
+    CustomContextMenu menu(CustomContextMenu::All);
 
-    QAction editAction(QIcon(":/icons/icons/edit-16.png"), tr("Edit"));
-    editAction.setShortcut(editShortcut->key());
-    editAction.setEnabled(editShortcut->isEnabled());
-    connect(&editAction, &QAction::triggered, this,  &RecordDialog::edit);
-    menu.addAction(&editAction);
+    QAction *insertAction = menu.action(CustomContextMenu::Insert);
+    insertAction->setText(insertAction->text() + tr(" %1").arg(item));
+    insertAction->setShortcut(insertShortcut->key());
+    insertAction->setEnabled(insertShortcut->isEnabled());
+    connect(insertAction, &QAction::triggered, this, &RecordDialog::insert);
 
-    QAction removeAction(QIcon(":/icons/icons/remove-16.png"), tr("Remove"));
-    removeAction.setShortcut(removeShortcut->key());
-    removeAction.setEnabled(removeShortcut->isEnabled());
-    connect(&removeAction, &QAction::triggered, this,  &RecordDialog::remove);
-    menu.addAction(&removeAction);
+    QAction *editAction = menu.action(CustomContextMenu::Edit);
+    editAction->setShortcut(editShortcut->key());
+    editAction->setEnabled(editShortcut->isEnabled());
+    connect(editAction, &QAction::triggered, this,  &RecordDialog::edit);
 
-    menu.addSeparator();
+    QAction *removeAction = menu.action(CustomContextMenu::Remove);
+    removeAction->setShortcut(removeShortcut->key());
+    removeAction->setEnabled(removeShortcut->isEnabled());
+    connect(removeAction, &QAction::triggered, this,  &RecordDialog::remove);
 
-    QAction refreshAction(QIcon(":/icons/icons/refresh-16.png"), tr("Refresh"));
-    refreshAction.setShortcut(refreshShortcut->key());
-    connect(&refreshAction, &QAction::triggered, this, &RecordDialog::refresh);
-
-    menu.addAction(&refreshAction);
+    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
+    refreshAction->setShortcut(refreshShortcut->key());
+    connect(refreshAction, &QAction::triggered, this, &RecordDialog::refresh);
 
     menu.exec(QCursor().pos());
 }
