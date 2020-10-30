@@ -1,8 +1,9 @@
 #ifndef DOCTYPEDIALOG_H
 #define DOCTYPEDIALOG_H
 
+#include "models/doctypemodel.h"
+
 #include <QDialog>
-#include <QSqlTableModel>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 
@@ -27,7 +28,7 @@ public slots:
 private:
     Ui::DoctypeDialog *ui;
 
-    QSqlTableModel *m_model;
+    DoctypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
     QShortcut *insertShortcut;
@@ -36,11 +37,18 @@ private:
     QShortcut *refreshShortcut;
 
     void setupShortcuts();
+    void restoreDialogState();
+    void saveDialogState();
 
 private slots:
     void changeCurrent(const QModelIndex &current, const QModelIndex &);
     void contextMenu(const QPoint &pos);
 
+    void accept() override;
+    void reject() override;
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // DOCTYPEDIALOG_H

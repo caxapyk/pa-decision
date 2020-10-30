@@ -1,6 +1,7 @@
 #include "recorddialog.h"
 #include "ui_recorddialog.h"
 
+#include "application.h"
 #include "widgets/customcontextmenu.h"
 
 #include <QDebug>
@@ -25,6 +26,7 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->tV_record->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setupShortcuts();
+    restoreDialogState();
 
     connect(ui->tV_record, &QMenu::customContextMenuRequested, this, &RecordDialog::contextMenu);
     connect(ui->tV_record->selectionModel(), &QItemSelectionModel::currentChanged, this, &RecordDialog::changeCurrent);
@@ -131,6 +133,13 @@ void RecordDialog::contextMenu(const QPoint &)
     menu.exec(QCursor().pos());
 }
 
+void RecordDialog::edit()
+{
+    QModelIndex index = ui->tV_record->currentIndex();
+
+    ui->tV_record->edit(index);
+}
+
 void RecordDialog::insert()
 {
     QModelIndex proxyParent = ui->tV_record->currentIndex();
@@ -149,20 +158,13 @@ void RecordDialog::insert()
 
         ui->tV_record->setCurrentIndex(currentIndex);
         ui->tV_record->scrollTo(currentIndex);
-        ui->tV_record->edit(currentIndex);
+        ui->tV_record->edit(ui->tV_record->currentIndex());
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
                 tr("Could not create item."),
                 QMessageBox::Ok);
     }
-}
-
-void RecordDialog::edit()
-{
-    QModelIndex index = ui->tV_record->currentIndex();
-
-    ui->tV_record->edit(index);
 }
 
 void RecordDialog::editComment()
@@ -262,7 +264,38 @@ void RecordDialog::remove()
     }
 }
 
-void RecordDialog::title()
+void RecordDialog::restoreDialogState()
 {
+    QSettings* settings = application->applicationSettings();
 
+    restoreGeometry(settings->value("RecordDialog/geometry").toByteArray());
+    ui->tV_record->header()->restoreState(settings->value("RecordDialog/tV_record").toByteArray());
+}
+
+void RecordDialog::saveDialogState()
+{
+    QSettings* settings = application->applicationSettings();
+
+    settings->beginGroup("RecordDialog");
+    settings->setValue("geometry", saveGeometry());
+    settings->setValue("tV_record", ui->tV_record->header()->saveState());
+    settings->endGroup();
+}
+
+void RecordDialog::accept()
+{
+    saveDialogState();
+    QDialog::accept();
+}
+
+void RecordDialog::reject()
+{
+    saveDialogState();
+    QDialog::reject();
+}
+
+void RecordDialog::closeEvent(QCloseEvent *event)
+{
+   saveDialogState();
+   QDialog::closeEvent(event);
 }

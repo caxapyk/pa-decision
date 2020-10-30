@@ -28,7 +28,9 @@ SOURCES += \
     mainwindow.cpp \
     models/authorityproxymodel.cpp \
     models/authoritytreemodel.cpp \
+    models/colorpickeritemdelegate.cpp \
     models/decisionmodel.cpp \
+    models/doctypemodel.cpp \
     models/recordproxymodel.cpp \
     models/recordtreemodel.cpp \
     utils/stringsort.cpp \
@@ -37,6 +39,7 @@ SOURCES += \
     views/decisionview.cpp \
     views/navigatorview.cpp \
     views/view.cpp \
+    widgets/colorrect.cpp \
     widgets/customcontextmenu.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
@@ -51,7 +54,9 @@ HEADERS += \
     mainwindow.h \
     models/authorityproxymodel.h \
     models/authoritytreemodel.h \
+    models/colorpickeritemdelegate.h \
     models/decisionmodel.h \
+    models/doctypemodel.h \
     models/recordproxymodel.h \
     models/recordtreemodel.h \
     utils/stringsort.h \
@@ -60,6 +65,7 @@ HEADERS += \
     views/decisionview.h \
     views/navigatorview.h \
     views/view.h \
+    widgets/colorrect.h \
     widgets/customcontextmenu.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h

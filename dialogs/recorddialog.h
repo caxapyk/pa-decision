@@ -32,6 +32,8 @@ private:
 
     void setInfoText();
     void setupShortcuts();
+    void restoreDialogState();
+    void saveDialogState();
 
 private slots:
     void changeCurrent(const QModelIndex &current, const QModelIndex &);
@@ -42,7 +44,12 @@ private slots:
     void insert();
     void refresh();
     void remove();
-    void title();
+
+    void accept() override;
+    void reject() override;
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // RECORDDIALOG_H

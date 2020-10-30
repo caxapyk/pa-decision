@@ -41,6 +41,7 @@ void CollectionView::saveViewState()
 
 void CollectionView::initialize()
 {
+    ui->tV_collection->sortByColumn(0, Qt::AscendingOrder);
     ui->tV_collection->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tV_collection, &QMenu::customContextMenuRequested, this, &CollectionView::contextMenu);
 

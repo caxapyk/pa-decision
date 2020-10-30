@@ -23,6 +23,9 @@
      <property name="editTriggers">
       <set>QAbstractItemView::EditKeyPressed</set>
      </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
      <property name="itemsExpandable">
       <bool>false</bool>
      </property>
@@ -35,6 +38,9 @@
      <property name="expandsOnDoubleClick">
       <bool>false</bool>
      </property>
+     <attribute name="headerHighlightSections">
+      <bool>false</bool>
+     </attribute>
     </widget>
    </item>
    <item>
