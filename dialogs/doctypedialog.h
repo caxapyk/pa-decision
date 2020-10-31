@@ -1,17 +1,18 @@
 #ifndef DOCTYPEDIALOG_H
 #define DOCTYPEDIALOG_H
 
+#include "dialogs/referencedialog.h"
 #include "models/doctypemodel.h"
 
 #include <QDialog>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 
-namespace Ui {
+/*namespace Ui {
 class DoctypeDialog;
-}
+}*/
 
-class DoctypeDialog : public QDialog
+class DoctypeDialog : public ReferenceDialog
 {
     Q_OBJECT
 
@@ -19,15 +20,17 @@ public:
     explicit DoctypeDialog(QWidget *parent = nullptr);
     ~DoctypeDialog();
 
+    void restoreDialogState() override;
+    void saveDialogState() override;
+    void setupShortcuts() override;
+
 public slots:
-    void edit();
-    void insert() ;
-    void refresh();
-    void remove();
+    void edit() override;
+    void insert() override;
+    void refresh() override;
+    void remove() override;
 
 private:
-    Ui::DoctypeDialog *ui;
-
     DoctypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
@@ -36,13 +39,9 @@ private:
     QShortcut *removeShortcut;
     QShortcut *refreshShortcut;
 
-    void setupShortcuts();
-    void restoreDialogState();
-    void saveDialogState();
-
 private slots:
-    void changeCurrent(const QModelIndex &current, const QModelIndex &);
-    void contextMenu(const QPoint &pos);
+    void changeCurrent(const QModelIndex &current, const QModelIndex &) override;
+    void contextMenu(const QPoint &pos) override;
 
     void accept() override;
     void reject() override;

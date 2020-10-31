@@ -49,10 +49,10 @@
     <item>
      <widget class="QSplitter" name="splitter_layout">
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -107,8 +107,14 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
-   <property name="movable">
+   <property name="autoFillBackground">
     <bool>false</bool>
+   </property>
+   <property name="movable">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="iconSize">
     <size>

@@ -33,6 +33,7 @@ private:
     QAction *action_doctype;
     QAction *action_edit;
     QAction *action_new;
+    QAction *action_pa;
     QAction *action_print;
     QAction *action_record;
     QAction *action_remove;
@@ -54,6 +55,7 @@ private:
 private slots:
     void openDoctype();
     void openConnection();
+    void openPublicAuthorities();
     void openRecords();
 
 protected:

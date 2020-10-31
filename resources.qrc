@@ -27,6 +27,12 @@
         <file>icons/doctype-24.png</file>
         <file>icons/doctype-16.png</file>
         <file>icons/info-24.png</file>
+        <file>icons/toward-16.png</file>
+        <file>icons/previous-16.png</file>
+        <file>icons/next-16.png</file>
+        <file>icons/backward.png</file>
+        <file>icons/goto-16.png</file>
+        <file>icons/icon-24.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>

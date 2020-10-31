@@ -1,5 +1,5 @@
 #include "doctypedialog.h"
-#include "ui_doctypedialog.h"
+#include "ui_referencedialog.h"
 
 #include "application.h"
 #include "models/colorpickeritemdelegate.h"
@@ -7,15 +7,14 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QSqlRecord>
 #include <QSqlError>
 
 DoctypeDialog::DoctypeDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::DoctypeDialog)
+    ReferenceDialog(parent)
 {
     ui->setupUi(this);
-
 
     m_model = new DoctypeModel;
     m_model->select();
@@ -23,39 +22,42 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
-    ui->tV_doctype->setModel(m_proxyModel);
-    ui->tV_doctype->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->tV_itemView->setModel(m_proxyModel);
+    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    ui->tV_doctype->hideColumn(0);
-    ui->tV_doctype->resizeColumnToContents(1);
-    ui->tV_doctype->setItemDelegate(new ColorPickerItemDelegate);
+    ui->tV_itemView->hideColumn(0);
+    ui->tV_itemView->resizeColumnToContents(1);
+    ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
 
     setupShortcuts();
     restoreDialogState();
 
-    connect(ui->tV_doctype, &QMenu::customContextMenuRequested, this, &DoctypeDialog::contextMenu);
-    connect(ui->tV_doctype->selectionModel(), &QItemSelectionModel::currentChanged, this, &DoctypeDialog::changeCurrent);
+    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &DoctypeDialog::contextMenu);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &DoctypeDialog::changeCurrent);
+
+    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &DoctypeDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DoctypeDialog::reject);
 }
 
 DoctypeDialog::~DoctypeDialog()
 {
-    delete ui;
+    //delete ui;
     delete m_model;
     delete m_proxyModel;
 }
 
 void DoctypeDialog::setupShortcuts()
 {
-    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_doctype, nullptr, nullptr, Qt::WidgetShortcut);
+    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
     connect(insertShortcut, &QShortcut::activated, this, &DoctypeDialog::insert);
 
-    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_doctype, nullptr, nullptr, Qt::WidgetShortcut);
+    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
     connect(editShortcut, &QShortcut::activated, this, &DoctypeDialog::edit);
 
-    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_doctype, nullptr, nullptr, Qt::WidgetShortcut);
+    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
     connect(removeShortcut, &QShortcut::activated, this, &DoctypeDialog::remove);
 
-    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_doctype, nullptr, nullptr, Qt::WidgetShortcut);
+    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
     connect(refreshShortcut, &QShortcut::activated, this, &DoctypeDialog::refresh);
 }
 
@@ -69,8 +71,8 @@ void DoctypeDialog::changeCurrent(const QModelIndex &current, const QModelIndex 
 
 void DoctypeDialog::contextMenu(const QPoint &)
 {
-    QModelIndex currentIndex = ui->tV_doctype->indexAt(ui->tV_doctype->viewport()->mapFromGlobal(QCursor().pos()));
-    ui->tV_doctype->setCurrentIndex(currentIndex);
+    QModelIndex currentIndex = ui->tV_itemView->indexAt(ui->tV_itemView->viewport()->mapFromGlobal(QCursor().pos()));
+    ui->tV_itemView->setCurrentIndex(currentIndex);
 
     CustomContextMenu menu(CustomContextMenu::All);
 
@@ -98,9 +100,9 @@ void DoctypeDialog::contextMenu(const QPoint &)
 
 void DoctypeDialog::edit()
 {
-    QModelIndex index = ui->tV_doctype->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
-    ui->tV_doctype->edit(index);
+    ui->tV_itemView->edit(index);
 }
 
 void DoctypeDialog::insert()
@@ -111,11 +113,11 @@ void DoctypeDialog::insert()
         QModelIndex currentIndex = m_proxyModel->mapFromSource(
                     m_proxyModel->sourceModel()->index(0, 1));
 
-        ui->tV_doctype->resizeColumnToContents(1);
+        ui->tV_itemView->resizeColumnToContents(1);
 
-        ui->tV_doctype->setCurrentIndex(currentIndex);
-        ui->tV_doctype->scrollTo(currentIndex);
-        ui->tV_doctype->edit(ui->tV_doctype->currentIndex());
+        ui->tV_itemView->setCurrentIndex(currentIndex);
+        ui->tV_itemView->scrollTo(currentIndex);
+        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
@@ -126,7 +128,7 @@ void DoctypeDialog::insert()
 
 void DoctypeDialog::refresh()
 {
-    ui->tV_doctype->selectionModel()->clearCurrentIndex();
+    ui->tV_itemView->selectionModel()->clearCurrentIndex();
 
     m_proxyModel->invalidate();
     m_model->select();
@@ -134,7 +136,7 @@ void DoctypeDialog::refresh()
 
 void DoctypeDialog::remove()
 {
-    QModelIndex index = ui->tV_doctype->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
     int res = QMessageBox::critical(this,
         tr("Deleting item"),
@@ -158,7 +160,7 @@ void DoctypeDialog::restoreDialogState()
 {
     QSettings* settings = application->applicationSettings();
     restoreGeometry(settings->value("DoctypeDialog/geometry").toByteArray());
-    ui->tV_doctype->header()->restoreState(settings->value("DoctypeDialog/tV_doctype").toByteArray());
+    ui->tV_itemView->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
 }
 
 void DoctypeDialog::saveDialogState()
@@ -167,25 +169,25 @@ void DoctypeDialog::saveDialogState()
 
     settings->beginGroup("DoctypeDialog");
     settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_doctype", ui->tV_doctype->header()->saveState());
+    settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();
 }
 
 void DoctypeDialog::accept()
 {
     saveDialogState();
-    QDialog::accept();
+    ReferenceDialog::accept();
 }
 
 void DoctypeDialog::reject()
 {
     saveDialogState();
-    QDialog::reject();
+    ReferenceDialog::reject();
 }
 
 void DoctypeDialog::closeEvent(QCloseEvent *event)
 {
    saveDialogState();
-   QDialog::closeEvent(event);
+   ReferenceDialog::closeEvent(event);
 }
 

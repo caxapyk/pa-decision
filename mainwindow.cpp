@@ -32,6 +32,7 @@ MainWindow::~MainWindow()
     delete action_doctype;
     delete action_edit;
     delete action_new;
+    delete action_pa;
     delete action_print;
     delete action_record;
     delete action_remove;
@@ -103,9 +104,6 @@ void MainWindow::setupToolBar()
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
     action_edit->setDisabled(true);
 
-    action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
-    connect(action_record, &QAction::triggered, this, &MainWindow::openRecords);
-
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
 
@@ -118,11 +116,16 @@ void MainWindow::setupToolBar()
          ui->splitter_layout->widget(0)->setHidden(!action_tree->isChecked());
     });
 
+    action_pa = new QAction(QIcon(":/icons/icons/icon-24.png"), tr("Public authorities"));
+    connect(action_pa, &QAction::triggered, this, &MainWindow::openPublicAuthorities);
+
+    action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
+    connect(action_record, &QAction::triggered, this, &MainWindow::openRecords);
+
     action_doctype = new QAction(QIcon(":/icons/icons/doctype-24.png"), tr("Document types"));
     connect(action_doctype, &QAction::triggered, this, &MainWindow::openDoctype);
 
     ui->toolBar->addAction(action_new);
-    ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_edit);
     ui->toolBar->addAction(action_remove);
     ui->toolBar->addSeparator();
@@ -130,6 +133,8 @@ void MainWindow::setupToolBar()
     ui->toolBar->addAction(action_refresh);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_tree);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(action_pa);
     ui->toolBar->addAction(action_record);
     ui->toolBar->addAction(action_doctype);
 
@@ -165,6 +170,12 @@ void MainWindow::openDoctype()
 void MainWindow::openConnection()
 {
     ConnectionDialog dialog;
+    dialog.exec();
+}
+
+void MainWindow::openPublicAuthorities()
+{
+    RecordDialog dialog;
     dialog.exec();
 }
 
