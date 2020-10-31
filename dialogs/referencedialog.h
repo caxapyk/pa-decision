@@ -2,6 +2,7 @@
 #define REFERENCEDIALOG_H
 
 #include <QDialog>
+#include <QShortcut>
 
 namespace Ui {
 class ReferenceDialog;
@@ -17,7 +18,8 @@ public:
 
     virtual void restoreDialogState() {};
     virtual void saveDialogState() {};
-    virtual void setupShortcuts() {};
+
+    void contextMenu(const QPoint &pos);
 
 public slots:
     virtual void edit() {};
@@ -28,9 +30,21 @@ public slots:
 protected:
     Ui::ReferenceDialog *ui;
 
+    QShortcut *insertShortcut = nullptr;
+    QShortcut *editShortcut = nullptr;
+    QShortcut *removeShortcut = nullptr;
+    QShortcut *refreshShortcut = nullptr;
+
+    void closeEvent(QCloseEvent *event) override;
+
+private:
+    void setupShortcuts();
+
 private slots:
     virtual void changeCurrent(const QModelIndex &current, const QModelIndex &) {};
-    virtual void contextMenu(const QPoint &pos) {};
+
+    void accept() override;
+    void reject() override;
 };
 
 #endif // REFERENCEDIALOG_H

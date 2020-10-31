@@ -2,6 +2,7 @@
 #include "ui_collectionview.h"
 
 #include "application.h"
+#include "widgets/customcontextmenu.h"
 
 #include <QDebug>
 #include <QKeyEvent>
@@ -19,6 +20,8 @@ CollectionView::CollectionView(QWidget *parent) :
 CollectionView::~CollectionView()
 {
     delete ui;
+    delete m_authorityModel;
+    delete m_authorityProxyModel;
     delete m_recordModel;
     delete m_recordProxyModel;
     delete m_refreshShortcut;
@@ -57,15 +60,13 @@ void CollectionView::initialize()
 
 void CollectionView::contextMenu(const QPoint &)
 {
-    QMenu menu;
+    CustomContextMenu menu(CustomContextMenu::Refresh);
 
-    QAction refreshAction(QIcon(":/icons/icons/refresh-16.png"), tr("Refresh"));
-    refreshAction.setShortcut(m_refreshShortcut->key());
-    connect(&refreshAction, &QAction::triggered, this, [=] {
+    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
+    refreshAction->setShortcut(m_refreshShortcut->key());
+    connect(refreshAction, &QAction::triggered, this, [=] {
         switchModel(ui->cB_collection->currentIndex());
     });
-
-    menu.addAction(&refreshAction);
 
     menu.exec(QCursor().pos());
 }
@@ -73,8 +74,11 @@ void CollectionView::contextMenu(const QPoint &)
 void CollectionView::switchModel(int index)
 {
     switch(index){
+    case CollectionView::CollectionAuthority:
+        setCollectionAuthority();
+        break;
     case CollectionView::CollectionRecord:
-        setRecordCollection();
+        setCollectionRecord();
         break;
     case CollectionView::CollectionYear:
         break;
@@ -83,7 +87,25 @@ void CollectionView::switchModel(int index)
     }
 }
 
-void CollectionView::setRecordCollection()
+void CollectionView::setCollectionAuthority()
+{
+    if(m_recordModel == nullptr) {
+        m_authorityModel = new AuthorityTreeModel;
+        m_authorityModel->select();
+
+        m_authorityProxyModel = new AuthorityProxyModel;
+        m_authorityProxyModel->setSourceModel(m_authorityModel);
+    }
+
+    m_authorityProxyModel->invalidate();
+    m_authorityModel->select();
+
+    ui->tV_collection->setModel(m_authorityProxyModel);
+    ui->tV_collection->setCurrentIndex(m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem()));
+    ui->tV_collection->expandAll();
+}
+
+void CollectionView::setCollectionRecord()
 {
     if(m_recordModel == nullptr) {
         m_recordModel = new RecordTreeModel;

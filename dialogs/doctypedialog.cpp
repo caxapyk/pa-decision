@@ -3,18 +3,16 @@
 
 #include "application.h"
 #include "models/colorpickeritemdelegate.h"
-#include "widgets/customcontextmenu.h"
 
 #include <QDebug>
 #include <QMessageBox>
-#include <QPushButton>
-#include <QSqlRecord>
-#include <QSqlError>
+#include <QMenu>
 
 DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
-    ui->setupUi(this);
+    setWindowTitle(tr("Document types"));
+    ui->label_info->setText(tr("Use color to highlight documents!"));
 
     m_model = new DoctypeModel;
     m_model->select();
@@ -29,36 +27,31 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->resizeColumnToContents(1);
     ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
 
-    setupShortcuts();
-    restoreDialogState();
-
-    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &DoctypeDialog::contextMenu);
+    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
     connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &DoctypeDialog::changeCurrent);
-
-    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &DoctypeDialog::accept);
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DoctypeDialog::reject);
 }
 
 DoctypeDialog::~DoctypeDialog()
 {
-    //delete ui;
     delete m_model;
     delete m_proxyModel;
 }
 
-void DoctypeDialog::setupShortcuts()
+void DoctypeDialog::restoreDialogState()
 {
-    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(insertShortcut, &QShortcut::activated, this, &DoctypeDialog::insert);
+    QSettings* settings = application->applicationSettings();
+    restoreGeometry(settings->value("DoctypeDialog/geometry").toByteArray());
+    ui->tV_itemView->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
+}
 
-    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(editShortcut, &QShortcut::activated, this, &DoctypeDialog::edit);
+void DoctypeDialog::saveDialogState()
+{
+    QSettings* settings = application->applicationSettings();
 
-    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(removeShortcut, &QShortcut::activated, this, &DoctypeDialog::remove);
-
-    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(refreshShortcut, &QShortcut::activated, this, &DoctypeDialog::refresh);
+    settings->beginGroup("DoctypeDialog");
+    settings->setValue("geometry", saveGeometry());
+    settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
+    settings->endGroup();
 }
 
 void DoctypeDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
@@ -67,35 +60,6 @@ void DoctypeDialog::changeCurrent(const QModelIndex &current, const QModelIndex 
     editShortcut->setEnabled(current.isValid());
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
-}
-
-void DoctypeDialog::contextMenu(const QPoint &)
-{
-    QModelIndex currentIndex = ui->tV_itemView->indexAt(ui->tV_itemView->viewport()->mapFromGlobal(QCursor().pos()));
-    ui->tV_itemView->setCurrentIndex(currentIndex);
-
-    CustomContextMenu menu(CustomContextMenu::All);
-
-    QAction *insertAction = menu.action(CustomContextMenu::Insert);
-    insertAction->setShortcut(insertShortcut->key());
-    insertAction->setEnabled(insertShortcut->isEnabled());
-    connect(insertAction, &QAction::triggered, this, &DoctypeDialog::insert);
-
-    QAction *editAction = menu.action(CustomContextMenu::Edit);
-    editAction->setShortcut(editShortcut->key());
-    editAction->setEnabled(editShortcut->isEnabled());
-    connect(editAction, &QAction::triggered, this,  &DoctypeDialog::edit);
-
-    QAction *removeAction = menu.action(CustomContextMenu::Remove);
-    removeAction->setShortcut(removeShortcut->key());
-    removeAction->setEnabled(removeShortcut->isEnabled());
-    connect(removeAction, &QAction::triggered, this,  &DoctypeDialog::remove);
-
-    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
-    refreshAction->setShortcut(refreshShortcut->key());
-    connect(refreshAction, &QAction::triggered, this, &DoctypeDialog::refresh);
-
-    menu.exec(QCursor().pos());
 }
 
 void DoctypeDialog::edit()
@@ -154,40 +118,5 @@ void DoctypeDialog::remove()
                     QMessageBox::Ok);
         }
     }
-}
-
-void DoctypeDialog::restoreDialogState()
-{
-    QSettings* settings = application->applicationSettings();
-    restoreGeometry(settings->value("DoctypeDialog/geometry").toByteArray());
-    ui->tV_itemView->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
-}
-
-void DoctypeDialog::saveDialogState()
-{
-    QSettings* settings = application->applicationSettings();
-
-    settings->beginGroup("DoctypeDialog");
-    settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
-    settings->endGroup();
-}
-
-void DoctypeDialog::accept()
-{
-    saveDialogState();
-    ReferenceDialog::accept();
-}
-
-void DoctypeDialog::reject()
-{
-    saveDialogState();
-    ReferenceDialog::reject();
-}
-
-void DoctypeDialog::closeEvent(QCloseEvent *event)
-{
-   saveDialogState();
-   ReferenceDialog::closeEvent(event);
 }
 

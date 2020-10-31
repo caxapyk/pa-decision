@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AuthorityDetailDialog</class>
- <widget class="QDialog" name="AuthorityDetailDialog">
+ <class>AuthorityDetailsDialog</class>
+ <widget class="QDialog" name="AuthorityDetailsDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -69,7 +69,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>AuthorityDetailDialog</receiver>
+   <receiver>AuthorityDetailsDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -85,7 +85,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>AuthorityDetailDialog</receiver>
+   <receiver>AuthorityDetailsDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

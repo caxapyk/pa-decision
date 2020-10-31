@@ -55,7 +55,7 @@ private:
 private slots:
     void openDoctype();
     void openConnection();
-    void openPublicAuthorities();
+    void openAuthorities();
     void openRecords();
 
 protected:

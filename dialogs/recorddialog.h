@@ -1,17 +1,18 @@
 #ifndef RECORDDIALOG_H
 #define RECORDDIALOG_H
 
+#include "dialogs/referencedialog.h"
 #include "models/recordtreemodel.h"
 #include "models/recordproxymodel.h"
 
 #include <QDialog>
-#include <QShortcut>
+#include <QPushButton>
 
 namespace Ui {
 class RecordDialog;
 }
 
-class RecordDialog : public QDialog
+class RecordDialog : public ReferenceDialog
 {
     Q_OBJECT
 
@@ -19,37 +20,28 @@ public:
     explicit RecordDialog(QWidget *parent = nullptr);
     ~RecordDialog();
 
-private:
-    Ui::RecordDialog *ui;
+    void restoreDialogState() override;
+    void saveDialogState() override;
 
+public slots:
+    void edit() override;
+    void insert() override;
+    void refresh() override;
+    void remove() override;
+
+private:
     RecordTreeModel *m_model;
     RecordProxyModel *m_proxyModel;
 
-    QShortcut *insertShortcut;
-    QShortcut *editShortcut;
-    QShortcut *removeShortcut;
-    QShortcut *refreshShortcut;
+    QPushButton *pB_comment;
+    QPushButton *pB_fundTitle;
 
     void setInfoText();
-    void setupShortcuts();
-    void restoreDialogState();
-    void saveDialogState();
 
 private slots:
-    void changeCurrent(const QModelIndex &current, const QModelIndex &);
-    void contextMenu(const QPoint &pos);
-    void edit();
+    void changeCurrent(const QModelIndex &current, const QModelIndex &) override;
     void editComment();
     void editFundName();
-    void insert();
-    void refresh();
-    void remove();
-
-    void accept() override;
-    void reject() override;
-
-protected:
-    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // RECORDDIALOG_H

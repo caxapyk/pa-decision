@@ -20,7 +20,8 @@ DEFINES += APP_VERSION=$$VERSION
 SOURCES += \
     application.cpp \
     connection.cpp \
-    dialogs/authoritydetaildialog.cpp \
+    dialogs/authoritydetailsdialog.cpp \
+    dialogs/authoritydialog.cpp \
     dialogs/connectiondialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/recorddialog.cpp \
@@ -48,7 +49,8 @@ SOURCES += \
 HEADERS += \
     application.h \
     connection.h \
-    dialogs/authoritydetaildialog.h \
+    dialogs/authoritydetailsdialog.h \
+    dialogs/authoritydialog.h \
     dialogs/connectiondialog.h \
     dialogs/doctypedialog.h \
     dialogs/recorddialog.h \
@@ -73,10 +75,8 @@ HEADERS += \
     widgets/statusbarpanel.h
 
 FORMS += \
-    dialogs/authoritydetaildialog.ui \
+    dialogs/authoritydetailsdialog.ui \
     dialogs/connectiondialog.ui \
-    dialogs/doctypedialog.ui \
-    dialogs/recorddialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \
     views/authorityview.ui \

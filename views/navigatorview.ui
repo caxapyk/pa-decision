@@ -55,29 +55,6 @@
      <property name="tabBarAutoHide">
       <bool>false</bool>
      </property>
-     <widget class="QWidget" name="tab_authority">
-      <attribute name="icon">
-       <iconset resource="../resources.qrc">
-        <normaloff>:/icons/icons/icon-16.png</normaloff>:/icons/icons/icon-16.png</iconset>
-      </attribute>
-      <attribute name="title">
-       <string>Public authorities</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-      </layout>
-     </widget>
      <widget class="QWidget" name="tab_collection">
       <attribute name="icon">
        <iconset resource="../resources.qrc">

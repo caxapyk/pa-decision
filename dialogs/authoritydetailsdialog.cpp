@@ -1,13 +1,13 @@
-#include "authoritydetaildialog.h"
-#include "ui_authoritydetaildialog.h"
+#include "authoritydetailsdialog.h"
+#include "ui_authoritydetailsdialog.h"
 
 #include <QDebug>
 #include <QMessageBox>
 #include <QPushButton>
 
-AuthorityDetailDialog::AuthorityDetailDialog(QVariant id, QWidget *parent) :
+AuthorityDetailsDialog::AuthorityDetailsDialog(QVariant id, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AuthorityDetailDialog)
+    ui(new Ui::AuthorityDetailsDialog)
 {
     ui->setupUi(this);
     m_model = new QSqlTableModel;
@@ -25,17 +25,17 @@ AuthorityDetailDialog::AuthorityDetailDialog(QVariant id, QWidget *parent) :
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
         m_mapper->submit();
     });
-    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &AuthorityDetailDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &AuthorityDetailsDialog::reject);
 }
 
-AuthorityDetailDialog::~AuthorityDetailDialog()
+AuthorityDetailsDialog::~AuthorityDetailsDialog()
 {
     delete ui;
     delete m_model;
     delete m_mapper;
 }
 
-void AuthorityDetailDialog::reject()
+void AuthorityDetailsDialog::reject()
 {
     bool commit = ui->lE_name->isModified() || ui->pTE_geo->document()->isModified();
     if(commit) {

@@ -1,7 +1,8 @@
 #include "recorddialog.h"
-#include "ui_recorddialog.h"
+#include "ui_referencedialog.h"
 
 #include "application.h"
+#include "dialogs/referencedialog.h"
 #include "widgets/customcontextmenu.h"
 
 #include <QDebug>
@@ -11,10 +12,18 @@
 #include <QMessageBox>
 
 RecordDialog::RecordDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::RecordDialog)
+     ReferenceDialog(parent)
 {
-    ui->setupUi(this);
+    setWindowTitle(tr("Archive records"));
+    ui->label_infoIcon->setVisible(false);
+
+    pB_comment = new QPushButton(tr("Comment"));
+    pB_comment->setDisabled(true);
+    pB_fundTitle = new QPushButton(tr("Title"));
+    pB_fundTitle->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_fundTitle);
+    ui->vL_buttonGroup->addWidget(pB_comment);
 
     m_model = new RecordTreeModel;
     m_model->select();
@@ -22,42 +31,40 @@ RecordDialog::RecordDialog(QWidget *parent) :
     m_proxyModel = new RecordProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
-    ui->tV_record->setModel(m_proxyModel);
-    ui->tV_record->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->tV_itemView->setModel(m_proxyModel);
+    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    setupShortcuts();
-    restoreDialogState();
+    connect(pB_fundTitle, &QPushButton::clicked, this, &RecordDialog::editFundName);
+    connect(pB_comment, &QPushButton::clicked, this, &RecordDialog::editComment);
 
-    connect(ui->tV_record, &QMenu::customContextMenuRequested, this, &RecordDialog::contextMenu);
-    connect(ui->tV_record->selectionModel(), &QItemSelectionModel::currentChanged, this, &RecordDialog::changeCurrent);
-    connect(ui->pB_title, &QPushButton::clicked, this, &RecordDialog::editFundName);
-    connect(ui->pB_comment, &QPushButton::clicked, this, &RecordDialog::editComment);
+    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &RecordDialog::changeCurrent);
 }
 
 RecordDialog::~RecordDialog()
 {
-    delete ui;
     delete m_model;
     delete m_proxyModel;
-    delete insertShortcut;
-    delete editShortcut;
-    delete removeShortcut;
-    delete refreshShortcut;
+    delete pB_comment;
+    delete pB_fundTitle;
 }
 
-void RecordDialog::setupShortcuts()
+void RecordDialog::restoreDialogState()
 {
-    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_record, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(insertShortcut, &QShortcut::activated, this, &RecordDialog::insert);
+    QSettings* settings = application->applicationSettings();
 
-    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_record, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(editShortcut, &QShortcut::activated, this, &RecordDialog::edit);
+    restoreGeometry(settings->value("RecordDialog/geometry").toByteArray());
+    ui->tV_itemView->header()->restoreState(settings->value("RecordDialog/tV_itemView").toByteArray());
+}
 
-    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_record, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(removeShortcut, &QShortcut::activated, this, &RecordDialog::remove);
+void RecordDialog::saveDialogState()
+{
+    QSettings* settings = application->applicationSettings();
 
-    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_record, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(refreshShortcut, &QShortcut::activated, this, &RecordDialog::refresh);
+    settings->beginGroup("RecordDialog");
+    settings->setValue("geometry", saveGeometry());
+    settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
+    settings->endGroup();
 }
 
 void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
@@ -69,15 +76,15 @@ void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
 
-    ui->pB_title->setEnabled(current.isValid() && (node != nullptr && node->level == RecordTreeModel::FundLevel));
-    ui->pB_comment->setEnabled(current.isValid());
+    pB_fundTitle->setEnabled(current.isValid() && (node != nullptr && node->level == RecordTreeModel::FundLevel));
+    pB_comment->setEnabled(current.isValid());
 
     setInfoText();
 }
 
 void RecordDialog::setInfoText()
 {
-    QModelIndex currentIndex = ui->tV_record->currentIndex();
+    QModelIndex currentIndex = ui->tV_itemView->currentIndex();
 
     ui->label_info->setText(
                 currentIndex.data(Qt::UserRole + 2).toString() +
@@ -87,66 +94,20 @@ void RecordDialog::setInfoText()
                 "</i>");
 }
 
-void RecordDialog::contextMenu(const QPoint &)
-{
-    QModelIndex currentIndex = ui->tV_record->indexAt(ui->tV_record->viewport()->mapFromGlobal(QCursor().pos()));
-    ui->tV_record->setCurrentIndex(currentIndex);
-
-    QString item;
-
-    if(!currentIndex.isValid()) {
-        item = tr("fund");
-    } else {
-        RecordTreeModel::RecordNode *node = static_cast<RecordTreeModel::RecordNode*>(m_proxyModel->mapToSource(currentIndex).internalPointer());
-        switch (node->level) {
-        case RecordTreeModel::FundLevel:
-            item = tr("inventory");
-            break;
-        case RecordTreeModel::InventoryLevel:
-            item = tr("record");
-            break;
-        }
-    }
-
-    CustomContextMenu menu(CustomContextMenu::All);
-
-    QAction *insertAction = menu.action(CustomContextMenu::Insert);
-    insertAction->setText(insertAction->text() + tr(" %1").arg(item));
-    insertAction->setShortcut(insertShortcut->key());
-    insertAction->setEnabled(insertShortcut->isEnabled());
-    connect(insertAction, &QAction::triggered, this, &RecordDialog::insert);
-
-    QAction *editAction = menu.action(CustomContextMenu::Edit);
-    editAction->setShortcut(editShortcut->key());
-    editAction->setEnabled(editShortcut->isEnabled());
-    connect(editAction, &QAction::triggered, this,  &RecordDialog::edit);
-
-    QAction *removeAction = menu.action(CustomContextMenu::Remove);
-    removeAction->setShortcut(removeShortcut->key());
-    removeAction->setEnabled(removeShortcut->isEnabled());
-    connect(removeAction, &QAction::triggered, this,  &RecordDialog::remove);
-
-    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
-    refreshAction->setShortcut(refreshShortcut->key());
-    connect(refreshAction, &QAction::triggered, this, &RecordDialog::refresh);
-
-    menu.exec(QCursor().pos());
-}
-
 void RecordDialog::edit()
 {
-    QModelIndex index = ui->tV_record->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
-    ui->tV_record->edit(index);
+    ui->tV_itemView->edit(index);
 }
 
 void RecordDialog::insert()
 {
-    QModelIndex proxyParent = ui->tV_record->currentIndex();
+    QModelIndex proxyParent = ui->tV_itemView->currentIndex();
     QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
 
-    if(!ui->tV_record->isExpanded(proxyParent)) {
-        ui->tV_record->expand(proxyParent);
+    if(!ui->tV_itemView->isExpanded(proxyParent)) {
+        ui->tV_itemView->expand(proxyParent);
     }
 
     int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
@@ -156,9 +117,9 @@ void RecordDialog::insert()
     if(insert) {
         QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
 
-        ui->tV_record->setCurrentIndex(currentIndex);
-        ui->tV_record->scrollTo(currentIndex);
-        ui->tV_record->edit(ui->tV_record->currentIndex());
+        ui->tV_itemView->setCurrentIndex(currentIndex);
+        ui->tV_itemView->scrollTo(currentIndex);
+        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
@@ -169,7 +130,7 @@ void RecordDialog::insert()
 
 void RecordDialog::editComment()
 {
-    QModelIndex index = ui->tV_record->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
     QInputDialog inputDialog;
     inputDialog.setWindowTitle(tr("Comment"));
@@ -184,7 +145,7 @@ void RecordDialog::editComment()
 
     if (res && !inputDialog.textValue().isEmpty()) {
         bool set;
-        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), inputDialog.textValue(), Qt::UserRole + 1);
+        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 1);
 
         if(set) {
             setInfoText();
@@ -203,7 +164,7 @@ void RecordDialog::editComment()
 
 void RecordDialog::editFundName()
 {
-    QModelIndex index = ui->tV_record->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
     QInputDialog inputDialog;
     inputDialog.setWindowTitle(tr("Fund name"));
@@ -218,7 +179,7 @@ void RecordDialog::editFundName()
 
     if (res && !inputDialog.textValue().isEmpty()) {
         bool set;
-        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_record->currentIndex()), inputDialog.textValue(), Qt::UserRole + 2);
+        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 2);
 
         if(set) {
             setInfoText();
@@ -237,7 +198,7 @@ void RecordDialog::editFundName()
 
 void RecordDialog::refresh()
 {
-    ui->tV_record->selectionModel()->clearCurrentIndex();
+    ui->tV_itemView->selectionModel()->clearCurrentIndex();
 
     m_proxyModel->invalidate();
     m_model->select();
@@ -245,7 +206,7 @@ void RecordDialog::refresh()
 
 void RecordDialog::remove()
 {
-    QModelIndex index = ui->tV_record->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex();
     QModelIndex parent = m_proxyModel->parent(index);
 
     int res = QMessageBox::critical(this,
@@ -262,40 +223,4 @@ void RecordDialog::remove()
                     QMessageBox::Ok);
         }
     }
-}
-
-void RecordDialog::restoreDialogState()
-{
-    QSettings* settings = application->applicationSettings();
-
-    restoreGeometry(settings->value("RecordDialog/geometry").toByteArray());
-    ui->tV_record->header()->restoreState(settings->value("RecordDialog/tV_record").toByteArray());
-}
-
-void RecordDialog::saveDialogState()
-{
-    QSettings* settings = application->applicationSettings();
-
-    settings->beginGroup("RecordDialog");
-    settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_record", ui->tV_record->header()->saveState());
-    settings->endGroup();
-}
-
-void RecordDialog::accept()
-{
-    saveDialogState();
-    QDialog::accept();
-}
-
-void RecordDialog::reject()
-{
-    saveDialogState();
-    QDialog::reject();
-}
-
-void RecordDialog::closeEvent(QCloseEvent *event)
-{
-   saveDialogState();
-   QDialog::closeEvent(event);
 }

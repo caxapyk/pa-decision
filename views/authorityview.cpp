@@ -2,7 +2,7 @@
 #include "ui_authorityview.h"
 
 #include "application.h"
-#include "dialogs/authoritydetaildialog.h"
+//#include "dialogs/authoritydetaildialog.h"
 
 #include <QDebug>
 #include <QItemSelectionModel>
@@ -237,10 +237,10 @@ void AuthorityView::info()
 {
     QModelIndex index = ui->tV_authority->currentIndex();
 
-    AuthorityDetailDialog dialog(index.data(Qt::UserRole));
+    /*AuthorityDetailDialog dialog(index.data(Qt::UserRole));
     int res = dialog.exec();
 
     if(res == AuthorityDetailDialog::Accepted) {
         refresh();
-    }
+    }*/
 }

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "application.h"
+#include "dialogs/authoritydialog.h"
 #include "dialogs/doctypedialog.h"
 #include "dialogs/connectiondialog.h"
 #include "dialogs/recorddialog.h"
@@ -117,7 +118,7 @@ void MainWindow::setupToolBar()
     });
 
     action_pa = new QAction(QIcon(":/icons/icons/icon-24.png"), tr("Public authorities"));
-    connect(action_pa, &QAction::triggered, this, &MainWindow::openPublicAuthorities);
+    connect(action_pa, &QAction::triggered, this, &MainWindow::openAuthorities);
 
     action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
     connect(action_record, &QAction::triggered, this, &MainWindow::openRecords);
@@ -146,12 +147,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     QSettings* settings = application->applicationSettings();
 
-    m_navigatorView->saveViewState();
-
     settings->beginGroup("MainWindow");
     settings->setValue("geometry", saveGeometry());
     settings->setValue("windowState", saveState());
     settings->setValue("splitter_layout", ui->splitter_layout->saveState());
+    m_navigatorView->saveViewState();
     settings->endGroup();
 
     QMainWindow::closeEvent(event);
@@ -173,9 +173,9 @@ void MainWindow::openConnection()
     dialog.exec();
 }
 
-void MainWindow::openPublicAuthorities()
+void MainWindow::openAuthorities()
 {
-    RecordDialog dialog;
+    AuthorityDialog dialog;
     dialog.exec();
 }
 

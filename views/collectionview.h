@@ -1,6 +1,8 @@
 #ifndef RECORDVIEW_H
 #define RECORDVIEW_H
 
+#include "models/authoritytreemodel.h"
+#include "models/authorityproxymodel.h"
 #include "models/recordtreemodel.h"
 #include "models/recordproxymodel.h"
 #include "views/view.h"
@@ -19,7 +21,7 @@ public:
     explicit CollectionView(QWidget *parent = nullptr);
     ~CollectionView();
 
-    enum {CollectionRecord, CollectionYear, CollectionMember};
+    enum {CollectionAuthority, CollectionRecord, CollectionYear, CollectionMember};
 
     void restoreViewState() override;
     void saveViewState() override;
@@ -29,12 +31,16 @@ public:
 private:
     Ui::CollectionView *ui;
 
+    AuthorityTreeModel *m_authorityModel = nullptr;
+    AuthorityProxyModel *m_authorityProxyModel = nullptr;
+
     RecordTreeModel *m_recordModel = nullptr;
     RecordProxyModel *m_recordProxyModel = nullptr;
 
     QShortcut *m_refreshShortcut;
 
-    void setRecordCollection();
+    void setCollectionAuthority();
+    void setCollectionRecord();
 
 private slots:
     void contextMenu(const QPoint &pos);
