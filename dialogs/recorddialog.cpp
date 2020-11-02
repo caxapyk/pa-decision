@@ -25,7 +25,7 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->vL_buttonGroup->addWidget(pB_fundTitle);
     ui->vL_buttonGroup->addWidget(pB_comment);
 
-    m_model = new RecordTreeModel;
+    m_model = new RecordModel;
     m_model->select();
 
     m_proxyModel = new RecordProxyModel;
@@ -69,14 +69,14 @@ void RecordDialog::saveDialogState()
 
 void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
 {
-    RecordTreeModel::RecordNode *node = static_cast<RecordTreeModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
+    RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
-    insertShortcut->setEnabled(node == nullptr || node->level != RecordTreeModel::RecordLevel);
+    insertShortcut->setEnabled(node == nullptr || node->level != RecordModel::RecordLevel);
     editShortcut->setEnabled(current.isValid());
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
 
-    pB_fundTitle->setEnabled(current.isValid() && (node != nullptr && node->level == RecordTreeModel::FundLevel));
+    pB_fundTitle->setEnabled(current.isValid() && (node != nullptr && node->level == RecordModel::FundLevel));
     pB_comment->setEnabled(current.isValid());
 
     setInfoText();

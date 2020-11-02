@@ -1,43 +1,37 @@
-#ifndef RECORDTREEMODEL_H
-#define RECORDTREEMODEL_H
+#ifndef AUTHORITYMODEL_H
+#define AUTHORITYMODEL_H
+
+#include "models/collectionmodel.h"
 
 #include <QAbstractItemModel>
+#include <QMap>
+#include <QRegExp>
+#include <QVariant>
+#include <QVector>
 
-class RecordTreeModel : public QAbstractItemModel
+class AuthorityModel : public CollectionModel
 {
     Q_OBJECT
 
 public:
-    RecordTreeModel();
-    ~RecordTreeModel();
+    typedef QVector<QVariant> AT_Node;
+    typedef QVector<AT_Node*> AT_NodeList;
 
-    struct RecordNode
-    {
-        QVariant id;
-        QVariant number;
-        QVariant comment;
-        QVector<RecordNode*> children;
-        RecordNode* parent;
-        int level;
-        int row;
-        bool mapped;
-    };
+    AuthorityModel(QObject *parent = nullptr);
+    ~AuthorityModel();
 
-    enum Levels {FundLevel, InventoryLevel, RecordLevel};
+    int itemMaxNum(int column, const QRegExp &rule) const;
+    QModelIndex rootItem() const;
 
-    void clear();
-    void select();
-    void setupModelData(const QModelIndex &index=QModelIndex());
+    void clear() override;
+    void select() override;
 
-    bool canFetchMore(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent=QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     bool insertRows(int row, int count, const QModelIndex &parent) override;
-    void fetchMore(const QModelIndex &parent) override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     int rowCount(const QModelIndex &parent=QModelIndex()) const override;
@@ -46,11 +40,11 @@ public:
 
 private:
     QMap<int, QVariant> columnHeaders;
-    QMap<RecordNode*, QVariant> fundNames;
 
-    RecordNode *rootNode;
+    AT_Node *m_rootNode;
+    AT_NodeList *m_nodeList;
 
-    void recursivelyRemoveNodes(RecordNode *node=nullptr);
+    void setupModelData();
 };
 
-#endif // RECORDTREEMODEL_H
+#endif // AUTHORITYMODEL_H

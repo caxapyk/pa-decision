@@ -1,4 +1,4 @@
-#include "authoritytreemodel.h"
+#include "authoritymodel.h"
 
 #include <QDebug>
 #include <QIcon>
@@ -6,7 +6,7 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 
-AuthorityTreeModel::AuthorityTreeModel()
+AuthorityModel::AuthorityModel(QObject *parent) : CollectionModel(parent)
 {
     m_rootNode = new AT_Node;
     m_nodeList = new AT_NodeList;
@@ -14,14 +14,14 @@ AuthorityTreeModel::AuthorityTreeModel()
     setHeaderData(0, Qt::Horizontal, tr("Public Authorities"));
 }
 
-AuthorityTreeModel::~AuthorityTreeModel()
+AuthorityModel::~AuthorityModel()
 {
     clear();
     delete m_rootNode;
     delete m_nodeList;
 }
 
-void AuthorityTreeModel::clear()
+void AuthorityModel::clear()
 {
     beginResetModel();
     for(int i = 0; i< m_nodeList->size(); ++i) {
@@ -34,7 +34,7 @@ void AuthorityTreeModel::clear()
     endResetModel();
 }
 
-int AuthorityTreeModel::itemMaxNum(int column, const QRegExp &rule) const
+int AuthorityModel::itemMaxNum(int column, const QRegExp &rule) const
 {
     int max = 1;
     for(int i = 0; i < rowCount(rootItem()); ++i) {
@@ -53,7 +53,7 @@ int AuthorityTreeModel::itemMaxNum(int column, const QRegExp &rule) const
     return max;
 }
 
-void AuthorityTreeModel::select()
+void AuthorityModel::select()
 {
     beginResetModel();
 
@@ -63,7 +63,7 @@ void AuthorityTreeModel::select()
     endResetModel();
 }
 
-void AuthorityTreeModel::setupModelData()
+void AuthorityModel::setupModelData()
 {
     QSqlQuery query("SELECT id, name FROM pad_authority ORDER BY name ASC");
 
@@ -77,7 +77,7 @@ void AuthorityTreeModel::setupModelData()
     }
 }
 
-Qt::ItemFlags AuthorityTreeModel::flags(const QModelIndex &index) const
+Qt::ItemFlags AuthorityModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return QAbstractItemModel::flags(index);
@@ -91,7 +91,7 @@ Qt::ItemFlags AuthorityTreeModel::flags(const QModelIndex &index) const
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
 }
 
-QModelIndex AuthorityTreeModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex AuthorityModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent)) {
         return QModelIndex();
@@ -104,7 +104,7 @@ QModelIndex AuthorityTreeModel::index(int row, int column, const QModelIndex &pa
     return createIndex(row, column, m_nodeList->at(row));
 }
 
-bool AuthorityTreeModel::insertRows(int row, int count, const QModelIndex &parent)
+bool AuthorityModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     QSqlQuery query;
 
@@ -134,7 +134,7 @@ bool AuthorityTreeModel::insertRows(int row, int count, const QModelIndex &paren
     return false;
 }
 
-QVariant AuthorityTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AuthorityModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if ((section < 0)
             || ((orientation == Qt::Horizontal) && (section >= columnCount()))
@@ -149,7 +149,7 @@ QVariant AuthorityTreeModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-QModelIndex AuthorityTreeModel::parent(const QModelIndex &index) const
+QModelIndex AuthorityModel::parent(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return QModelIndex();
@@ -163,7 +163,7 @@ QModelIndex AuthorityTreeModel::parent(const QModelIndex &index) const
     return createIndex(0, 0, m_rootNode);
 }
 
-bool AuthorityTreeModel::removeRows(int row, int count, const QModelIndex &parent)
+bool AuthorityModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     QSqlQuery query;
 
@@ -192,12 +192,12 @@ bool AuthorityTreeModel::removeRows(int row, int count, const QModelIndex &paren
     return true;
 }
 
-QModelIndex AuthorityTreeModel::rootItem() const
+QModelIndex AuthorityModel::rootItem() const
 {
     return index(0, 0, QModelIndex());
 }
 
-int AuthorityTreeModel::rowCount(const QModelIndex &parent) const
+int AuthorityModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
         return 1;
@@ -211,12 +211,12 @@ int AuthorityTreeModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int AuthorityTreeModel::columnCount(const QModelIndex &) const
+int AuthorityModel::columnCount(const QModelIndex &) const
 {
     return 1;
 }
 
-QVariant AuthorityTreeModel::data(const QModelIndex &index, int role) const
+QVariant AuthorityModel::data(const QModelIndex &index, int role) const
 {
     switch (role) {
         case Qt::DisplayRole:
@@ -252,7 +252,7 @@ QVariant AuthorityTreeModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool AuthorityTreeModel::setData(const QModelIndex &index, const QVariant &value, int role){
+bool AuthorityModel::setData(const QModelIndex &index, const QVariant &value, int role){
     switch (role) {
         case Qt::EditRole:
             if(value.toString().size() > 0) {
@@ -279,7 +279,7 @@ bool AuthorityTreeModel::setData(const QModelIndex &index, const QVariant &value
     return false;
 }
 
-bool AuthorityTreeModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int)
+bool AuthorityModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int)
 {
     if ((section < 0)
             || ((orientation == Qt::Horizontal) && (section >= columnCount()))

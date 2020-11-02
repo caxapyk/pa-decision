@@ -65,7 +65,7 @@ void Application::connect()
         QString hostname = !parser.value(hostnameOption).isEmpty() ? parser.value(hostnameOption) : m_settings->value("hostname").toString();
         QString database = !parser.value(databaseOption).isEmpty() ? parser.value(databaseOption) : m_settings->value("db").toString();
         QString username = !parser.value(usernameOption).isEmpty() ? parser.value(usernameOption) : m_settings->value("user").toString();
-        QString password = !parser.value(passwordOption).isEmpty() ? parser.value(passwordOption) : m_settings->value("password").toString();
+        QString password = !parser.value(passwordOption).isEmpty() ? parser.value(passwordOption) : QByteArray().fromBase64(m_settings->value("password").toByteArray());
         m_settings->endGroup();
 
         conn.connect(hostname, database, username, password);

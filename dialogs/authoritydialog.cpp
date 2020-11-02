@@ -18,7 +18,7 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     pB_details->setDisabled(true);
     ui->vL_buttonGroup->addWidget(pB_details);
 
-    m_model = new AuthorityTreeModel;
+    m_model = new AuthorityModel;
     m_model->select();
 
     m_proxyModel = new AuthorityProxyModel;

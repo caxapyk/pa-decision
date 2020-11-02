@@ -37,7 +37,7 @@ MainWindow::~MainWindow()
     delete action_print;
     delete action_record;
     delete action_remove;
-    delete action_refresh;
+    //delete action_refresh;
     delete action_tree;
 
     //delete m_editShortcut;
@@ -63,8 +63,6 @@ void MainWindow::initialize()
 void MainWindow::restoreAppState()
 {
     QSettings* settings = application->applicationSettings();
-
-    m_navigatorView->restoreViewState();
 
     //restore main window geometry and states
     restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
@@ -108,9 +106,9 @@ void MainWindow::setupToolBar()
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
 
-    action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
+    //action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
 
-    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Navigation"));
+    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Collections"));
     action_tree->setCheckable(true);
     action_tree->setChecked(true);
     connect(action_tree, &QAction::triggered, this, [=]{
@@ -131,7 +129,7 @@ void MainWindow::setupToolBar()
     ui->toolBar->addAction(action_remove);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_print);
-    ui->toolBar->addAction(action_refresh);
+    //ui->toolBar->addAction(action_refresh);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_tree);
     ui->toolBar->addSeparator();
@@ -151,7 +149,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings->setValue("geometry", saveGeometry());
     settings->setValue("windowState", saveState());
     settings->setValue("splitter_layout", ui->splitter_layout->saveState());
-    m_navigatorView->saveViewState();
     settings->endGroup();
 
     QMainWindow::closeEvent(event);
@@ -176,11 +173,19 @@ void MainWindow::openConnection()
 void MainWindow::openAuthorities()
 {
     AuthorityDialog dialog;
-    dialog.exec();
+    int res = dialog.exec();
+
+    if(res == AuthorityDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionAuthority) {
+        m_navigatorView->refresh();
+    }
 }
 
 void MainWindow::openRecords()
 {
     RecordDialog dialog;
-    dialog.exec();
+    int res = dialog.exec();
+
+    if(res == AuthorityDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionRecord) {
+        m_navigatorView->refresh();
+    }
 }

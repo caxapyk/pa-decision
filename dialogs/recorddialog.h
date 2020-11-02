@@ -2,7 +2,7 @@
 #define RECORDDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/recordtreemodel.h"
+#include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
 
 #include <QDialog>
@@ -30,7 +30,7 @@ public slots:
     void remove() override;
 
 private:
-    RecordTreeModel *m_model;
+    RecordModel *m_model;
     RecordProxyModel *m_proxyModel;
 
     QPushButton *pB_comment;

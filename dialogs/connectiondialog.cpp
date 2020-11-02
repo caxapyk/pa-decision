@@ -16,7 +16,7 @@ ConnectionDialog::ConnectionDialog(QWidget *parent) :
     ui->lE_hostname->setText(application->applicationSettings()->value("hostname").toString());
     ui->lE_dbname->setText(application->applicationSettings()->value("db").toString());
     ui->lE_dbuser->setText(application->applicationSettings()->value("user").toString());
-    ui->lE_dbpass->setText(application->applicationSettings()->value("password").toString());
+    ui->lE_dbpass->setText(QByteArray().fromBase64(application->applicationSettings()->value("password").toByteArray()));
     application->applicationSettings()->endGroup();
 
     connect(ui->pB_test, &QPushButton::clicked, this, &ConnectionDialog::testConnection);
@@ -59,7 +59,7 @@ void ConnectionDialog::save()
     application->applicationSettings()->setValue("hostname", ui->lE_hostname->text());
     application->applicationSettings()->setValue("db", ui->lE_dbname->text());
     application->applicationSettings()->setValue("user", ui->lE_dbuser->text());
-    application->applicationSettings()->setValue("password", ui->lE_dbpass->text());
+    application->applicationSettings()->setValue("password", QVariant(ui->lE_dbpass->text()).toByteArray().toBase64());
     application->applicationSettings()->endGroup();
 
     accept();

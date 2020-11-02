@@ -28,16 +28,15 @@ SOURCES += \
     dialogs/referencedialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    models/authoritymodel.cpp \
     models/authorityproxymodel.cpp \
-    models/authoritytreemodel.cpp \
+    models/collectionmodel.cpp \
     models/colorpickeritemdelegate.cpp \
     models/decisionmodel.cpp \
     models/doctypemodel.cpp \
+    models/recordmodel.cpp \
     models/recordproxymodel.cpp \
-    models/recordtreemodel.cpp \
     utils/stringsort.cpp \
-    views/authorityview.cpp \
-    views/collectionview.cpp \
     views/decisionview.cpp \
     views/navigatorview.cpp \
     views/view.cpp \
@@ -56,16 +55,15 @@ HEADERS += \
     dialogs/recorddialog.h \
     dialogs/referencedialog.h \
     mainwindow.h \
+    models/authoritymodel.h \
     models/authorityproxymodel.h \
-    models/authoritytreemodel.h \
+    models/collectionmodel.h \
     models/colorpickeritemdelegate.h \
     models/decisionmodel.h \
     models/doctypemodel.h \
+    models/recordmodel.h \
     models/recordproxymodel.h \
-    models/recordtreemodel.h \
     utils/stringsort.h \
-    views/authorityview.h \
-    views/collectionview.h \
     views/decisionview.h \
     views/navigatorview.h \
     views/view.h \
@@ -79,8 +77,6 @@ FORMS += \
     dialogs/connectiondialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \
-    views/authorityview.ui \
-    views/collectionview.ui \
     views/decisionview.ui \
     views/navigatorview.ui \
     widgets/searchpanel.ui \

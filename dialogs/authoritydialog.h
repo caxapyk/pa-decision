@@ -2,7 +2,7 @@
 #define AUTHORITYDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/authoritytreemodel.h"
+#include "models/authoritymodel.h"
 #include "models/authorityproxymodel.h"
 
 #include <QDialog>
@@ -27,7 +27,7 @@ public slots:
     void remove() override;
 
 private:
-    AuthorityTreeModel *m_model;
+    AuthorityModel *m_model;
     AuthorityProxyModel *m_proxyModel;
 
     QPushButton *pB_details;
