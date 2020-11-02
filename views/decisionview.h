@@ -7,6 +7,7 @@
 #include "widgets/paginator.h"
 
 #include <QWidget>
+#include <QShortcut>
 
 namespace Ui {
 class DecisionView;
@@ -23,6 +24,12 @@ public:
     void restoreViewState() override;
     void saveViewState() override;
 
+public slots:
+    void edit();
+    void insert();
+    void refresh();
+    void remove();
+
 private:
     Ui::DecisionView *ui;
     Paginator *m_paginator;
@@ -30,7 +37,15 @@ private:
     DecisionModel *m_model;
     DecisionProxyModel *m_proxyModel;
 
+    QShortcut *insertShortcut;
+    QShortcut *editShortcut;
+    QShortcut *removeShortcut;
+    QShortcut *refreshShortcut;
+
     void initialize() override;
+
+    void contextMenu(const QPoint &pos);
+    void setupShortcuts();
 };
 
 #endif // DECISIONVIEW_H

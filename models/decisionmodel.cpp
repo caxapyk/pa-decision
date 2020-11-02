@@ -64,6 +64,7 @@ void DecisionModel::where(const QString &condition)
 QString DecisionModel::field(const QModelIndex &index) const
 {
     QString field;
+
     if(index.column() == Column::Date)
         field = "date";
     else if(index.column() == Column::Number)
