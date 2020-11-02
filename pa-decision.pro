@@ -33,6 +33,7 @@ SOURCES += \
     models/collectionmodel.cpp \
     models/colorpickeritemdelegate.cpp \
     models/decisionmodel.cpp \
+    models/decisionproxymodel.cpp \
     models/doctypemodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
@@ -42,6 +43,7 @@ SOURCES += \
     views/view.cpp \
     widgets/colorrect.cpp \
     widgets/customcontextmenu.cpp \
+    widgets/paginator.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
 
@@ -60,6 +62,7 @@ HEADERS += \
     models/collectionmodel.h \
     models/colorpickeritemdelegate.h \
     models/decisionmodel.h \
+    models/decisionproxymodel.h \
     models/doctypemodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
@@ -69,6 +72,7 @@ HEADERS += \
     views/view.h \
     widgets/colorrect.h \
     widgets/customcontextmenu.h \
+    widgets/paginator.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h
 
@@ -79,6 +83,7 @@ FORMS += \
     mainwindow.ui \
     views/decisionview.ui \
     views/navigatorview.ui \
+    widgets/paginator.ui \
     widgets/searchpanel.ui \
     widgets/statusbarpanel.ui
 

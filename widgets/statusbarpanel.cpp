@@ -8,15 +8,11 @@ StatusBarPanel::StatusBarPanel(QWidget *parent) :
     ui(new Ui::StatusBarPanel)
 {
     ui->setupUi(this);
-    ui->label_serverAddress->setText(application->server_address);
+    ui->label_server->setText(application->server_address);
+    ui->label_user->setText(application->server_username);
 }
 
 StatusBarPanel::~StatusBarPanel()
 {
     delete ui;
-}
-
-void StatusBarPanel::setTotal(int total)
-{
-    ui->label_total->setText(tr("Total rows %1").arg(QString::number(total)));
 }

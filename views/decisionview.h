@@ -1,7 +1,10 @@
 #ifndef DECISIONVIEW_H
 #define DECISIONVIEW_H
 
+#include "models/decisionmodel.h"
+#include "models/decisionproxymodel.h"
 #include "views/view.h"
+#include "widgets/paginator.h"
 
 #include <QWidget>
 
@@ -22,6 +25,10 @@ public:
 
 private:
     Ui::DecisionView *ui;
+    Paginator *m_paginator;
+
+    DecisionModel *m_model;
+    DecisionProxyModel *m_proxyModel;
 
     void initialize() override;
 };

@@ -87,7 +87,6 @@ void MainWindow::setupShortcuts()
 void MainWindow::setupStatusBar()
 {
     m_statusBarPanel = new StatusBarPanel;
-    m_statusBarPanel->setTotal(0);
     ui->statusbar->addPermanentWidget(m_statusBarPanel);
 
     statusBar()->showMessage(tr("Ready"));
@@ -131,11 +130,11 @@ void MainWindow::setupToolBar()
     ui->toolBar->addAction(action_print);
     //ui->toolBar->addAction(action_refresh);
     ui->toolBar->addSeparator();
-    ui->toolBar->addAction(action_tree);
-    ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_pa);
     ui->toolBar->addAction(action_record);
     ui->toolBar->addAction(action_doctype);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(action_tree);
 
     m_searchPanel = new SearchPanel();
     ui->toolBar->addWidget(m_searchPanel);

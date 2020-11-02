@@ -1,12 +1,20 @@
 #include "decisionmodel.h"
 
+#include <QColor>
 #include <QDebug>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
 
 DecisionModel::DecisionModel()
 {
     m_nodeList = new NodeList;
+
+    setHeaderData(DecisionModel::Date, Qt::Horizontal, tr("Date"));
+    setHeaderData(DecisionModel::Number, Qt::Horizontal, tr("Number"));
+    setHeaderData(DecisionModel::Title, Qt::Horizontal, tr("Title"));
+    setHeaderData(DecisionModel::ARecord, Qt::Horizontal, tr("Archive record"));
+    setHeaderData(DecisionModel::Comment, Qt::Horizontal, tr("Comment"));
 }
 
 DecisionModel::~DecisionModel()
@@ -38,75 +46,105 @@ void DecisionModel::select()
     endResetModel();
 }
 
+void DecisionModel::andWhere(const QString &condition)
+{
+
+}
+
+void DecisionModel::orWhere(const QString &condition)
+{
+
+}
+
+void DecisionModel::where(const QString &condition)
+{
+
+}
+
+QString DecisionModel::field(const QModelIndex &index) const
+{
+    QString field;
+    if(index.column() == Column::Date)
+        field = "date";
+    else if(index.column() == Column::Number)
+        field = "number";
+    else if(index.column() == Column::Title)
+        field = "title";
+    else if(index.column() == Column::Comment)
+         field = "comment";
+
+    return field;
+}
+
 void DecisionModel::setupModelData()
 {
-    QSqlQuery query("SELECT id, name FROM pad_authority ORDER BY name ASC");
+    QSqlQuery query;
+    query.prepare(
+            QString(" \
+                    SELECT \
+                    pad_decision.id, \
+                    pad_decision.date, \
+                    pad_decision.number, \
+                    pad_decision.title, \
+                    pad_decision.comment, \
+                    pad_doctype.color AS color \
+                    FROM pad_decision \
+                    LEFT JOIN pad_doctype ON pad_decision.doctype_id=pad_doctype.id \
+                    %1 ORDER BY pad_decision.id DESC"
+            ).arg(cond.isEmpty() ? QString() : "WHERE " + cond));
+
+    query.exec();
 
     while (query.next()) {
         Node *node = new Node;
 
-        node->append(query.value(query.record().indexOf("id")));
-        node->append(query.value(query.record().indexOf("name")));
+        for(int i = 0; i < query.record().count(); ++i) {
+            node->insert(query.record().fieldName(i), query.record().value(i));
+        }
 
         m_nodeList->append(node);
     }
 }
 
-
 int DecisionModel::columnCount(const QModelIndex &) const
 {
-    return 0;
+    return ColumnCount;
 }
 
 QVariant DecisionModel::data(const QModelIndex &index, int role) const
 {
+    const Node* currentNode = static_cast<Node*>(index.internalPointer());
+
     switch (role) {
-        case Qt::DisplayRole:
-            /*if(index.parent().isValid()) {
-                const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
-                return currentNode->at(1);
-            }
-
-            if(index.column() == 0) {
-                return QVariant(tr("All Public Authorities"));
-            }*/
-        break;
-        case Qt::EditRole:
-            return data(index, Qt::DisplayRole);
-        break;
-        case Qt::DecorationRole:
-            /*if (index.column() == 0) {
-                if(index == rootItem())
-                    return QIcon(":/icons/icons/folder-16.png");
-
-                return QIcon(":/icons/icons/icon-16.png");
-            }*/
-        break;
-        // return id of item
-        case Qt::UserRole:
-            /*if (index.column() == 0) {
-                const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
-                return currentNode->at(0);
-            }*/
-        break;
+    case Qt::DisplayRole:
+        return currentNode->value(field(index));
+    break;
+    case Qt::EditRole:
+        return data(index, Qt::DisplayRole);
+    break;
+    case Qt::BackgroundColorRole:
+        return QColor(currentNode->value("color").toString());
     }
 
     return QVariant();
 }
 
+Qt::ItemFlags DecisionModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()  || index.column() == DecisionModel::ARecord) {
+        return QAbstractItemModel::flags(index);
+    }
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
+}
+
 QModelIndex DecisionModel::index(int row, int column, const QModelIndex &parent) const
 {
-    /*if (!hasIndex(row, column, parent)) {
+    if (!hasIndex(row, column, parent)) {
         return QModelIndex();
     }
 
-    if (!parent.isValid()) {
-        return createIndex(row, column, m_rootNode);
-    }
-
-    return createIndex(row, column, m_nodeList->at(row));*/
-
-    return QModelIndex();
+    return createIndex(row, column, m_nodeList->at(row));
 }
 
 QVariant DecisionModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -119,62 +157,46 @@ QVariant DecisionModel::headerData(int section, Qt::Orientation orientation, int
 
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return columnHeaders.value(section);
-     }
+    } else if (orientation == Qt::Vertical && role == Qt::DisplayRole) {
+        return section + 1;
+    }
 
     return QVariant();
 }
 
-QModelIndex DecisionModel::parent(const QModelIndex &index) const
+QModelIndex DecisionModel::parent(const QModelIndex &) const
 {
-    /*if (!index.isValid()) {
-        return QModelIndex();
-    }
-
-    AT_Node *node = static_cast<AT_Node*>(index.internalPointer());
-    if(node->isEmpty()) {
-        return QModelIndex();
-    }
-
-    return createIndex(0, 0, m_rootNode);*/
-
     return QModelIndex();
 }
 
-int DecisionModel::rowCount(const QModelIndex &parent) const
+int DecisionModel::rowCount(const QModelIndex &) const
 {
-    /*if (!parent.isValid()) {
-        return 1;
-    }
-
-    AT_Node *node = static_cast<AT_Node*>(parent.internalPointer());
-    if(node->isEmpty()) {
-        return m_nodeList->size();
-    }*/
-
-    return 0;
+    return m_nodeList->size();
 }
 
 bool DecisionModel::setData(const QModelIndex &index, const QVariant &value, int role){
     switch (role) {
         case Qt::EditRole:
-            /*if(value.toString().size() > 0) {
-                AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
+            if(value.toString().size() > 0) {
+                Node* currentNode = static_cast<Node*>(index.internalPointer());
 
                 QSqlQuery query;
-                query.prepare("UPDATE pad_authority SET name=? WHERE id=?");
+                QString f = field(index);
+
+                query.prepare(QString("UPDATE pad_decision SET %1=? WHERE id=?").arg(f));
                 query.bindValue(0, value);
-                query.bindValue(1, currentNode->at(0));
+                query.bindValue(1, currentNode->value("id"));
                 query.exec();
 
                 if(query.isActive()) {
-                    currentNode->replace(1, value);
+                    currentNode->insert(f, value);
                     emit dataChanged(index, index);
 
                     return true;
                 }
 
                 qDebug() << query.lastError().text();
-            }*/
+            }
         break;
     }
 

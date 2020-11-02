@@ -57,6 +57,7 @@ void Application::connect()
     parser.process(*application);
 
     server_address = parser.value(hostnameOption);
+    server_username = parser.value(usernameOption);
 
     try {
         Connection conn;
@@ -71,6 +72,7 @@ void Application::connect()
         conn.connect(hostname, database, username, password);
 
         server_address = hostname;
+        server_username = username;
 
         initMainWindow();
     } catch (ConnectionExeption e) {

@@ -15,8 +15,6 @@ public:
     explicit StatusBarPanel(QWidget *parent = nullptr);
     ~StatusBarPanel();
 
-    void setTotal(int total);
-
 private:
     Ui::StatusBarPanel *ui;
 };

@@ -25,6 +25,7 @@ public:
     void connect();
 
     QString server_address;
+    QString server_username;
 
     const QString m_orgName = "GAOO";
     const QString m_appName = "pa-decision";
