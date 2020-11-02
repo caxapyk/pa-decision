@@ -40,10 +40,6 @@ private:
     //QAction *action_refresh;
     QAction *action_tree;
 
-    //QShortcut *m_editShortcut;
-    //QShortcut *m_newShortcut;
-    //QShortcut *m_refreshShortcut;
-    //QShortcut *m_removeShortcut;
     QShortcut *m_searchShortcut;
 
     void initialize();

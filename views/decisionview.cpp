@@ -2,6 +2,7 @@
 #include "ui_decisionview.h"
 
 #include "application.h"
+#include "dialogs/decisionnewdialog.h"
 #include "widgets/customcontextmenu.h"
 
 #include <QSettings>
@@ -69,11 +70,24 @@ void DecisionView::contextMenu(const QPoint &)
 {
     CustomContextMenu menu(CustomContextMenu::All);
 
-    //QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
-    //refreshAction->setShortcut(m_refreshShortcut->key());
-    //connect(refreshAction, &QAction::triggered, this, [=] {
-    ///    switchModel(ui->cB_collection->currentIndex());
-    //});
+    QAction *insertAction = menu.action(CustomContextMenu::Insert);
+    insertAction->setShortcut(insertShortcut->key());
+    insertAction->setEnabled(insertShortcut->isEnabled());
+    connect(insertAction, &QAction::triggered, this, &DecisionView::insert);
+
+    QAction *editAction = menu.action(CustomContextMenu::Edit);
+    editAction->setShortcut(editShortcut->key());
+    editAction->setEnabled(editShortcut->isEnabled());
+    connect(editAction, &QAction::triggered, this,  &DecisionView::edit);
+
+    QAction *removeAction = menu.action(CustomContextMenu::Remove);
+    removeAction->setShortcut(removeShortcut->key());
+    removeAction->setEnabled(removeShortcut->isEnabled());
+    connect(removeAction, &QAction::triggered, this,  &DecisionView::remove);
+
+    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
+    refreshAction->setShortcut(refreshShortcut->key());
+    connect(refreshAction, &QAction::triggered, this, &DecisionView::refresh);
 
     menu.exec(QCursor().pos());
 }
@@ -100,12 +114,20 @@ void DecisionView::edit()
 
 void DecisionView::insert()
 {
+    DecisionNewDialog dialog;
+    int res = dialog.exec();
 
+    if(res == DecisionNewDialog::Accepted) {
+        // do smth
+    }
 }
 
 void DecisionView::refresh()
 {
+    ui->tV_decision->selectionModel()->clearSelection();
 
+    m_proxyModel->invalidate();
+    m_model->select();
 }
 
 void DecisionView::remove()

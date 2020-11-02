@@ -23,6 +23,8 @@ SOURCES += \
     dialogs/authoritydetailsdialog.cpp \
     dialogs/authoritydialog.cpp \
     dialogs/connectiondialog.cpp \
+    dialogs/decisionbasedialog.cpp \
+    dialogs/decisionnewdialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/recorddialog.cpp \
     dialogs/referencedialog.cpp \
@@ -53,6 +55,8 @@ HEADERS += \
     dialogs/authoritydetailsdialog.h \
     dialogs/authoritydialog.h \
     dialogs/connectiondialog.h \
+    dialogs/decisionbasedialog.h \
+    dialogs/decisionnewdialog.h \
     dialogs/doctypedialog.h \
     dialogs/recorddialog.h \
     dialogs/referencedialog.h \
@@ -79,6 +83,7 @@ HEADERS += \
 FORMS += \
     dialogs/authoritydetailsdialog.ui \
     dialogs/connectiondialog.ui \
+    dialogs/decisionbasedialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \
     views/decisionview.ui \

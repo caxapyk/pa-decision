@@ -41,7 +41,7 @@ private:
     void setupShortcuts();
 
 private slots:
-    virtual void changeCurrent(const QModelIndex &current, const QModelIndex &) {};
+    virtual void changeCurrent(const QModelIndex &current, const QModelIndex &) = 0;
 
     void accept() override;
     void reject() override;
