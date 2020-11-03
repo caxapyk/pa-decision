@@ -6,8 +6,8 @@
 #include "views/view.h"
 #include "widgets/paginator.h"
 
-#include <QWidget>
 #include <QShortcut>
+#include <QWidget>
 
 namespace Ui {
 class DecisionView;
@@ -46,6 +46,9 @@ private:
 
     void contextMenu(const QPoint &pos);
     void setupShortcuts();
+
+private slots:
+    void selected(const QItemSelection &selected, const QItemSelection &deselected);
 };
 
 #endif // DECISIONVIEW_H

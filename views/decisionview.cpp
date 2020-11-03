@@ -48,6 +48,7 @@ void DecisionView::initialize()
     ui->tV_decision->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui->tV_decision, &QMenu::customContextMenuRequested, this, &DecisionView::contextMenu);
+    connect(ui->tV_decision->selectionModel(), &QItemSelectionModel::selectionChanged, this, &DecisionView::selected);
 }
 
 void DecisionView::restoreViewState()
@@ -72,7 +73,7 @@ void DecisionView::contextMenu(const QPoint &)
 
     QAction *insertAction = menu.action(CustomContextMenu::Insert);
     insertAction->setShortcut(insertShortcut->key());
-    insertAction->setEnabled(insertShortcut->isEnabled());
+    insertAction->setEnabled(true);
     connect(insertAction, &QAction::triggered, this, &DecisionView::insert);
 
     QAction *editAction = menu.action(CustomContextMenu::Edit);
@@ -87,6 +88,7 @@ void DecisionView::contextMenu(const QPoint &)
 
     QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
     refreshAction->setShortcut(refreshShortcut->key());
+    refreshShortcut->setEnabled(true);
     connect(refreshAction, &QAction::triggered, this, &DecisionView::refresh);
 
     menu.exec(QCursor().pos());
@@ -95,15 +97,19 @@ void DecisionView::contextMenu(const QPoint &)
 void DecisionView::setupShortcuts()
 {
     insertShortcut = new QShortcut(QKeySequence::New, ui->tV_decision, nullptr, nullptr, Qt::WidgetShortcut);
+    insertShortcut->setEnabled(true);
     connect(insertShortcut, &QShortcut::activated, this, &DecisionView::insert);
 
     editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_decision, nullptr, nullptr, Qt::WidgetShortcut);
+    editShortcut->setEnabled(false);
     connect(editShortcut, &QShortcut::activated, this, &DecisionView::edit);
 
     removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_decision, nullptr, nullptr, Qt::WidgetShortcut);
+    removeShortcut->setEnabled(false);
     connect(removeShortcut, &QShortcut::activated, this, &DecisionView::remove);
 
     refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_decision, nullptr, nullptr, Qt::WidgetShortcut);
+    setEnabled(true);
     connect(refreshShortcut, &QShortcut::activated, this, &DecisionView::refresh);
 }
 
@@ -133,4 +139,15 @@ void DecisionView::refresh()
 void DecisionView::remove()
 {
 
+}
+
+void DecisionView::selected(const QItemSelection &, const QItemSelection &)
+{
+    int len = ui->tV_decision->selectionModel()->selectedRows().length();
+
+    editShortcut->setEnabled(len == 1);
+    removeShortcut->setEnabled(len > 0);
+
+    application->mainWindow()->action_edit->setEnabled(len == 1);
+    application->mainWindow()->action_remove->setEnabled(len > 0);
 }

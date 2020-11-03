@@ -2,11 +2,14 @@
 <ui version="4.0">
  <class>SearchPanel</class>
  <widget class="QWidget" name="SearchPanel">
+  <property name="enabled">
+   <bool>false</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>235</width>
+    <width>241</width>
     <height>47</height>
    </rect>
   </property>

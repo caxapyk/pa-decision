@@ -21,15 +21,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private:
-    Ui::MainWindow *ui;
-
-    NavigatorView *m_navigatorView;
-    DecisionView *m_decisionView;
-
-    StatusBarPanel *m_statusBarPanel;
-    SearchPanel *m_searchPanel;
-
     QAction *action_doctype;
     QAction *action_edit;
     QAction *action_new;
@@ -39,6 +30,16 @@ private:
     QAction *action_remove;
     //QAction *action_refresh;
     QAction *action_tree;
+
+
+private:
+    Ui::MainWindow *ui;
+
+    NavigatorView *m_navigatorView;
+    DecisionView *m_decisionView;
+
+    StatusBarPanel *m_statusBarPanel;
+    SearchPanel *m_searchPanel;
 
     QShortcut *m_searchShortcut;
 

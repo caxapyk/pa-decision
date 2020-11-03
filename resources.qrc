@@ -34,6 +34,8 @@
         <file>icons/goto-16.png</file>
         <file>icons/icon-24.png</file>
         <file>icons/user-16.png</file>
+        <file>icons/word-16.png</file>
+        <file>icons/scanner-16.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>

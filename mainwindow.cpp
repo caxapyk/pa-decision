@@ -93,6 +93,7 @@ void MainWindow::setupToolBar()
 
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
     action_edit->setDisabled(true);
+    connect(action_edit, &QAction::triggered, m_decisionView, &DecisionView::edit);
 
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
