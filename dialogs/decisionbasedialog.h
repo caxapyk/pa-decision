@@ -1,6 +1,8 @@
 #ifndef DECISIONBASEDIALOG_H
 #define DECISIONBASEDIALOG_H
 
+#include "models/authorityflatmodel.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -17,6 +19,10 @@ public:
 
 private:
     Ui::DecisionBaseDialog *ui;
+
+    AuthorityFlatModel *m_authorityModel;
+
+    void initialize();
 };
 
 #endif // DECISIONBASEDIALOG_H

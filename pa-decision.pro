@@ -30,6 +30,7 @@ SOURCES += \
     dialogs/referencedialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    models/authorityflatmodel.cpp \
     models/authoritymodel.cpp \
     models/authorityproxymodel.cpp \
     models/collectionmodel.cpp \
@@ -61,6 +62,7 @@ HEADERS += \
     dialogs/recorddialog.h \
     dialogs/referencedialog.h \
     mainwindow.h \
+    models/authorityflatmodel.h \
     models/authoritymodel.h \
     models/authorityproxymodel.h \
     models/collectionmodel.h \

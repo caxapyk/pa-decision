@@ -41,10 +41,12 @@ public:
 private:
     QMap<int, QVariant> columnHeaders;
 
+    void setupModelData();
+
+protected:
     AT_Node *m_rootNode;
     AT_NodeList *m_nodeList;
 
-    void setupModelData();
 };
 
 #endif // AUTHORITYMODEL_H

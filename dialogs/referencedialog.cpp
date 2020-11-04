@@ -28,6 +28,21 @@ ReferenceDialog::~ReferenceDialog()
     delete refreshShortcut;
 }
 
+void ReferenceDialog::setupShortcuts()
+{
+    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(insertShortcut, &QShortcut::activated, this, &ReferenceDialog::insert);
+
+    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(editShortcut, &QShortcut::activated, this, &ReferenceDialog::edit);
+
+    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(removeShortcut, &QShortcut::activated, this, &ReferenceDialog::remove);
+
+    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
+    connect(refreshShortcut, &QShortcut::activated, this, &ReferenceDialog::refresh);
+}
+
 void ReferenceDialog::contextMenu(const QPoint &)
 {
     QModelIndex currentIndex = ui->tV_itemView->indexAt(ui->tV_itemView->viewport()->mapFromGlobal(QCursor().pos()));
@@ -55,21 +70,6 @@ void ReferenceDialog::contextMenu(const QPoint &)
     connect(refreshAction, &QAction::triggered, this, &ReferenceDialog::refresh);
 
     menu.exec(QCursor().pos());
-}
-
-void ReferenceDialog::setupShortcuts()
-{
-    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(insertShortcut, &QShortcut::activated, this, &ReferenceDialog::insert);
-
-    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(editShortcut, &QShortcut::activated, this, &ReferenceDialog::edit);
-
-    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(removeShortcut, &QShortcut::activated, this, &ReferenceDialog::remove);
-
-    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(refreshShortcut, &QShortcut::activated, this, &ReferenceDialog::refresh);
 }
 
 void ReferenceDialog::accept()
