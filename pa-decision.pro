@@ -34,13 +34,13 @@ SOURCES += \
     models/authorityflatmodel.cpp \
     models/authoritymodel.cpp \
     models/authorityproxymodel.cpp \
-    models/collectionmodel.cpp \
     models/colorpickeritemdelegate.cpp \
     models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
     models/doctypemodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
+    models/referencemodel.cpp \
     utils/stringsort.cpp \
     views/decisionview.cpp \
     views/navigatorview.cpp \
@@ -48,6 +48,7 @@ SOURCES += \
     widgets/colorrect.cpp \
     widgets/customcontextmenu.cpp \
     widgets/paginator.cpp \
+    widgets/recorddialogheader.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
@@ -68,13 +69,13 @@ HEADERS += \
     models/authorityflatmodel.h \
     models/authoritymodel.h \
     models/authorityproxymodel.h \
-    models/collectionmodel.h \
     models/colorpickeritemdelegate.h \
     models/decisionmodel.h \
     models/decisionproxymodel.h \
     models/doctypemodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
+    models/referencemodel.h \
     utils/stringsort.h \
     views/decisionview.h \
     views/navigatorview.h \
@@ -82,6 +83,7 @@ HEADERS += \
     widgets/colorrect.h \
     widgets/customcontextmenu.h \
     widgets/paginator.h \
+    widgets/recorddialogheader.h \
     widgets/referencebutton.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h
@@ -96,6 +98,7 @@ FORMS += \
     views/decisionview.ui \
     views/navigatorview.ui \
     widgets/paginator.ui \
+    widgets/recorddialogheader.ui \
     widgets/referencebutton.ui \
     widgets/searchpanel.ui \
     widgets/statusbarpanel.ui
@@ -110,3 +113,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+DISTFILES +=

@@ -1,7 +1,7 @@
 #ifndef AUTHORITYMODEL_H
 #define AUTHORITYMODEL_H
 
-#include "models/collectionmodel.h"
+#include "models/referencemodel.h"
 
 #include <QAbstractItemModel>
 #include <QMap>
@@ -9,7 +9,7 @@
 #include <QVariant>
 #include <QVector>
 
-class AuthorityModel : public CollectionModel
+class AuthorityModel : public ReferenceModel
 {
     Q_OBJECT
 

@@ -27,7 +27,7 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     m_proxyModel->setSourceModel(m_model);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ProtocolDialog::changeCurrent);
+    //connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ProtocolDialog::selected);
 }
 
 ProtocolDialog::~ProtocolDialog()
@@ -55,7 +55,7 @@ void ProtocolDialog::saveDialogState()
     settings->endGroup();
 }
 
-void ProtocolDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
+void ProtocolDialog::selected(const QModelIndex &current, const QModelIndex &)
 {
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
@@ -68,7 +68,7 @@ void ProtocolDialog::changeCurrent(const QModelIndex &current, const QModelIndex
 
     //ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(chr_mode && node->level != RecordModel::RecordLevel);
 
-    setInfoText();
+    //setInfoText();
 
     /*change choosed*/
     /*QMap<int, QString> curr;
@@ -85,11 +85,9 @@ void ProtocolDialog::changeCurrent(const QModelIndex &current, const QModelIndex
     m_current = curr;*/
 }
 
-void ProtocolDialog::setInfoText()
+QMap<int, QString> ProtocolDialog::choice(const QModelIndex &current)
 {
-    QModelIndex currentIndex = ui->tV_itemView->currentIndex();
-
-    ui->label_info->setText("");
+    return QMap<int, QString>();
 }
 
 void ProtocolDialog::edit()
@@ -126,7 +124,7 @@ void ProtocolDialog::insert()
     }
 }
 
-void ProtocolDialog::editComment()
+/*void ProtocolDialog::editComment()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
@@ -158,7 +156,7 @@ void ProtocolDialog::editComment()
                     QMessageBox::Ok);
         }
     }
-}
+}*/
 
 void ProtocolDialog::refresh()
 {

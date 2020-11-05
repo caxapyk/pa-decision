@@ -32,7 +32,7 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     connect(pB_details, &QPushButton::clicked, this, &AuthorityDialog::details);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &AuthorityDialog::changeCurrent);
+    //connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &AuthorityDialog::selected);
 }
 
 AuthorityDialog::~AuthorityDialog()
@@ -60,7 +60,7 @@ void AuthorityDialog::saveDialogState()
     settings->endGroup();
 }
 
-void AuthorityDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
+void AuthorityDialog::selected(const QModelIndex &current, const QModelIndex &)
 {
     QModelIndex root = m_proxyModel->mapFromSource(m_model->rootItem());
 
@@ -70,6 +70,11 @@ void AuthorityDialog::changeCurrent(const QModelIndex &current, const QModelInde
     removeShortcut->setEnabled(current.isValid() && current != root);
 
     pB_details->setEnabled(current.isValid() && current != root);
+}
+
+QMap<int, QString> AuthorityDialog::choice(const QModelIndex &current)
+{
+    return QMap<int, QString>();
 }
 
 void AuthorityDialog::details()

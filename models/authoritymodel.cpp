@@ -6,7 +6,7 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 
-AuthorityModel::AuthorityModel(QObject *parent) : CollectionModel(parent)
+AuthorityModel::AuthorityModel(QObject *parent) : ReferenceModel(parent)
 {
     m_rootNode = new AT_Node;
     m_nodeList = new AT_NodeList;

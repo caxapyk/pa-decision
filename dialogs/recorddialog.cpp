@@ -15,35 +15,35 @@ RecordDialog::RecordDialog(QWidget *parent) :
      ReferenceDialog(parent)
 {
     setWindowTitle(tr("Archive records"));
-    ui->label_infoIcon->setVisible(false);
-
-    addCommentButton();
 
     pB_fundTitle = new QPushButton(tr("Title"));
     pB_fundTitle->setDisabled(true);
 
     ui->vL_buttonGroup->addWidget(pB_fundTitle);
 
+    m_headerWidget = new RecordDialogHeader;
+    ui->hL_header->addWidget(m_headerWidget);
+
     m_model = new RecordModel;
     m_model->select();
 
     m_proxyModel = new RecordProxyModel;
     m_proxyModel->setSourceModel(m_model);
-    setDialogModel(m_proxyModel);
 
     ui->tV_itemView->setModel(m_proxyModel);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(pB_fundTitle, &QPushButton::clicked, this, &RecordDialog::editFundName);
-    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
+    addCommentButton();
+    setDialogModel(m_proxyModel);
 
+    connect(pB_fundTitle, &QPushButton::clicked, this, &RecordDialog::editFundName);
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &RecordDialog::changeCurrent);
 }
 
 RecordDialog::~RecordDialog()
 {
     delete pB_fundTitle;
+    delete m_headerWidget;
 }
 
 void RecordDialog::restoreDialogState()
@@ -64,7 +64,7 @@ void RecordDialog::saveDialogState()
     settings->endGroup();
 }
 
-void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
+void RecordDialog::selected(const QModelIndex &current, const QModelIndex &)
 {
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
@@ -78,129 +78,46 @@ void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(isChoiceMode() && node->level != RecordModel::RecordLevel);
 
-    setInfoText();
-
-    /*change choosed*/
-    /*if(node != nullptr) {
-        QMap<int, QString> curr;
-        QStringList text;
-
-        QModelIndex c = current;
-        while(c.isValid()) {
-            text.append(m_proxyModel->mapToSource(c).data().toString());
-            c = c.parent();
-        }
-        std::reverse(text.begin(), text.end());
-
-        curr.insert(node->id.toInt(), text.join(' '));
-        m_current = curr;
-    }*/
+    if(current.isValid() && node->level == RecordModel::FundLevel)
+        m_headerWidget->setFundName(current.data(ReferenceModel::InfoRole).toString());
 }
 
-void RecordDialog::setInfoText()
+QMap<int, QString> RecordDialog::choice(const QModelIndex &current)
 {
-    QModelIndex currentIndex = ui->tV_itemView->currentIndex();
+    QMap<int, QString> c;
+    QStringList txt;
 
-    ui->label_info->setText(
-                currentIndex.data(Qt::UserRole + 2).toString() +
-                (currentIndex.data(Qt::UserRole + 2).isNull() ? "" : "<br/><br/>") +
-                "<i style=color:grey>" +
-                currentIndex.data(Qt::UserRole + 1).toString() +
-                "</i>");
-}
-
-void RecordDialog::edit()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex();
-
-    ui->tV_itemView->edit(index);
-}
-
-void RecordDialog::insert()
-{
-    QModelIndex proxyParent = ui->tV_itemView->currentIndex();
-    QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
-
-    if(!ui->tV_itemView->isExpanded(proxyParent)) {
-        ui->tV_itemView->expand(proxyParent);
+    QModelIndex v = current;
+    while(v.isValid()) {
+        txt.append(m_proxyModel->mapToSource(v).data().toString());
+        v = v.parent();
     }
+    std::reverse(txt.begin(), txt.end());
 
-    int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
+    int id = m_proxyModel->mapToSource(v).data(ReferenceModel::IDRole).toInt();
 
-    bool insert = m_proxyModel->sourceModel()->insertRow(v, sourceParent);
+    c.insert(id, txt.join(' '));
 
-    if(insert) {
-        QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
-
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
-    } else {
-        QMessageBox::warning(this,
-                tr("Creating items"),
-                tr("Could not create item."),
-                QMessageBox::Ok);
-    }
+    return c;
 }
 
 void RecordDialog::editFundName()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
+    QString title = tr("Fund name");
 
-    QInputDialog inputDialog;
-    inputDialog.setWindowTitle(tr("Fund name"));
-    inputDialog.setLabelText(tr("Enter fund name:"));
-    inputDialog.setTextValue(index.data(Qt::UserRole + 2).toString());
-    inputDialog.setTextEchoMode(QLineEdit::Normal);
+    QString value = inputDialog(title, tr("Enter fund name"), index.data(ReferenceModel::InfoRole).toString());
 
-    inputDialog.setMinimumWidth(480);
-    inputDialog.resize(inputDialog.size());
-
-    bool res = inputDialog.exec();
-
-    if (res && !inputDialog.textValue().isEmpty()) {
+    if (!value.isEmpty()) {
         bool set;
-        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 2);
+        set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::InfoRole);
 
         if(set) {
-            setInfoText();
+            m_headerWidget->setFundName(value);
         } else {
-            bool tooLong = false;
-            if(inputDialog.textValue().length() >= 255) {
-                tooLong = true;
-            }
             QMessageBox::warning(this,
-                    tr("Fund name"),
-                    tr("Could not set the fund name.") + (tooLong ? tr(" Too long.") : ""),
-                    QMessageBox::Ok);
-        }
-    }
-}
-
-void RecordDialog::refresh()
-{
-    ui->tV_itemView->selectionModel()->clearCurrentIndex();
-
-    m_proxyModel->invalidate();
-    m_model->select();
-}
-
-void RecordDialog::remove()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex();
-    QModelIndex parent = m_proxyModel->parent(index);
-
-    int res = QMessageBox::critical(this,
-        tr("Deleting item"),
-        tr("Are you shure that you want to delete this item?"),
-        QMessageBox::No | QMessageBox::Yes);
-
-    if (res == QMessageBox::Yes) {
-        bool remove = m_proxyModel->removeRow(index.row(), parent);
-        if (!remove) {
-            QMessageBox::warning(this,
-                    tr("Deleting item"),
-                    tr("Could not remove the item."),
+                    title,
+                    tr("Could not set data.") + (value.length() >= 255 ? tr(" Too long.") : ""),
                     QMessageBox::Ok);
         }
     }

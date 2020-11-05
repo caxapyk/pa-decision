@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-RecordModel::RecordModel(QObject *parent) : CollectionModel(parent)
+RecordModel::RecordModel(QObject *parent) : ReferenceModel(parent)
 {
     rootNode = new RecordNode;
     setHeaderData(0, Qt::Horizontal, tr("Archive records"));
@@ -361,10 +361,10 @@ QVariant RecordModel::data(const QModelIndex &index, int role) const
                 break;
             }
             break;
-        case Qt::UserRole + 1: // fund name
+        case ReferenceModel::CommentRole: // comment
             return currentNode->comment;
             break;
-        case Qt::UserRole + 2: // fund name
+        case ReferenceModel::InfoRole: // fund name
             return fundNames.value(currentNode);
             break;
     }
@@ -413,7 +413,7 @@ bool RecordModel::setData(const QModelIndex &index, const QVariant &value, int r
         }
     }
         break;
-    case Qt::UserRole + 1: // update comment
+    case ReferenceModel::CommentRole: // update comment
     {
         QSqlQuery query;
 
@@ -443,7 +443,7 @@ bool RecordModel::setData(const QModelIndex &index, const QVariant &value, int r
         qDebug() << query.lastError().text();
     }
         break;
-    case Qt::UserRole + 2: // update fund name
+    case ReferenceModel::InfoRole: // update fund name
     {
         if(currentNode->level == RecordModel::FundLevel) {
             QSqlQuery query;

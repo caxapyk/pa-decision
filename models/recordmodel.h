@@ -1,11 +1,11 @@
 #ifndef RECORDTREEMODEL_H
 #define RECORDTREEMODEL_H
 
-#include "models/collectionmodel.h"
+#include "models/referencemodel.h"
 
 #include <QAbstractItemModel>
 
-class RecordModel : public CollectionModel
+class RecordModel : public ReferenceModel
 {
     Q_OBJECT
 

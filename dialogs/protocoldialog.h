@@ -31,11 +31,9 @@ private:
 
     QPushButton *pB_comment;
 
-    void setInfoText();
-
-private slots:
-    void changeCurrent(const QModelIndex &current, const QModelIndex &) override;
-    void editComment();
+protected slots:
+    virtual void selected(const QModelIndex &current, const QModelIndex &) override;
+    virtual QMap<int, QString> choice(const QModelIndex &current) override;
 
 };
 

@@ -1,7 +1,7 @@
 #ifndef NAVIGATORVIEW_H
 #define NAVIGATORVIEW_H
 
-#include "models/collectionmodel.h"
+#include "models/referencemodel.h"
 #include "views/view.h"
 
 #include <QShortcut>
@@ -34,7 +34,7 @@ private:
     Ui::NavigatorView *ui;
     QShortcut *m_refreshShortcut;
 
-    CollectionModel *m_model = nullptr;
+    ReferenceModel *m_model = nullptr;
     QSortFilterProxyModel *m_proxyModel = nullptr;
 
     int current = 0;

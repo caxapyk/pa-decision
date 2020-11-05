@@ -12,7 +12,7 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
     setWindowTitle(tr("Document types"));
-    ui->label_info->setText(tr("Use color to highlight documents!"));
+    setComment(tr("Use color to highlight documents!"));
 
     m_model = new DoctypeModel;
     m_model->select();
@@ -28,7 +28,6 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &DoctypeDialog::changeCurrent);
 }
 
 DoctypeDialog::~DoctypeDialog()
@@ -54,12 +53,17 @@ void DoctypeDialog::saveDialogState()
     settings->endGroup();
 }
 
-void DoctypeDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
+void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
 {
     insertShortcut->setEnabled(!current.isValid());
     editShortcut->setEnabled(current.isValid());
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
+}
+
+QMap<int, QString> DoctypeDialog::choice(const QModelIndex &current)
+{
+    return QMap<int, QString>();
 }
 
 void DoctypeDialog::edit()

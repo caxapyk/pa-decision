@@ -29,8 +29,10 @@ private:
     DoctypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
-private slots:
-    void changeCurrent(const QModelIndex &current, const QModelIndex &) override;
+protected slots:
+    virtual void selected(const QModelIndex &current, const QModelIndex &) override;
+    virtual QMap<int, QString> choice(const QModelIndex &current) override;
+
 };
 
 #endif // DOCTYPEDIALOG_H

@@ -3,6 +3,7 @@
 
 #include "widgets/customcontextmenu.h"
 
+#include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPushButton>
@@ -13,13 +14,13 @@ ReferenceDialog::ReferenceDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->label_infoIcon->setVisible(false);
+
     restoreDialogState();
     setupShortcuts();
 
     connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ReferenceDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ReferenceDialog::reject);
-
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::choice);
 }
 
 ReferenceDialog::~ReferenceDialog()
@@ -86,37 +87,126 @@ void ReferenceDialog::addCommentButton()
     pB_comment->setDisabled(true);
 
     ui->vL_buttonGroup->addWidget(pB_comment);
+
+    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
 }
 
 void ReferenceDialog::editComment()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
+    QString title = tr("Comment");
 
+    QString value = inputDialog(title, tr("Enter comment"), index.data(ReferenceModel::CommentRole).toString());
+
+    if (!value.isEmpty()) {
+        bool set;
+        set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::CommentRole);
+
+        if(set) {
+            setComment(value);
+        } else {
+            QMessageBox::warning(this,
+                    title,
+                    tr("Could not set data.") + (value.length() >= 255 ? tr(" Too long.") : ""),
+                    QMessageBox::Ok);
+        }
+    }
+
+}
+
+QString ReferenceDialog::inputDialog(const QString &title, const QString &label, const QString &value)
+{
     QInputDialog inputDialog;
-    inputDialog.setWindowTitle(tr("Comment"));
-    inputDialog.setLabelText(tr("Enter comment:"));
-    inputDialog.setTextValue(index.data(Qt::UserRole + 1).toString());
+    inputDialog.setWindowTitle(title);
+    inputDialog.setLabelText(label);
+    inputDialog.setTextValue(value);
     inputDialog.setTextEchoMode(QLineEdit::Normal);
 
     inputDialog.setMinimumWidth(480);
     inputDialog.resize(inputDialog.size());
 
-    bool res = inputDialog.exec();
+    inputDialog.exec();
 
-    if (res && !inputDialog.textValue().isEmpty()) {
-        bool set;
-        set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 1);
+    return inputDialog.textValue();
+}
 
-        if(set) {
-            //setInfoText();
-        } else {
-            bool tooLong = false;
-            if(inputDialog.textValue().length() >= 255) {
-                tooLong = true;
-            }
+void ReferenceDialog::setDialogModel(QAbstractProxyModel *model)
+{
+    m_dialogProxyModel = model;
+
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::_selected);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::selected);
+}
+
+void ReferenceDialog::setComment(const QString &text)
+{
+    ui->label_comment->setText(text);
+}
+
+void ReferenceDialog::_selected(const QModelIndex &current, const QModelIndex &)
+{
+    m_choice = choice(current);
+    if(pB_comment != nullptr) {
+        setComment(current.data(ReferenceModel::CommentRole).toString());
+    }
+}
+
+void ReferenceDialog::edit()
+{
+    ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+}
+
+void ReferenceDialog::insert()
+{
+    QModelIndex proxyParent = ui->tV_itemView->currentIndex();
+    QModelIndex sourceParent = m_dialogProxyModel->mapToSource(proxyParent);
+
+    if(!ui->tV_itemView->isExpanded(proxyParent)) {
+        ui->tV_itemView->expand(proxyParent);
+    }
+
+    int v = m_dialogProxyModel->sourceModel()->rowCount(sourceParent);
+
+    bool insert = m_dialogProxyModel->sourceModel()->insertRow(v, sourceParent);
+
+    if(insert) {
+        QModelIndex currentIndex = m_dialogProxyModel->mapFromSource(m_dialogProxyModel->sourceModel()->index(v, 0, sourceParent));
+
+        ui->tV_itemView->setCurrentIndex(currentIndex);
+        ui->tV_itemView->scrollTo(currentIndex);
+        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+    } else {
+        QMessageBox::warning(this,
+                tr("Creating items"),
+                tr("Could not create item."),
+                QMessageBox::Ok);
+    }
+}
+
+void ReferenceDialog::refresh()
+{
+    ui->tV_itemView->selectionModel()->clearCurrentIndex();
+
+    ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
+    model->select();
+}
+
+void ReferenceDialog::remove()
+{
+    QModelIndex index = ui->tV_itemView->currentIndex();
+    QModelIndex parent = m_dialogProxyModel->parent(index);
+
+    int res = QMessageBox::critical(this,
+        tr("Deleting item"),
+        tr("Are you shure that you want to delete this item?"),
+        QMessageBox::No | QMessageBox::Yes);
+
+    if (res == QMessageBox::Yes) {
+        bool remove = m_dialogProxyModel->removeRow(index.row(), parent);
+        if (!remove) {
             QMessageBox::warning(this,
-                    tr("Comment"),
-                    tr("Could not set the comment data.") + (tooLong ? tr(" Too long.") : ""),
+                    tr("Deleting item"),
+                    tr("Could not remove the item."),
                     QMessageBox::Ok);
         }
     }

@@ -4,6 +4,7 @@
 #include "dialogs/referencedialog.h"
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
+#include "widgets/recorddialogheader.h"
 
 #include <QDialog>
 #include <QPushButton>
@@ -19,28 +20,18 @@ public:
     void restoreDialogState() override;
     void saveDialogState() override;
 
-    //void setChooseMode(bool ok) { chr_mode = ok; };
-    //QMap<int, QString> current() { return m_current; };
-
-public slots:
-    void edit() override;
-    void insert() override;
-    void refresh() override;
-    void remove() override;
-
 private:
     RecordModel *m_model;
     RecordProxyModel *m_proxyModel;
 
     QPushButton *pB_fundTitle;
+    RecordDialogHeader *m_headerWidget;
 
-    //bool chr_mode = false;
-    //QMap<int, QString> m_current = QMap<int, QString>();
-
-    void setInfoText();
+protected slots:
+    virtual void selected(const QModelIndex &current, const QModelIndex &) override;
+    virtual QMap<int, QString> choice(const QModelIndex &current) override;
 
 private slots:
-    void changeCurrent(const QModelIndex &current, const QModelIndex &) override;
     void editFundName();
 };
 

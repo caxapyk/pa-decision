@@ -1,14 +1,14 @@
-#ifndef COLLECTIONMODEL_H
-#define COLLECTIONMODEL_H
+#ifndef ReferenceModel_H
+#define ReferenceModel_H
 
 #include <QAbstractItemModel>
 
-class CollectionModel : public QAbstractItemModel
+class ReferenceModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    explicit CollectionModel(QObject *parent = nullptr);
+    explicit ReferenceModel(QObject *parent = nullptr);
 
     virtual QVariant headerData(int, Qt::Orientation, int role = Qt::DisplayRole) const = 0;
     virtual QModelIndex index(int row, int column,
@@ -22,6 +22,10 @@ public:
 
     virtual void clear() = 0;
     virtual void select() = 0;
+
+    static constexpr int IDRole = Qt::UserRole;
+    static constexpr int CommentRole = Qt::UserRole + 1;
+    static constexpr int InfoRole = Qt::UserRole + 2;
 };
 
-#endif // COLLECTIONMODEL_H
+#endif // ReferenceModel_H
