@@ -26,6 +26,7 @@ SOURCES += \
     dialogs/decisionbasedialog.cpp \
     dialogs/decisionnewdialog.cpp \
     dialogs/doctypedialog.cpp \
+    dialogs/protocoldialog.cpp \
     dialogs/recorddialog.cpp \
     dialogs/referencedialog.cpp \
     main.cpp \
@@ -47,6 +48,7 @@ SOURCES += \
     widgets/colorrect.cpp \
     widgets/customcontextmenu.cpp \
     widgets/paginator.cpp \
+    widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
 
@@ -59,6 +61,7 @@ HEADERS += \
     dialogs/decisionbasedialog.h \
     dialogs/decisionnewdialog.h \
     dialogs/doctypedialog.h \
+    dialogs/protocoldialog.h \
     dialogs/recorddialog.h \
     dialogs/referencedialog.h \
     mainwindow.h \
@@ -79,6 +82,7 @@ HEADERS += \
     widgets/colorrect.h \
     widgets/customcontextmenu.h \
     widgets/paginator.h \
+    widgets/referencebutton.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h
 
@@ -86,11 +90,13 @@ FORMS += \
     dialogs/authoritydetailsdialog.ui \
     dialogs/connectiondialog.ui \
     dialogs/decisionbasedialog.ui \
+    dialogs/protocoldialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \
     views/decisionview.ui \
     views/navigatorview.ui \
     widgets/paginator.ui \
+    widgets/referencebutton.ui \
     widgets/searchpanel.ui \
     widgets/statusbarpanel.ui
 

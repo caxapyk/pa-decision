@@ -1,5 +1,5 @@
-#ifndef RECORDDIALOG_H
-#define RECORDDIALOG_H
+#ifndef PROTOCOLDIALOG_H
+#define PROTOCOLDIALOG_H
 
 #include "dialogs/referencedialog.h"
 #include "models/recordmodel.h"
@@ -8,19 +8,16 @@
 #include <QDialog>
 #include <QPushButton>
 
-class RecordDialog : public ReferenceDialog
+class ProtocolDialog : public ReferenceDialog
 {
     Q_OBJECT
 
 public:
-    explicit RecordDialog(QWidget *parent = nullptr);
-    ~RecordDialog();
+    explicit ProtocolDialog(QWidget *parent = nullptr);
+    ~ProtocolDialog();
 
     void restoreDialogState() override;
     void saveDialogState() override;
-
-    //void setChooseMode(bool ok) { chr_mode = ok; };
-    //QMap<int, QString> current() { return m_current; };
 
 public slots:
     void edit() override;
@@ -32,16 +29,14 @@ private:
     RecordModel *m_model;
     RecordProxyModel *m_proxyModel;
 
-    QPushButton *pB_fundTitle;
-
-    //bool chr_mode = false;
-    //QMap<int, QString> m_current = QMap<int, QString>();
+    QPushButton *pB_comment;
 
     void setInfoText();
 
 private slots:
     void changeCurrent(const QModelIndex &current, const QModelIndex &) override;
-    void editFundName();
+    void editComment();
+
 };
 
-#endif // RECORDDIALOG_H
+#endif // PROTOCOLDIALOG_H

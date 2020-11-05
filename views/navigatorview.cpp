@@ -100,9 +100,15 @@ void NavigatorView::switchModel(int index)
 
         current = NavigatorView::CollectionRecord;
         break;
+    case NavigatorView::CollectionProtocol:
+        m_model = new AuthorityModel();
+        m_proxyModel = new AuthorityProxyModel;
+
+        current = NavigatorView::CollectionAuthority;
+        break;
     case NavigatorView::CollectionYear:
         break;
-    case NavigatorView::CollectionMember:
+    case NavigatorView::CollectionObject:
         break;
     }
 

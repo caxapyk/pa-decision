@@ -3,6 +3,8 @@
 
 #include "widgets/customcontextmenu.h"
 
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QPushButton>
 
 ReferenceDialog::ReferenceDialog(QWidget *parent) :
@@ -16,6 +18,8 @@ ReferenceDialog::ReferenceDialog(QWidget *parent) :
 
     connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ReferenceDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ReferenceDialog::reject);
+
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::choice);
 }
 
 ReferenceDialog::~ReferenceDialog()
@@ -26,6 +30,10 @@ ReferenceDialog::~ReferenceDialog()
     delete editShortcut;
     delete removeShortcut;
     delete refreshShortcut;
+
+    delete pB_comment;
+
+    delete m_dialogProxyModel;
 }
 
 void ReferenceDialog::setupShortcuts()
@@ -70,6 +78,48 @@ void ReferenceDialog::contextMenu(const QPoint &)
     connect(refreshAction, &QAction::triggered, this, &ReferenceDialog::refresh);
 
     menu.exec(QCursor().pos());
+}
+
+void ReferenceDialog::addCommentButton()
+{
+    pB_comment = new QPushButton(tr("Comment"));
+    pB_comment->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_comment);
+}
+
+void ReferenceDialog::editComment()
+{
+    QModelIndex index = ui->tV_itemView->currentIndex();
+
+    QInputDialog inputDialog;
+    inputDialog.setWindowTitle(tr("Comment"));
+    inputDialog.setLabelText(tr("Enter comment:"));
+    inputDialog.setTextValue(index.data(Qt::UserRole + 1).toString());
+    inputDialog.setTextEchoMode(QLineEdit::Normal);
+
+    inputDialog.setMinimumWidth(480);
+    inputDialog.resize(inputDialog.size());
+
+    bool res = inputDialog.exec();
+
+    if (res && !inputDialog.textValue().isEmpty()) {
+        bool set;
+        set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 1);
+
+        if(set) {
+            //setInfoText();
+        } else {
+            bool tooLong = false;
+            if(inputDialog.textValue().length() >= 255) {
+                tooLong = true;
+            }
+            QMessageBox::warning(this,
+                    tr("Comment"),
+                    tr("Could not set the comment data.") + (tooLong ? tr(" Too long.") : ""),
+                    QMessageBox::Ok);
+        }
+    }
 }
 
 void ReferenceDialog::accept()

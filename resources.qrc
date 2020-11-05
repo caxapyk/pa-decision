@@ -12,7 +12,6 @@
         <file>icons/search-16.png</file>
         <file>icons/collection-16.png</file>
         <file>icons/record-16.png</file>
-        <file>icons/members-16.png</file>
         <file>icons/calendar-16.png</file>
         <file>icons/new-16.png</file>
         <file>icons/print-16.png</file>
@@ -23,8 +22,6 @@
         <file>icons/refresh-24.png</file>
         <file>icons/tree-24.png</file>
         <file>icons/icon.png</file>
-        <file>icons/record-24.png</file>
-        <file>icons/doctype-24.png</file>
         <file>icons/doctype-16.png</file>
         <file>icons/info-24.png</file>
         <file>icons/toward-16.png</file>
@@ -32,10 +29,12 @@
         <file>icons/next-16.png</file>
         <file>icons/backward.png</file>
         <file>icons/goto-16.png</file>
-        <file>icons/icon-24.png</file>
         <file>icons/user-16.png</file>
         <file>icons/word-16.png</file>
         <file>icons/scanner-16.png</file>
+        <file>icons/references-24.png</file>
+        <file>icons/protocol-16.png</file>
+        <file>icons/object-16.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>

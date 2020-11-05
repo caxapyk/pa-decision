@@ -3,6 +3,7 @@
 
 #include "views/navigatorview.h"
 #include "views/decisionview.h"
+#include "widgets/referencebutton.h"
 #include "widgets/statusbarpanel.h"
 #include "widgets/searchpanel.h"
 
@@ -21,16 +22,19 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    QAction *action_doctype;
     QAction *action_edit;
     QAction *action_new;
-    QAction *action_pa;
     QAction *action_print;
-    QAction *action_record;
     QAction *action_remove;
-    //QAction *action_refresh;
+    QAction *action_refresh;
     QAction *action_tree;
 
+public slots:
+    void openDoctype();
+    void openConnection();
+    void openAuthorities();
+    void openProtocol();
+    void openRecords();
 
 private:
     Ui::MainWindow *ui;
@@ -38,6 +42,7 @@ private:
     NavigatorView *m_navigatorView;
     DecisionView *m_decisionView;
 
+    ReferenceButton *m_referenceButton;
     StatusBarPanel *m_statusBarPanel;
     SearchPanel *m_searchPanel;
 
@@ -48,12 +53,6 @@ private:
     void setupShortcuts();
     void setupStatusBar();
     void setupToolBar();
-
-private slots:
-    void openDoctype();
-    void openConnection();
-    void openAuthorities();
-    void openRecords();
 
 protected:
     void closeEvent(QCloseEvent *event) override;

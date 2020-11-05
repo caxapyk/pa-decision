@@ -1,9 +1,7 @@
-#include "recorddialog.h"
+#include "protocoldialog.h"
 #include "ui_referencedialog.h"
 
 #include "application.h"
-#include "dialogs/referencedialog.h"
-#include "widgets/customcontextmenu.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -11,42 +9,35 @@
 #include <QMenu>
 #include <QMessageBox>
 
-RecordDialog::RecordDialog(QWidget *parent) :
-     ReferenceDialog(parent)
+ProtocolDialog::ProtocolDialog(QWidget *parent) :
+    ReferenceDialog(parent)
 {
-    setWindowTitle(tr("Archive records"));
+    setWindowTitle(tr("Protocols"));
     ui->label_infoIcon->setVisible(false);
 
-    addCommentButton();
+    pB_comment = new QPushButton(tr("Comment"));
+    pB_comment->setDisabled(true);
 
-    pB_fundTitle = new QPushButton(tr("Title"));
-    pB_fundTitle->setDisabled(true);
-
-    ui->vL_buttonGroup->addWidget(pB_fundTitle);
+    ui->vL_buttonGroup->addWidget(pB_comment);
 
     m_model = new RecordModel;
     m_model->select();
 
     m_proxyModel = new RecordProxyModel;
     m_proxyModel->setSourceModel(m_model);
-    setDialogModel(m_proxyModel);
-
-    ui->tV_itemView->setModel(m_proxyModel);
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(pB_fundTitle, &QPushButton::clicked, this, &RecordDialog::editFundName);
-    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &RecordDialog::changeCurrent);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ProtocolDialog::changeCurrent);
 }
 
-RecordDialog::~RecordDialog()
+ProtocolDialog::~ProtocolDialog()
 {
-    delete pB_fundTitle;
+    delete m_model;
+    delete m_proxyModel;
+    delete pB_comment;
 }
 
-void RecordDialog::restoreDialogState()
+void ProtocolDialog::restoreDialogState()
 {
     QSettings* settings = application->applicationSettings();
 
@@ -54,7 +45,7 @@ void RecordDialog::restoreDialogState()
     ui->tV_itemView->header()->restoreState(settings->value("RecordDialog/tV_itemView").toByteArray());
 }
 
-void RecordDialog::saveDialogState()
+void ProtocolDialog::saveDialogState()
 {
     QSettings* settings = application->applicationSettings();
 
@@ -64,7 +55,7 @@ void RecordDialog::saveDialogState()
     settings->endGroup();
 }
 
-void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
+void ProtocolDialog::changeCurrent(const QModelIndex &current, const QModelIndex &)
 {
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
@@ -73,50 +64,42 @@ void RecordDialog::changeCurrent(const QModelIndex &current, const QModelIndex &
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
 
-    pB_fundTitle->setEnabled(current.isValid() && (node != nullptr && node->level == RecordModel::FundLevel));
-    commentButton()->setEnabled(current.isValid());
+    //pB_comment->setEnabled(current.isValid());
 
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(isChoiceMode() && node->level != RecordModel::RecordLevel);
+    //ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(chr_mode && node->level != RecordModel::RecordLevel);
 
     setInfoText();
 
     /*change choosed*/
-    /*if(node != nullptr) {
-        QMap<int, QString> curr;
-        QStringList text;
+    /*QMap<int, QString> curr;
+    QStringList text;
 
-        QModelIndex c = current;
-        while(c.isValid()) {
-            text.append(m_proxyModel->mapToSource(c).data().toString());
-            c = c.parent();
-        }
-        std::reverse(text.begin(), text.end());
+    QModelIndex c = current;
+    while(c.isValid()) {
+        text.append(m_proxyModel->mapToSource(c).data().toString());
+        c = c.parent();
+    }
+    std::reverse(text.begin(), text.end());
 
-        curr.insert(node->id.toInt(), text.join(' '));
-        m_current = curr;
-    }*/
+    curr.insert(node->id.toInt(), text.join(' '));
+    m_current = curr;*/
 }
 
-void RecordDialog::setInfoText()
+void ProtocolDialog::setInfoText()
 {
     QModelIndex currentIndex = ui->tV_itemView->currentIndex();
 
-    ui->label_info->setText(
-                currentIndex.data(Qt::UserRole + 2).toString() +
-                (currentIndex.data(Qt::UserRole + 2).isNull() ? "" : "<br/><br/>") +
-                "<i style=color:grey>" +
-                currentIndex.data(Qt::UserRole + 1).toString() +
-                "</i>");
+    ui->label_info->setText("");
 }
 
-void RecordDialog::edit()
+void ProtocolDialog::edit()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
     ui->tV_itemView->edit(index);
 }
 
-void RecordDialog::insert()
+void ProtocolDialog::insert()
 {
     QModelIndex proxyParent = ui->tV_itemView->currentIndex();
     QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
@@ -143,14 +126,14 @@ void RecordDialog::insert()
     }
 }
 
-void RecordDialog::editFundName()
+void ProtocolDialog::editComment()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
     QInputDialog inputDialog;
-    inputDialog.setWindowTitle(tr("Fund name"));
-    inputDialog.setLabelText(tr("Enter fund name:"));
-    inputDialog.setTextValue(index.data(Qt::UserRole + 2).toString());
+    inputDialog.setWindowTitle(tr("Comment"));
+    inputDialog.setLabelText(tr("Enter comment:"));
+    inputDialog.setTextValue(index.data(Qt::UserRole + 1).toString());
     inputDialog.setTextEchoMode(QLineEdit::Normal);
 
     inputDialog.setMinimumWidth(480);
@@ -160,7 +143,7 @@ void RecordDialog::editFundName()
 
     if (res && !inputDialog.textValue().isEmpty()) {
         bool set;
-        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 2);
+        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 1);
 
         if(set) {
             setInfoText();
@@ -170,14 +153,14 @@ void RecordDialog::editFundName()
                 tooLong = true;
             }
             QMessageBox::warning(this,
-                    tr("Fund name"),
-                    tr("Could not set the fund name.") + (tooLong ? tr(" Too long.") : ""),
+                    tr("Comment"),
+                    tr("Could not set the comment data.") + (tooLong ? tr(" Too long.") : ""),
                     QMessageBox::Ok);
         }
     }
 }
 
-void RecordDialog::refresh()
+void ProtocolDialog::refresh()
 {
     ui->tV_itemView->selectionModel()->clearCurrentIndex();
 
@@ -185,7 +168,7 @@ void RecordDialog::refresh()
     m_model->select();
 }
 
-void RecordDialog::remove()
+void ProtocolDialog::remove()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
     QModelIndex parent = m_proxyModel->parent(index);

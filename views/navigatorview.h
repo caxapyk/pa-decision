@@ -17,7 +17,7 @@ class NavigatorView : public View
 
 public:
     enum Tabs {TabCollection, TabSearch};
-    enum Collection {CollectionAuthority, CollectionRecord, CollectionYear, CollectionMember};
+    enum Collection {CollectionAuthority, CollectionRecord, CollectionProtocol, CollectionYear, CollectionObject};
 
     explicit NavigatorView(QWidget *parent = nullptr);
     ~NavigatorView();

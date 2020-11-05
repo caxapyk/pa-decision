@@ -5,6 +5,7 @@
 #include "dialogs/authoritydialog.h"
 #include "dialogs/doctypedialog.h"
 #include "dialogs/connectiondialog.h"
+#include "dialogs/protocoldialog.h"
 #include "dialogs/recorddialog.h"
 
 #include <QDebug>
@@ -30,14 +31,11 @@ MainWindow::~MainWindow()
     delete m_statusBarPanel;
     delete m_searchPanel;
 
-    delete action_doctype;
     delete action_edit;
     delete action_new;
-    delete action_pa;
     delete action_print;
-    delete action_record;
     delete action_remove;
-    //delete action_refresh;
+    delete action_refresh;
     delete action_tree;
 
     delete m_searchShortcut;
@@ -98,7 +96,7 @@ void MainWindow::setupToolBar()
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
 
-    //action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
+    action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
 
     action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Collections"));
     action_tree->setCheckable(true);
@@ -107,29 +105,24 @@ void MainWindow::setupToolBar()
          ui->splitter_layout->widget(0)->setHidden(!action_tree->isChecked());
     });
 
-    action_pa = new QAction(QIcon(":/icons/icons/icon-24.png"), tr("Public authorities"));
-    connect(action_pa, &QAction::triggered, this, &MainWindow::openAuthorities);
-
-    action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
-    connect(action_record, &QAction::triggered, this, &MainWindow::openRecords);
-
-    action_doctype = new QAction(QIcon(":/icons/icons/doctype-24.png"), tr("Document types"));
-    connect(action_doctype, &QAction::triggered, this, &MainWindow::openDoctype);
-
     ui->toolBar->addAction(action_new);
     ui->toolBar->addAction(action_edit);
     ui->toolBar->addAction(action_remove);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_print);
-    //ui->toolBar->addAction(action_refresh);
-    ui->toolBar->addSeparator();
-    ui->toolBar->addAction(action_pa);
-    ui->toolBar->addAction(action_record);
-    ui->toolBar->addAction(action_doctype);
+    ui->toolBar->addAction(action_refresh);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(action_tree);
+    ui->toolBar->addSeparator();
 
-    m_searchPanel = new SearchPanel();
+    m_referenceButton = new ReferenceButton;
+    connect(m_referenceButton->actionAuthority(), &QAction::triggered, this, &MainWindow::openAuthorities);
+    connect(m_referenceButton->actionProtocol(), &QAction::triggered, this, &MainWindow::openProtocol);
+    connect(m_referenceButton->actionRecord(), &QAction::triggered, this, &MainWindow::openRecords);
+    connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, &MainWindow::openDoctype);
+    ui->toolBar->addWidget(m_referenceButton);
+
+    m_searchPanel = new SearchPanel;
     ui->toolBar->addWidget(m_searchPanel);
 }
 
@@ -172,12 +165,22 @@ void MainWindow::openAuthorities()
     }
 }
 
+void MainWindow::openProtocol()
+{
+    ProtocolDialog dialog;
+    int res = dialog.exec();
+
+    if(res == ProtocolDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionProtocol) {
+        m_navigatorView->refresh();
+    }
+}
+
 void MainWindow::openRecords()
 {
     RecordDialog dialog;
     int res = dialog.exec();
 
-    if(res == AuthorityDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionRecord) {
+    if(res == RecordDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionRecord) {
         m_navigatorView->refresh();
     }
 }
