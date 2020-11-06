@@ -47,6 +47,16 @@
       <item>
        <widget class="QPlainTextEdit" name="pTE_geo"/>
       </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Comment</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lE_comment"/>
+      </item>
      </layout>
     </widget>
    </item>

@@ -12,6 +12,7 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
     setWindowTitle(tr("Document types"));
+    setInfoIconVisible();
     setComment(tr("Use color to highlight documents!"));
 
     m_model = new DoctypeModel;
@@ -26,6 +27,8 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->hideColumn(0);
     ui->tV_itemView->resizeColumnToContents(1);
     ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
+
+    setDialogModel(m_proxyModel);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
 }
@@ -61,17 +64,12 @@ void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
     refreshShortcut->setEnabled(true);
 }
 
-QMap<int, QString> DoctypeDialog::choice(const QModelIndex &current)
-{
-    return QMap<int, QString>();
-}
-
-void DoctypeDialog::edit()
+/*void DoctypeDialog::edit()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
     ui->tV_itemView->edit(index);
-}
+}*/
 
 void DoctypeDialog::insert()
 {
@@ -94,7 +92,7 @@ void DoctypeDialog::insert()
     }
 }
 
-void DoctypeDialog::refresh()
+/* void DoctypeDialog::refresh()
 {
     ui->tV_itemView->selectionModel()->clearCurrentIndex();
 
@@ -122,5 +120,5 @@ void DoctypeDialog::remove()
                     QMessageBox::Ok);
         }
     }
-}
+}*/
 

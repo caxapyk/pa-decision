@@ -14,7 +14,7 @@ ReferenceDialog::ReferenceDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->label_infoIcon->setVisible(false);
+    setInfoIconVisible(false);
 
     pB_comment = new QPushButton(tr("Comment"));
     pB_comment->setDisabled(true);
@@ -88,25 +88,26 @@ void ReferenceDialog::contextMenu(const QPoint &)
 
 void ReferenceDialog::editComment()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
-    QString title = tr("Comment");
+    if(m_dialogProxyModel != nullptr) {
+        QModelIndex index = ui->tV_itemView->currentIndex();
+        QString title = tr("Comment");
 
-    QString value = inputDialog(title, tr("Enter comment"), index.data(ReferenceModel::CommentRole).toString());
+        QString value = inputDialog(title, tr("Enter comment"), index.data(ReferenceModel::CommentRole).toString());
 
-    if (!value.isEmpty()) {
-        bool set;
-        set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::CommentRole);
+        if (!value.isEmpty()) {
+            bool set;
+            set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::CommentRole);
 
-        if(set) {
-            setComment(value);
-        } else {
-            QMessageBox::warning(this,
-                    title,
-                    tr("Could not set data.") + (value.length() >= 255 ? tr(" Too long.") : ""),
-                    QMessageBox::Ok);
+            if(set) {
+                setComment(value);
+            } else {
+                QMessageBox::warning(this,
+                        title,
+                        tr("Could not set data.") + (value.length() >= 255 ? tr(" Too long.") : ""),
+                        QMessageBox::Ok);
+            }
         }
     }
-
 }
 
 QString ReferenceDialog::inputDialog(const QString &title, const QString &label, const QString &value)
@@ -138,6 +139,11 @@ void ReferenceDialog::setComment(const QString &text)
     ui->label_comment->setText(text);
 }
 
+void ReferenceDialog::setInfoIconVisible(bool ok)
+{
+    ui->label_infoIcon->setVisible(ok);
+}
+
 void ReferenceDialog::_selected(const QModelIndex &current, const QModelIndex &)
 {
     m_choice = choice(current);
@@ -155,56 +161,39 @@ void ReferenceDialog::edit()
 
 void ReferenceDialog::insert()
 {
-    QModelIndex proxyParent = ui->tV_itemView->currentIndex();
-    QModelIndex sourceParent = m_dialogProxyModel->mapToSource(proxyParent);
 
-    if(!ui->tV_itemView->isExpanded(proxyParent)) {
-        ui->tV_itemView->expand(proxyParent);
-    }
-
-    int v = m_dialogProxyModel->sourceModel()->rowCount(sourceParent);
-
-    bool insert = m_dialogProxyModel->sourceModel()->insertRow(v, sourceParent);
-
-    if(insert) {
-        QModelIndex currentIndex = m_dialogProxyModel->mapFromSource(m_dialogProxyModel->sourceModel()->index(v, 0, sourceParent));
-
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
-    } else {
-        QMessageBox::warning(this,
-                tr("Creating items"),
-                tr("Could not create item."),
-                QMessageBox::Ok);
-    }
 }
 
 void ReferenceDialog::refresh()
 {
-    ui->tV_itemView->selectionModel()->clearCurrentIndex();
+    if(m_dialogProxyModel != nullptr) {
+        ui->tV_itemView->selectionModel()->clearCurrentIndex();
 
-    ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
-    model->select();
+        ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
+
+        model->select();
+    }
 }
 
 void ReferenceDialog::remove()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
-    QModelIndex parent = m_dialogProxyModel->parent(index);
+    if(m_dialogProxyModel != nullptr) {
+        QModelIndex index = ui->tV_itemView->currentIndex();
+        QModelIndex parent = m_dialogProxyModel->parent(index);
 
-    int res = QMessageBox::critical(this,
-        tr("Deleting item"),
-        tr("Are you shure that you want to delete this item?"),
-        QMessageBox::No | QMessageBox::Yes);
+        int res = QMessageBox::critical(this,
+            tr("Deleting item"),
+            tr("Are you shure that you want to delete this item?"),
+            QMessageBox::No | QMessageBox::Yes);
 
-    if (res == QMessageBox::Yes) {
-        bool remove = m_dialogProxyModel->removeRow(index.row(), parent);
-        if (!remove) {
-            QMessageBox::warning(this,
-                    tr("Deleting item"),
-                    tr("Could not remove the item."),
-                    QMessageBox::Ok);
+        if (res == QMessageBox::Yes) {
+            bool remove = m_dialogProxyModel->removeRow(index.row(), parent);
+            if (!remove) {
+                QMessageBox::warning(this,
+                        tr("Deleting item"),
+                        tr("Could not remove the item."),
+                        QMessageBox::Ok);
+            }
         }
     }
 }

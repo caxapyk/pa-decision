@@ -79,8 +79,7 @@ void RecordDialog::selected(const QModelIndex &current, const QModelIndex &)
     pB_fundTitle->setEnabled(current.isValid() && (node != nullptr && node->level == RecordModel::FundLevel));
     commentButton()->setEnabled(current.isValid());
 
-    if(current.isValid() && node->level == RecordModel::FundLevel)
-        m_headerWidget->setFundName(current.data(ReferenceModel::InfoRole).toString());
+    m_headerWidget->setFundName((current.isValid() && node->level == RecordModel::FundLevel) ? current.data(ReferenceModel::InfoRole).toString() : QString());
 }
 
 bool RecordDialog::choiceButtonEnabled()
@@ -91,27 +90,15 @@ bool RecordDialog::choiceButtonEnabled()
     return e;
 }
 
-QMap<int, QString> RecordDialog::choice(const QModelIndex &current)
+int RecordDialog::choice(const QModelIndex &current) const
 {
-    QMap<int, QString> c;
-    QStringList txt;
-
-    QModelIndex v = current;
-    while(v.isValid()) {
-        txt.append(m_proxyModel->mapToSource(v).data().toString());
-        v = v.parent();
-    }
-    std::reverse(txt.begin(), txt.end());
-
-    int id = m_proxyModel->mapToSource(v).data(ReferenceModel::IDRole).toInt();
-
-    c.insert(id, txt.join(' '));
-
-    return c;
+    return m_proxyModel->mapToSource(current).data(ReferenceModel::IDRole).toInt();
 }
 
 void RecordDialog::loadByAuthorityId(int id)
 {
+    ui->tV_itemView->selectionModel()->clearCurrentIndex();
+
     m_model->setAuthorityId(id);
     m_model->select();
 }
@@ -135,5 +122,32 @@ void RecordDialog::editFundName()
                     tr("Could not set data.") + (value.length() >= 255 ? tr(" Too long.") : ""),
                     QMessageBox::Ok);
         }
+    }
+}
+
+void RecordDialog::insert()
+{
+    QModelIndex proxyParent = ui->tV_itemView->currentIndex();
+    QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
+
+    if(!ui->tV_itemView->isExpanded(proxyParent)) {
+        ui->tV_itemView->expand(proxyParent);
+    }
+
+    int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
+
+    bool insert = m_proxyModel->sourceModel()->insertRow(v, sourceParent);
+
+    if(insert) {
+        QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
+
+        ui->tV_itemView->setCurrentIndex(currentIndex);
+        ui->tV_itemView->scrollTo(currentIndex);
+        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+    } else {
+        QMessageBox::warning(this,
+                tr("Creating items"),
+                tr("Could not create item."),
+                QMessageBox::Ok);
     }
 }

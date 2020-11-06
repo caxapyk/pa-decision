@@ -48,13 +48,15 @@ void DecisionBaseDialog::chooseRecord()
     int res = dialog.exec();
 
     if(res == RecordDialog::Accepted) {
-        QMap<int, QString> choice = dialog.currentChoice();
-        if(!choice.isEmpty()) {
+        int choice = dialog.currentChoice();
+        /*if(!choice.isEmpty()) {
             ui->cB_record->clear();
             ui->cB_record->addItem(choice.first());
             ui->cB_record->setEnabled(true);
 
             recordId = choice.keys().first();
-        }
+        }*/
+
+        qDebug() << "selected id:" << choice;
     }
 }

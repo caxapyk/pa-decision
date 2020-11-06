@@ -21,6 +21,9 @@ public:
     void restoreDialogState() override;
     void saveDialogState() override;
 
+public slots:
+    void insert() override;
+
 private:
     RecordModel *m_model;
     RecordProxyModel *m_proxyModel;
@@ -33,7 +36,7 @@ protected:
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) override;
-    virtual QMap<int, QString> choice(const QModelIndex &current) override;
+    virtual int choice(const QModelIndex &current) const override;
 
 private slots:
     void editFundName();

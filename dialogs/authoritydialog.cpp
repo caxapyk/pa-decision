@@ -12,7 +12,6 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
     setWindowTitle(tr("Public authorities"));
-    ui->label_infoIcon->setVisible(false);
 
     pB_details = new QPushButton(tr("Details"));
     pB_details->setDisabled(true);
@@ -29,17 +28,17 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ui->tV_itemView->setCurrentIndex(m_proxyModel->mapFromSource(m_model->rootItem()));
     ui->tV_itemView->expandAll();
 
-    connect(pB_details, &QPushButton::clicked, this, &AuthorityDialog::details);
+    setDialogModel(m_proxyModel);
 
+    connect(pB_details, &QPushButton::clicked, this, &AuthorityDialog::details);
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    //connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &AuthorityDialog::selected);
 }
 
 AuthorityDialog::~AuthorityDialog()
 {
+    delete pB_details;
     delete m_model;
     delete m_proxyModel;
-    delete pB_details;
 }
 
 void AuthorityDialog::restoreDialogState()
@@ -65,16 +64,12 @@ void AuthorityDialog::selected(const QModelIndex &current, const QModelIndex &)
     QModelIndex root = m_proxyModel->mapFromSource(m_model->rootItem());
 
     refreshShortcut->setEnabled(true);
-    insertShortcut->setEnabled(current.isValid() && current == root);
+    insertShortcut->setEnabled(!current.isValid() || current == root);
     editShortcut->setEnabled(current.isValid() && current !=root);
     removeShortcut->setEnabled(current.isValid() && current != root);
 
     pB_details->setEnabled(current.isValid() && current != root);
-}
-
-QMap<int, QString> AuthorityDialog::choice(const QModelIndex &current)
-{
-    return QMap<int, QString>();
+    commentButton()->setEnabled(current.isValid() && current != root);
 }
 
 void AuthorityDialog::details()
@@ -82,18 +77,11 @@ void AuthorityDialog::details()
     QModelIndex index = ui->tV_itemView->currentIndex();
 
     AuthorityDetailsDialog dialog(index.data(Qt::UserRole));
-    dialog.exec();
-}
+    int res = dialog.exec();
 
-void AuthorityDialog::refresh()
-{
-    m_proxyModel->invalidate();
-    m_model->select();
-
-    QModelIndex root = m_proxyModel->mapFromSource(m_model->rootItem());
-
-    ui->tV_itemView->expandAll();
-    ui->tV_itemView->setCurrentIndex(root);
+    if(res == AuthorityDialog::Accepted) {
+        setComment(dialog.comment());
+    }
 }
 
 void AuthorityDialog::insert()
@@ -124,30 +112,8 @@ void AuthorityDialog::insert()
     }
 }
 
-void AuthorityDialog::edit()
+void AuthorityDialog::refresh()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
-
-    ui->tV_itemView->edit(index);
-}
-
-void AuthorityDialog::remove()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex();
-    QModelIndex root = m_proxyModel->mapFromSource(m_model->rootItem());
-
-    int res = QMessageBox::critical(this,
-        tr("Deleting item"),
-        tr("Are you shure that you want to delete this item?"),
-        QMessageBox::No | QMessageBox::Yes);
-
-    if (res == QMessageBox::Yes) {
-        bool remove = m_proxyModel->removeRow(index.row(), root);
-        if (!remove) {
-            QMessageBox::warning(this,
-                    tr("Deleting item"),
-                    tr("Could not remove the item."),
-                    QMessageBox::Ok);
-        }
-    }
+    ReferenceDialog::refresh();
+    ui->tV_itemView->expandAll();
 }

@@ -21,10 +21,8 @@ public:
     void saveDialogState() override;
 
 public slots:
-    void edit() override;
     void insert() override;
     void refresh() override;
-    void remove() override;
 
 private:
     AuthorityModel *m_model;
@@ -34,7 +32,7 @@ private:
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) override;
-    virtual QMap<int, QString> choice(const QModelIndex &current) override;
+    virtual int choice(const QModelIndex &current) const override { return 0; };
 
 private slots:
     void details();

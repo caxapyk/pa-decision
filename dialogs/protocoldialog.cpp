@@ -85,9 +85,9 @@ void ProtocolDialog::selected(const QModelIndex &current, const QModelIndex &)
     m_current = curr;*/
 }
 
-QMap<int, QString> ProtocolDialog::choice(const QModelIndex &current)
+int ProtocolDialog::choice(const QModelIndex &current) const
 {
-    return QMap<int, QString>();
+    return 0;
 }
 
 void ProtocolDialog::edit()

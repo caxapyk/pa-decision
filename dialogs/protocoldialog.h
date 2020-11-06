@@ -33,7 +33,7 @@ private:
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) override;
-    virtual QMap<int, QString> choice(const QModelIndex &current) override;
+    virtual int choice(const QModelIndex &current) const override;
 
 };
 

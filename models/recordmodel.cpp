@@ -368,10 +368,13 @@ QVariant RecordModel::data(const QModelIndex &index, int role) const
                 break;
             }
             break;
-        case ReferenceModel::CommentRole: // comment
+        case ReferenceModel::IDRole:
+            return currentNode->id;
+        break;
+        case ReferenceModel::CommentRole:
             return currentNode->comment;
             break;
-        case ReferenceModel::InfoRole: // fund name
+        case ReferenceModel::InfoRole:
             return fundNames.value(currentNode);
             break;
     }

@@ -65,13 +65,14 @@ void AuthorityModel::select()
 
 void AuthorityModel::setupModelData()
 {
-    QSqlQuery query("SELECT id, name FROM pad_authority ORDER BY name ASC");
+    QSqlQuery query("SELECT id, name, comment FROM pad_authority ORDER BY name ASC");
 
     while (query.next()) {
         AT_Node *node = new AT_Node;
 
         node->append(query.value(query.record().indexOf("id")));
         node->append(query.value(query.record().indexOf("name")));
+        node->append(query.value(query.record().indexOf("comment")));
 
         m_nodeList->append(node);
     }
@@ -121,6 +122,7 @@ bool AuthorityModel::insertRows(int row, int count, const QModelIndex &parent)
        AT_Node *node = new AT_Node();
        node->append(QVariant(query.lastInsertId()));
        node->append(pa_name);
+       node->append(QVariant());
 
        m_nodeList->append(node);
 
@@ -218,33 +220,31 @@ int AuthorityModel::columnCount(const QModelIndex &) const
 
 QVariant AuthorityModel::data(const QModelIndex &index, int role) const
 {
+    const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
     switch (role) {
         case Qt::DisplayRole:
             if(index.parent().isValid()) {
-                const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
                 return currentNode->at(1);
             }
-
-            if(index.column() == 0) {
-                return QVariant(tr("All Public Authorities"));
-            }
+            return QVariant(tr("All Public Authorities"));
         break;
         case Qt::EditRole:
             return data(index, Qt::DisplayRole);
         break;
         case Qt::DecorationRole:
-            if (index.column() == 0) {
                 if(index == rootItem())
                     return QIcon(":/icons/icons/folder-16.png");
 
                 return QIcon(":/icons/icons/icon-16.png");
+        break;
+        case ReferenceModel::IDRole:
+            if(index.parent().isValid()) {
+                return currentNode->at(0);
             }
         break;
-        // return id of item
-        case IDRole:
-            if (index.column() == 0) {
-                const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
-                return currentNode->at(0);
+        case ReferenceModel::CommentRole:
+            if(index.parent().isValid()) {
+                return currentNode->at(2);
             }
         break;
     }
@@ -253,26 +253,45 @@ QVariant AuthorityModel::data(const QModelIndex &index, int role) const
 }
 
 bool AuthorityModel::setData(const QModelIndex &index, const QVariant &value, int role){
+    AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
+
     switch (role) {
-        case Qt::EditRole:
-            if(value.toString().size() > 0) {
-                AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
+    case Qt::EditRole:
+        if(value.toString().size() > 0) {
+            QSqlQuery query;
+            query.prepare("UPDATE pad_authority SET name=? WHERE id=?");
+            query.bindValue(0, value);
+            query.bindValue(1, currentNode->at(0));
+            query.exec();
 
-                QSqlQuery query;
-                query.prepare("UPDATE pad_authority SET name=? WHERE id=?");
-                query.bindValue(0, value);
-                query.bindValue(1, currentNode->at(0));
-                query.exec();
+            if(query.isActive()) {
+                currentNode->replace(1, value);
+                emit dataChanged(index, index);
 
-                if(query.isActive()) {
-                    currentNode->replace(1, value);
-                    emit dataChanged(index, index);
-
-                    return true;
-                }
-
-                qDebug() << query.lastError().text();
+                return true;
             }
+
+            qDebug() << query.lastError().text();
+        }
+        break;
+    case ReferenceModel::CommentRole: // update comment
+    {
+        QSqlQuery query;
+        query.prepare("UPDATE pad_authority SET comment=? WHERE id=?");
+
+        query.bindValue(0, value);
+        query.bindValue(1, currentNode->at(0));
+        query.exec();
+
+        if(query.isActive()) {
+            currentNode->replace(2, value);
+            emit dataChanged(index, index);
+
+            return true;
+        }
+
+        qDebug() << query.lastError().text();
+    }
         break;
     }
 

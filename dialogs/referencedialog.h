@@ -24,10 +24,11 @@ public:
 
     void contextMenu(const QPoint &pos);
 
-    QMap<int, QString> currentChoice() { return m_choice; };
+    int currentChoice() { return m_choice; };
     bool isChoiceMode() { return choice_mode; };
     void setChoiceMode() { choice_mode = true; };
     void setComment(const QString &text);
+    void setInfoIconVisible(bool ok = true);
 
 public slots:
     virtual void edit();
@@ -52,13 +53,13 @@ protected:
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) = 0;
-    virtual QMap<int, QString> choice(const QModelIndex &current) = 0;
+    virtual int choice(const QModelIndex &current) const = 0;
 
 private:
     void setupShortcuts();
 
     bool choice_mode = false;
-    QMap<int, QString> m_choice = QMap<int, QString>();
+    int m_choice = 0;
 
     QAbstractProxyModel *m_dialogProxyModel = nullptr;
     QPushButton *pB_comment = nullptr;
