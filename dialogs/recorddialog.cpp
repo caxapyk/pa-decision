@@ -21,11 +21,11 @@ RecordDialog::RecordDialog(QWidget *parent) :
 
     ui->vL_buttonGroup->addWidget(pB_fundTitle);
 
-    m_headerWidget = new RecordDialogHeader;
+    m_headerWidget = new DialogHeader;
     ui->hL_header->addWidget(m_headerWidget);
 
+    connect(m_headerWidget, &DialogHeader::authorityChanged, this, &RecordDialog::loadByAuthorityId);
     m_model = new RecordModel;
-    m_model->select();
 
     m_proxyModel = new RecordProxyModel;
     m_proxyModel->setSourceModel(m_model);
@@ -33,17 +33,20 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->tV_itemView->setModel(m_proxyModel);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    addCommentButton();
     setDialogModel(m_proxyModel);
 
     connect(pB_fundTitle, &QPushButton::clicked, this, &RecordDialog::editFundName);
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+
+    loadByAuthorityId(m_headerWidget->id());
 }
 
 RecordDialog::~RecordDialog()
 {
-    delete pB_fundTitle;
     delete m_headerWidget;
+    delete pB_fundTitle;
+    delete m_model;
+    delete m_proxyModel;
 }
 
 void RecordDialog::restoreDialogState()
@@ -76,10 +79,16 @@ void RecordDialog::selected(const QModelIndex &current, const QModelIndex &)
     pB_fundTitle->setEnabled(current.isValid() && (node != nullptr && node->level == RecordModel::FundLevel));
     commentButton()->setEnabled(current.isValid());
 
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(isChoiceMode() && node->level != RecordModel::RecordLevel);
-
     if(current.isValid() && node->level == RecordModel::FundLevel)
         m_headerWidget->setFundName(current.data(ReferenceModel::InfoRole).toString());
+}
+
+bool RecordDialog::choiceButtonEnabled()
+{
+    RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()).internalPointer());
+    bool e = !isChoiceMode() || node->level == RecordModel::RecordLevel;
+
+    return e;
 }
 
 QMap<int, QString> RecordDialog::choice(const QModelIndex &current)
@@ -101,6 +110,12 @@ QMap<int, QString> RecordDialog::choice(const QModelIndex &current)
     return c;
 }
 
+void RecordDialog::loadByAuthorityId(int id)
+{
+    m_model->setAuthorityId(id);
+    m_model->select();
+}
+
 void RecordDialog::editFundName()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
@@ -110,7 +125,7 @@ void RecordDialog::editFundName()
 
     if (!value.isEmpty()) {
         bool set;
-        set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::InfoRole);
+        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::InfoRole);
 
         if(set) {
             m_headerWidget->setFundName(value);

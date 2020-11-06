@@ -47,8 +47,8 @@ SOURCES += \
     views/view.cpp \
     widgets/colorrect.cpp \
     widgets/customcontextmenu.cpp \
+    widgets/dialogheader.cpp \
     widgets/paginator.cpp \
-    widgets/recorddialogheader.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp
@@ -82,8 +82,8 @@ HEADERS += \
     views/view.h \
     widgets/colorrect.h \
     widgets/customcontextmenu.h \
+    widgets/dialogheader.h \
     widgets/paginator.h \
-    widgets/recorddialogheader.h \
     widgets/referencebutton.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h
@@ -97,8 +97,8 @@ FORMS += \
     mainwindow.ui \
     views/decisionview.ui \
     views/navigatorview.ui \
+    widgets/dialogheader.ui \
     widgets/paginator.ui \
-    widgets/recorddialogheader.ui \
     widgets/referencebutton.ui \
     widgets/searchpanel.ui \
     widgets/statusbarpanel.ui

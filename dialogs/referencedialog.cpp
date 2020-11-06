@@ -16,6 +16,13 @@ ReferenceDialog::ReferenceDialog(QWidget *parent) :
 
     ui->label_infoIcon->setVisible(false);
 
+    pB_comment = new QPushButton(tr("Comment"));
+    pB_comment->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_comment);
+
+    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
+
     restoreDialogState();
     setupShortcuts();
 
@@ -33,8 +40,6 @@ ReferenceDialog::~ReferenceDialog()
     delete refreshShortcut;
 
     delete pB_comment;
-
-    delete m_dialogProxyModel;
 }
 
 void ReferenceDialog::setupShortcuts()
@@ -79,16 +84,6 @@ void ReferenceDialog::contextMenu(const QPoint &)
     connect(refreshAction, &QAction::triggered, this, &ReferenceDialog::refresh);
 
     menu.exec(QCursor().pos());
-}
-
-void ReferenceDialog::addCommentButton()
-{
-    pB_comment = new QPushButton(tr("Comment"));
-    pB_comment->setDisabled(true);
-
-    ui->vL_buttonGroup->addWidget(pB_comment);
-
-    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
 }
 
 void ReferenceDialog::editComment()
@@ -149,6 +144,8 @@ void ReferenceDialog::_selected(const QModelIndex &current, const QModelIndex &)
     if(pB_comment != nullptr) {
         setComment(current.data(ReferenceModel::CommentRole).toString());
     }
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
 
 void ReferenceDialog::edit()

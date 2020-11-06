@@ -241,7 +241,7 @@ QVariant AuthorityModel::data(const QModelIndex &index, int role) const
             }
         break;
         // return id of item
-        case Qt::UserRole:
+        case IDRole:
             if (index.column() == 0) {
                 const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
                 return currentNode->at(0);

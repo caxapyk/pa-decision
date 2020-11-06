@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RecordDialogHeader</class>
- <widget class="QWidget" name="RecordDialogHeader">
+ <class>DialogHeader</class>
+ <widget class="QWidget" name="DialogHeader">
   <property name="geometry">
    <rect>
     <x>0</x>

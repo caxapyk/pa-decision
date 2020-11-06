@@ -38,20 +38,17 @@ public slots:
 protected:
     Ui::ReferenceDialog *ui;
 
-    QAbstractProxyModel *m_dialogProxyModel = nullptr;
-
     QShortcut *insertShortcut = nullptr;
     QShortcut *editShortcut = nullptr;
     QShortcut *removeShortcut = nullptr;
     QShortcut *refreshShortcut = nullptr;
 
-    QPushButton *pB_comment = nullptr;
-
-    void addCommentButton();
     QPushButton *commentButton() { return pB_comment; };
     QString inputDialog(const QString &title, const QString &label = QString(), const QString &value = QString());
 
     void setDialogModel(QAbstractProxyModel *model);
+
+    virtual bool choiceButtonEnabled() { return true; };
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) = 0;
@@ -62,6 +59,9 @@ private:
 
     bool choice_mode = false;
     QMap<int, QString> m_choice = QMap<int, QString>();
+
+    QAbstractProxyModel *m_dialogProxyModel = nullptr;
+    QPushButton *pB_comment = nullptr;
 
 private slots:
     void _selected(const QModelIndex &current, const QModelIndex &);

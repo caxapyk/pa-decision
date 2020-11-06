@@ -39,18 +39,18 @@ int AuthorityFlatModel::rowCount(const QModelIndex &parent) const
 QVariant AuthorityFlatModel::data(const QModelIndex &index, int role) const
 {
     switch (role) {
-        case Qt::DisplayRole:
-        {
-            const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
-            return currentNode->at(1);
-        }
+    case Qt::DisplayRole:
+    {
+        const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
+        return currentNode->at(1);
+    }
         break;
-        case Qt::DecorationRole:
-            return QIcon(":/icons/icons/icon-16.png");
+    case Qt::DecorationRole:
+        return QIcon(":/icons/icons/icon-16.png");
         break;
-        // return id of item
-        case Qt::UserRole:
-        {
+    // return id of item
+    case IDRole:
+        if (index.column() == 0) {
             const AT_Node* currentNode = static_cast<AT_Node*>(index.internalPointer());
             return currentNode->at(0);
         }

@@ -2,9 +2,10 @@
 #define RECORDDIALOG_H
 
 #include "dialogs/referencedialog.h"
+#include "models/authorityflatmodel.h"
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
-#include "widgets/recorddialogheader.h"
+#include "widgets/dialogheader.h"
 
 #include <QDialog>
 #include <QPushButton>
@@ -25,7 +26,10 @@ private:
     RecordProxyModel *m_proxyModel;
 
     QPushButton *pB_fundTitle;
-    RecordDialogHeader *m_headerWidget;
+    DialogHeader *m_headerWidget;
+
+protected:
+    bool choiceButtonEnabled() override;
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) override;
@@ -33,6 +37,7 @@ protected slots:
 
 private slots:
     void editFundName();
+    void loadByAuthorityId(int id);
 };
 
 #endif // RECORDDIALOG_H

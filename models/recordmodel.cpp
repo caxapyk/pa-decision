@@ -61,7 +61,10 @@ void RecordModel::setupModelData(const QModelIndex &index)
 
     switch (level) {
     case RecordModel::FundLevel:
-        query.prepare("SELECT id, number, comment, name FROM pad_fund ORDER BY CAST(number AS UNSIGNED) ASC");
+    {
+        QString filter = m_authorityId > 0 ? QString(" WHERE authority_id=") + QString::number(m_authorityId) : QString();
+        query.prepare(QString("SELECT id, number, comment, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter));
+    }
         break;
     case RecordModel::InventoryLevel:
         query.prepare("SELECT id, number, comment FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
@@ -200,9 +203,13 @@ bool RecordModel::insertRows(int row, int count, const QModelIndex &parent)
     RecordNode *parentNode = (parent.isValid()) ? static_cast<RecordNode*>(parent.internalPointer()) : rootNode;
 
     if(!parent.isValid()) {
+        if(m_authorityId == 0) {
+            return false;
+        }
         name = tr("New fund");
-        query.prepare("INSERT INTO pad_fund(number) VALUES (?)");
-        query.bindValue(0, name);
+        query.prepare("INSERT INTO pad_fund(authority_id, number) VALUES (?,?)");
+        query.bindValue(0, m_authorityId);
+        query.bindValue(1, name);
     } else if(parentNode->level == RecordModel::FundLevel) {
         name = tr("New inventory");
         query.prepare("INSERT INTO pad_inventory(number, fund_id) VALUES (?,?)");
