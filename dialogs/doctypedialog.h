@@ -3,6 +3,7 @@
 
 #include "dialogs/referencedialog.h"
 #include "models/doctypemodel.h"
+#include "models/documenttypemodel.h"
 
 #include <QDialog>
 #include <QShortcut>
@@ -20,13 +21,10 @@ public:
     void saveDialogState() override;
 
 public slots:
-    //void edit() override;
     void insert() override;
-    //void refresh() override;
-    //void remove() override;
 
 private:
-    DoctypeModel *m_model;
+    DocumentTypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
 protected slots:

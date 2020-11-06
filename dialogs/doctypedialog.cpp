@@ -15,7 +15,7 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     setInfoIconVisible();
     setComment(tr("Use color to highlight documents!"));
 
-    m_model = new DoctypeModel;
+    m_model = new DocumentTypeModel;
     m_model->select();
 
     m_proxyModel = new QSortFilterProxyModel;
@@ -24,9 +24,8 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->setModel(m_proxyModel);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    ui->tV_itemView->hideColumn(0);
-    ui->tV_itemView->resizeColumnToContents(1);
-    ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
+    ui->tV_itemView->resizeColumnToContents(0);
+    ui->tV_itemView->setItemDelegateForColumn(1, new ColorPickerItemDelegate);
 
     setDialogModel(m_proxyModel);
 
@@ -64,13 +63,6 @@ void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
     refreshShortcut->setEnabled(true);
 }
 
-/*void DoctypeDialog::edit()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex();
-
-    ui->tV_itemView->edit(index);
-}*/
-
 void DoctypeDialog::insert()
 {
     bool insert = m_proxyModel->sourceModel()->insertRow(0);
@@ -91,34 +83,4 @@ void DoctypeDialog::insert()
                 QMessageBox::Ok);
     }
 }
-
-/* void DoctypeDialog::refresh()
-{
-    ui->tV_itemView->selectionModel()->clearCurrentIndex();
-
-    m_proxyModel->invalidate();
-    m_model->select();
-}
-
-void DoctypeDialog::remove()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex();
-
-    int res = QMessageBox::critical(this,
-        tr("Deleting item"),
-        tr("Are you shure that you want to delete this item?"),
-        QMessageBox::No | QMessageBox::Yes);
-
-    if (res == QMessageBox::Yes) {
-        bool remove = m_proxyModel->removeRow(index.row());
-        if (remove) {
-            m_model->select();
-        } else {
-            QMessageBox::warning(this,
-                    tr("Deleting item"),
-                    tr("Could not remove the item."),
-                    QMessageBox::Ok);
-        }
-    }
-}*/
 

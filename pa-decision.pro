@@ -38,6 +38,7 @@ SOURCES += \
     models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
     models/doctypemodel.cpp \
+    models/documenttypemodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/referencemodel.cpp \
@@ -73,6 +74,7 @@ HEADERS += \
     models/decisionmodel.h \
     models/decisionproxymodel.h \
     models/doctypemodel.h \
+    models/documenttypemodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/referencemodel.h \
