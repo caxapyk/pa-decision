@@ -22,15 +22,10 @@ DialogHeader::~DialogHeader()
 
 void DialogHeader::currentIndexChanged(int index)
 {
-    QVariant data = m_authorityModel.data(m_authorityModel.index(index, 0), ReferenceModel::IDRole);
+    QVariant data = m_authorityModel.data(m_authorityModel.index(index, 0), Qt::UserRole);
 
     if(data.isValid()) {
         currentId = data.toInt();
         emit authorityChanged(currentId);
     }
-}
-
-void DialogHeader::setFundName(const QString &name)
-{
-    ui->label_fundName->setText(name);
 }

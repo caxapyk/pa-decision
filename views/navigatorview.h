@@ -1,6 +1,8 @@
 #ifndef NAVIGATORVIEW_H
 #define NAVIGATORVIEW_H
 
+#include "models/authoritymodel.h"
+#include "models/authorityproxymodel.h"
 #include "models/referencemodel.h"
 #include "views/view.h"
 
@@ -17,7 +19,7 @@ class NavigatorView : public View
 
 public:
     enum Tabs {TabCollection, TabSearch};
-    enum Collection {CollectionAuthority, CollectionRecord, CollectionProtocol, CollectionYear, CollectionObject};
+    enum Collection {CollectionRecord, CollectionProtocol, CollectionDoctype, CollectionYear, CollectionObject};
 
     explicit NavigatorView(QWidget *parent = nullptr);
     ~NavigatorView();
@@ -27,21 +29,25 @@ public:
     void restoreViewState() override;
     void saveViewState() override;
 
-    int currentCollection() {return current;};
-    void refresh();
+    int currentCollection() { return current; };
+    void refreshAuthority();
+    void refreshCollection();
 
 private:
     Ui::NavigatorView *ui;
     QShortcut *m_refreshShortcut;
 
-    ReferenceModel *m_model = nullptr;
-    QSortFilterProxyModel *m_proxyModel = nullptr;
+    AuthorityModel *m_authorityModel;
+    AuthorityProxyModel *m_authorityProxyModel;
+
+    ReferenceModel *m_collectionModel = nullptr;
+    QSortFilterProxyModel *m_collectionProxyModel = nullptr;
 
     int current = 0;
 
 private slots:
     void contextMenu(const QPoint &pos);
-    void switchModel(int index);
+    void load(int collection);
 };
 
 #endif // NAVIGATORVIEW_H

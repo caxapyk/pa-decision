@@ -21,12 +21,19 @@ public:
 
     virtual void restoreDialogState() {};
     virtual void saveDialogState() {};
+    virtual bool choiceButtonEnabled() { return true; };
 
     void contextMenu(const QPoint &pos);
 
+    void clearComment();
+    void clearInfoText();
+
     int currentChoice() { return m_choice; };
     bool isChoiceMode() { return choice_mode; };
+    QVariant inputDialog(const QString &title, const QString &label = QString(), const QVariant &value = QVariant());
+
     void setChoiceMode() { choice_mode = true; };
+    void setInfoText(const QString &text);
     void setComment(const QString &text);
     void setInfoIconVisible(bool ok = true);
 
@@ -44,12 +51,7 @@ protected:
     QShortcut *removeShortcut = nullptr;
     QShortcut *refreshShortcut = nullptr;
 
-    QPushButton *commentButton() { return pB_comment; };
-    QString inputDialog(const QString &title, const QString &label = QString(), const QString &value = QString());
-
     void setDialogModel(QAbstractProxyModel *model);
-
-    virtual bool choiceButtonEnabled() { return true; };
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) = 0;
@@ -62,11 +64,10 @@ private:
     int m_choice = 0;
 
     QAbstractProxyModel *m_dialogProxyModel = nullptr;
-    QPushButton *pB_comment = nullptr;
+
 
 private slots:
     void _selected(const QModelIndex &current, const QModelIndex &);
-    void editComment();
 
     void accept() override;
     void reject() override;

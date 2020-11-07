@@ -2,14 +2,14 @@
 #include "ui_navigatorview.h"
 
 #include "application.h"
-#include "models/authoritymodel.h"
-#include "models/authorityproxymodel.h"
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
+#include "models/documenttypemodel.h"
 #include "widgets/customcontextmenu.h"
 
 #include <QDebug>
 #include <QMenu>
+#include <QSortFilterProxyModel>
 
 NavigatorView::NavigatorView(QWidget *parent) :
     View(parent),
@@ -26,30 +26,54 @@ NavigatorView::~NavigatorView()
     saveViewState();
 
     delete ui;
-    delete m_model;
-    delete m_proxyModel;
+
+    delete m_authorityModel;
+    delete m_authorityProxyModel;
+    delete m_collectionModel;
+    delete m_collectionProxyModel;
 }
 
 void NavigatorView::initialize()
 {
+    m_authorityModel = new AuthorityModel;
+    m_authorityModel->select();
+
+    m_authorityProxyModel = new AuthorityProxyModel;
+    m_authorityProxyModel->setSourceModel(m_authorityModel);
+    ui->tV_authority->setModel(m_authorityProxyModel);
+
+    ui->tV_authority->hideColumn(1);
+    ui->tV_authority->hideColumn(2);
+    ui->tV_authority->expandAll();
+
+    connect(ui->tV_authority, &QTreeView::clicked, this, [=] { if(ui->cB_dynamic->isChecked()) load(current); });
+
     ui->tV_collection->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tV_collection, &QMenu::customContextMenuRequested, this, &NavigatorView::contextMenu);
 
     m_refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_collection, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(m_refreshShortcut, &QShortcut::activated, this, [=] {
-        switchModel(ui->cB_collection->currentIndex());
-    });
+    connect(m_refreshShortcut, &QShortcut::activated, this, [=] { load(current); });
 
-    connect(ui->cB_collection, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NavigatorView::switchModel);
+    connect(ui->cB_collection, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NavigatorView::load);
+
+    // load all data on dynamic stage chenged
+    connect(ui->cB_dynamic, &QCheckBox::stateChanged, this, [=] (int state) {
+        load(current);
+    });
 }
 
 void NavigatorView::restoreViewState()
 {
     QSettings* settings = application->applicationSettings();
 
+    ui->splitter_nav->restoreState(settings->value("Views/splitter_nav").toByteArray());
+    ui->tV_authority->header()->restoreState(settings->value("Views/tV_authority").toByteArray());
+
     int currentModel = settings->contains("Views/cB_collection") ? settings->value("Views/cB_collection").toInt() : 0;
     ui->cB_collection->setCurrentIndex(currentModel);
-    switchModel(currentModel);
+    load(currentModel);
+
+    ui->cB_dynamic->setChecked(settings->value("Views/cB_dynamic").toBool());
 
     ui->tV_collection->header()->restoreState(settings->value("Views/tV_collection").toByteArray());
 }
@@ -59,8 +83,11 @@ void NavigatorView::saveViewState()
     QSettings* settings = application->applicationSettings();
 
     settings->beginGroup("Views");
+    settings->setValue("splitter_nav", ui->splitter_nav->saveState());
+    settings->setValue("tV_authority", ui->tV_authority->header()->saveState());
     settings->setValue("tV_collection", ui->tV_collection->header()->saveState());
     settings->setValue("cB_collection", QVariant(ui->cB_collection->currentIndex()));
+    settings->setValue("cB_dynamic", QVariant(ui->cB_dynamic->isChecked()));
     settings->endGroup();
 }
 
@@ -71,54 +98,64 @@ void NavigatorView::contextMenu(const QPoint &)
     QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
     connect(refreshAction, &QAction::triggered, this, [=] {
-        switchModel(ui->cB_collection->currentIndex());
+        load(ui->cB_collection->currentIndex());
     });
 
     menu.exec(QCursor().pos());
 }
 
-void NavigatorView::refresh()
+void NavigatorView::refreshAuthority()
 {
-    switchModel(current);
+    m_authorityModel->select();
+    ui->tV_authority->expandAll();
 }
 
-void NavigatorView::switchModel(int index)
+void NavigatorView::refreshCollection()
 {
-    delete m_model;
-    delete m_proxyModel;
+    load(current);
+}
 
-    switch(index){
-    case NavigatorView::CollectionAuthority:
-        m_model = new AuthorityModel();
-        m_proxyModel = new AuthorityProxyModel;
+void NavigatorView::load(int collection)
+{
+    delete m_collectionModel;
+    delete m_collectionProxyModel;
 
-        current = NavigatorView::CollectionAuthority;
-        break;
+    switch(collection){
     case NavigatorView::CollectionRecord:
-        m_model = new RecordModel();
-        m_proxyModel = new RecordProxyModel;
-
+        m_collectionModel = new RecordModel();
+        m_collectionProxyModel = new RecordProxyModel;
         current = NavigatorView::CollectionRecord;
         break;
     case NavigatorView::CollectionProtocol:
-        m_model = new AuthorityModel();
-        m_proxyModel = new AuthorityProxyModel;
-
-        current = NavigatorView::CollectionAuthority;
+        current = NavigatorView::CollectionProtocol;
+        break;
+    case NavigatorView::CollectionDoctype:
+        m_collectionModel = new DocumentTypeModel;
+        m_collectionProxyModel = new QSortFilterProxyModel;
+        current = NavigatorView::CollectionDoctype;
         break;
     case NavigatorView::CollectionYear:
+        current = NavigatorView::CollectionYear;
         break;
     case NavigatorView::CollectionObject:
+        current = NavigatorView::CollectionObject;
         break;
     }
 
-    m_model->select();
-
-    m_proxyModel->setSourceModel(m_model);
-    ui->tV_collection->setModel(m_proxyModel);
-
-    if(current == CollectionAuthority) {
-        ui->tV_collection->expandAll();
+    if(ui->cB_dynamic->isChecked()) {
+        QModelIndex v = ui->tV_authority->currentIndex();
+        if(v.parent().isValid()) {
+            int id = v.data(Qt::UserRole).toInt();
+            m_collectionModel->setAuthorityId(id);
+        }
     }
+
+    m_collectionModel->select();
+
+    m_collectionProxyModel->setSourceModel(m_collectionModel);
+    ui->tV_collection->setModel(m_collectionProxyModel);
+
+    for(int i = 1; i < ui->tV_collection->model()->columnCount(); ++i)
+        ui->tV_collection->hideColumn(i);
 }
 

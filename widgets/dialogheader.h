@@ -17,7 +17,6 @@ public:
     explicit DialogHeader(QWidget *parent = nullptr);
     ~DialogHeader();
 
-    void setFundName(const QString &name);
     int id() { return currentId; };
 
 signals:

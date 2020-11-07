@@ -98,7 +98,7 @@ void MainWindow::setupToolBar()
 
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
 
-    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Collections"));
+    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Navigation"));
     action_tree->setCheckable(true);
     action_tree->setChecked(true);
     connect(action_tree, &QAction::triggered, this, [=]{
@@ -160,8 +160,8 @@ void MainWindow::openAuthorities()
     AuthorityDialog dialog;
     int res = dialog.exec();
 
-    if(res == AuthorityDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionAuthority) {
-        m_navigatorView->refresh();
+    if(res == AuthorityDialog::Accepted) {
+        m_navigatorView->refreshAuthority();
     }
 }
 
@@ -171,7 +171,7 @@ void MainWindow::openProtocol()
     int res = dialog.exec();
 
     if(res == ProtocolDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionProtocol) {
-        m_navigatorView->refresh();
+        m_navigatorView->refreshCollection();
     }
 }
 
@@ -181,6 +181,6 @@ void MainWindow::openRecords()
     int res = dialog.exec();
 
     if(res == RecordDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionRecord) {
-        m_navigatorView->refresh();
+        m_navigatorView->refreshCollection();
     }
 }

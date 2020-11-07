@@ -15,13 +15,7 @@ ReferenceDialog::ReferenceDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setInfoIconVisible(false);
-
-    pB_comment = new QPushButton(tr("Comment"));
-    pB_comment->setDisabled(true);
-
-    ui->vL_buttonGroup->addWidget(pB_comment);
-
-    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
+    ui->label_commentIcon->setVisible(false);
 
     restoreDialogState();
     setupShortcuts();
@@ -38,8 +32,6 @@ ReferenceDialog::~ReferenceDialog()
     delete editShortcut;
     delete removeShortcut;
     delete refreshShortcut;
-
-    delete pB_comment;
 }
 
 void ReferenceDialog::setupShortcuts()
@@ -86,36 +78,12 @@ void ReferenceDialog::contextMenu(const QPoint &)
     menu.exec(QCursor().pos());
 }
 
-void ReferenceDialog::editComment()
-{
-    if(m_dialogProxyModel != nullptr) {
-        QModelIndex index = ui->tV_itemView->currentIndex();
-        QString title = tr("Comment");
-
-        QString value = inputDialog(title, tr("Enter comment"), index.data(ReferenceModel::CommentRole).toString());
-
-        if (!value.isEmpty()) {
-            bool set;
-            set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::CommentRole);
-
-            if(set) {
-                setComment(value);
-            } else {
-                QMessageBox::warning(this,
-                        title,
-                        tr("Could not set data.") + (value.length() >= 255 ? tr(" Too long.") : ""),
-                        QMessageBox::Ok);
-            }
-        }
-    }
-}
-
-QString ReferenceDialog::inputDialog(const QString &title, const QString &label, const QString &value)
+QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label, const QVariant &value)
 {
     QInputDialog inputDialog;
     inputDialog.setWindowTitle(title);
     inputDialog.setLabelText(label);
-    inputDialog.setTextValue(value);
+    inputDialog.setTextValue(value.toString());
     inputDialog.setTextEchoMode(QLineEdit::Normal);
 
     inputDialog.setMinimumWidth(480);
@@ -123,7 +91,18 @@ QString ReferenceDialog::inputDialog(const QString &title, const QString &label,
 
     inputDialog.exec();
 
-    return inputDialog.textValue();
+    return QVariant(inputDialog.textValue());
+}
+
+void ReferenceDialog::clearComment()
+{
+    ui->label_comment->clear();
+    ui->label_commentIcon->setVisible(false);
+}
+
+void ReferenceDialog::clearInfoText()
+{
+    ui->label_info->clear();
 }
 
 void ReferenceDialog::setDialogModel(QAbstractProxyModel *model)
@@ -136,7 +115,13 @@ void ReferenceDialog::setDialogModel(QAbstractProxyModel *model)
 
 void ReferenceDialog::setComment(const QString &text)
 {
+    ui->label_commentIcon->setVisible(!text.isEmpty());
     ui->label_comment->setText(text);
+}
+
+void ReferenceDialog::setInfoText(const QString &text)
+{
+    ui->label_info->setText(text);
 }
 
 void ReferenceDialog::setInfoIconVisible(bool ok)
@@ -147,9 +132,6 @@ void ReferenceDialog::setInfoIconVisible(bool ok)
 void ReferenceDialog::_selected(const QModelIndex &current, const QModelIndex &)
 {
     m_choice = choice(current);
-    if(pB_comment != nullptr) {
-        setComment(current.data(ReferenceModel::CommentRole).toString());
-    }
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
@@ -167,11 +149,11 @@ void ReferenceDialog::insert()
 void ReferenceDialog::refresh()
 {
     if(m_dialogProxyModel != nullptr) {
-        ui->tV_itemView->selectionModel()->clearCurrentIndex();
-
         ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
 
+        ui->tV_itemView->selectionModel()->clearCurrentIndex();
         model->select();
+        ui->tV_itemView->setCurrentIndex(QModelIndex());
     }
 }
 

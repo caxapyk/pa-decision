@@ -18,6 +18,7 @@ public:
         QVariant id;
         QVariant number;
         QVariant comment;
+        QVariant name;
         QVector<RecordNode*> children;
         RecordNode* parent;
         int level;
@@ -29,9 +30,6 @@ public:
 
     void clear() override;
     void select() override;
-
-    void setAuthorityId(int id) { m_authorityId = id; };
-    int authorityId() { return m_authorityId; };
 
     bool canFetchMore(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent=QModelIndex()) const override;
@@ -50,10 +48,6 @@ public:
 
 private:
     QMap<int, QVariant> columnHeaders;
-    QMap<RecordNode*, QVariant> fundNames;
-
-    int m_authorityId = 0;
-
     RecordNode *rootNode;
 
     void setupModelData(const QModelIndex &index=QModelIndex());

@@ -9,6 +9,7 @@
 
 #include <QDialog>
 #include <QPushButton>
+#include <QLabel>
 
 class RecordDialog : public ReferenceDialog
 {
@@ -23,11 +24,13 @@ public:
 
 public slots:
     void insert() override;
+    void remove() override;
 
 private:
     RecordModel *m_model;
     RecordProxyModel *m_proxyModel;
 
+    QPushButton *pB_comment;
     QPushButton *pB_fundTitle;
     DialogHeader *m_headerWidget;
 
@@ -39,6 +42,7 @@ protected slots:
     virtual int choice(const QModelIndex &current) const override;
 
 private slots:
+    void editComment();
     void editFundName();
     void loadByAuthorityId(int id);
 };

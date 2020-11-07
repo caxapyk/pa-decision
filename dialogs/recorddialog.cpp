@@ -6,6 +6,7 @@
 #include "widgets/customcontextmenu.h"
 
 #include <QDebug>
+#include <QIcon>
 #include <QInputDialog>
 #include <QItemSelection>
 #include <QMenu>
@@ -15,6 +16,14 @@ RecordDialog::RecordDialog(QWidget *parent) :
      ReferenceDialog(parent)
 {
     setWindowTitle(tr("Archive records"));
+
+    pB_comment = new QPushButton(tr("Comment"));
+    pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
+    pB_comment->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_comment);
+
+    connect(pB_comment, &QPushButton::clicked, this, &RecordDialog::editComment);
 
     pB_fundTitle = new QPushButton(tr("Title"));
     pB_fundTitle->setDisabled(true);
@@ -31,6 +40,9 @@ RecordDialog::RecordDialog(QWidget *parent) :
     m_proxyModel->setSourceModel(m_model);
 
     ui->tV_itemView->setModel(m_proxyModel);
+    ui->tV_itemView->hideColumn(1);
+    ui->tV_itemView->hideColumn(2);
+    ui->tV_itemView->hideColumn(3);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
@@ -45,6 +57,8 @@ RecordDialog::~RecordDialog()
 {
     delete m_headerWidget;
     delete pB_fundTitle;
+    delete pB_comment;
+
     delete m_model;
     delete m_proxyModel;
 }
@@ -77,9 +91,12 @@ void RecordDialog::selected(const QModelIndex &current, const QModelIndex &)
     refreshShortcut->setEnabled(true);
 
     pB_fundTitle->setEnabled(current.isValid() && (node != nullptr && node->level == RecordModel::FundLevel));
-    commentButton()->setEnabled(current.isValid());
+    pB_comment->setEnabled(current.isValid());
 
-    m_headerWidget->setFundName((current.isValid() && node->level == RecordModel::FundLevel) ? current.data(ReferenceModel::InfoRole).toString() : QString());
+    if(current.isValid() && node->level == RecordModel::FundLevel)
+        setInfoText(current.siblingAtColumn(3).data().toString());
+
+    setComment(current.siblingAtColumn(1).data().toString());
 }
 
 bool RecordDialog::choiceButtonEnabled()
@@ -92,35 +109,53 @@ bool RecordDialog::choiceButtonEnabled()
 
 int RecordDialog::choice(const QModelIndex &current) const
 {
-    return m_proxyModel->mapToSource(current).data(ReferenceModel::IDRole).toInt();
+    return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
 }
 
 void RecordDialog::loadByAuthorityId(int id)
 {
-    ui->tV_itemView->selectionModel()->clearCurrentIndex();
+    clearInfoText();
 
     m_model->setAuthorityId(id);
-    m_model->select();
+    refresh();
+}
+
+void RecordDialog::editComment()
+{
+    QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(1);
+    QString title = tr("Comment");
+
+    QVariant value = inputDialog(title, tr("Enter comment"), index.data());
+
+    if (value.isValid() && value != index.data()) {
+        bool set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(index), value);
+        if(set) {
+            setComment(value.toString());
+        } else {
+            QMessageBox::warning(this,
+                                 title,
+                                 tr("Could not set data.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
+                                 QMessageBox::Ok);
+        }
+    }
 }
 
 void RecordDialog::editFundName()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(3);
     QString title = tr("Fund name");
 
-    QString value = inputDialog(title, tr("Enter fund name"), index.data(ReferenceModel::InfoRole).toString());
+    QVariant value = inputDialog(title, tr("Enter fund name"), index.data());
 
-    if (!value.isEmpty()) {
-        bool set;
-        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), value, ReferenceModel::InfoRole);
-
+    if (value.isValid() && value != index.data()) {
+        bool set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(index), value);
         if(set) {
-            m_headerWidget->setFundName(value);
+            setInfoText(value.toString());
         } else {
             QMessageBox::warning(this,
-                    title,
-                    tr("Could not set data.") + (value.length() >= 255 ? tr(" Too long.") : ""),
-                    QMessageBox::Ok);
+                                 title,
+                                 tr("Could not set data.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
+                                 QMessageBox::Ok);
         }
     }
 }
@@ -150,4 +185,10 @@ void RecordDialog::insert()
                 tr("Could not create item."),
                 QMessageBox::Ok);
     }
+}
+
+void RecordDialog::remove()
+{
+    clearInfoText();
+    ReferenceDialog::remove();
 }

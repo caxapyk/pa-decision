@@ -13,7 +13,7 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
 {
     setWindowTitle(tr("Document types"));
     setInfoIconVisible();
-    setComment(tr("Use color to highlight documents!"));
+    setInfoText(tr("Use color to highlight documents!"));
 
     m_model = new DocumentTypeModel;
     m_model->select();
@@ -22,6 +22,7 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     m_proxyModel->setSourceModel(m_model);
 
     ui->tV_itemView->setModel(m_proxyModel);
+    ui->tV_itemView->hideColumn(2);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     ui->tV_itemView->resizeColumnToContents(0);
@@ -65,17 +66,19 @@ void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
 
 void DoctypeDialog::insert()
 {
-    bool insert = m_proxyModel->sourceModel()->insertRow(0);
+    int v = m_proxyModel->sourceModel()->rowCount() - 1;
+
+    bool insert = m_proxyModel->sourceModel()->insertRow(v);
 
     if(insert) {
-        QModelIndex currentIndex = m_proxyModel->mapFromSource(
-                    m_proxyModel->sourceModel()->index(0, 1));
-
-        ui->tV_itemView->resizeColumnToContents(1);
+        v += 1;
+        QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0));
 
         ui->tV_itemView->setCurrentIndex(currentIndex);
         ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+        ui->tV_itemView->edit(currentIndex);
+
+        ui->tV_itemView->resizeColumnToContents(0);
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
@@ -83,4 +86,3 @@ void DoctypeDialog::insert()
                 QMessageBox::Ok);
     }
 }
-

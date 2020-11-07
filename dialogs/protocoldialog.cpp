@@ -27,7 +27,6 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     m_proxyModel->setSourceModel(m_model);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    //connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ProtocolDialog::selected);
 }
 
 ProtocolDialog::~ProtocolDialog()

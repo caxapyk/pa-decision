@@ -23,9 +23,21 @@ public:
     virtual void clear() = 0;
     virtual void select() = 0;
 
-    static constexpr int IDRole = Qt::UserRole;
-    static constexpr int CommentRole = Qt::UserRole + 1;
-    static constexpr int InfoRole = Qt::UserRole + 2;
+    int authorityId() { return m_authorityId; };
+    void setAuthorityId(int id) { m_authorityId = id; };
+
+    void andWhere(const QString &condition);
+    void orWhere(const QString &condition);
+    void where(const QString &condition);
+
+    void clearFilter() { cond = QString(); };
+
+    QString filter() { return cond; };
+
+private:
+    int m_authorityId = 0;
+    QString cond;
+
 };
 
 #endif // ReferenceModel_H

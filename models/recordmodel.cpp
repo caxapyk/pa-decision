@@ -10,6 +10,9 @@ RecordModel::RecordModel(QObject *parent) : ReferenceModel(parent)
 {
     rootNode = new RecordNode;
     setHeaderData(0, Qt::Horizontal, tr("Archive records"));
+    setHeaderData(1, Qt::Horizontal, tr("Comment"));
+    setHeaderData(2, Qt::Horizontal, tr("ID"));
+    setHeaderData(3, Qt::Horizontal, tr("Fund name"));
 }
 
 RecordModel::~RecordModel()
@@ -28,6 +31,8 @@ void RecordModel::clear()
 
     rootNode->children.clear();
     rootNode->children.squeeze();
+
+    clearFilter();
 
     endResetModel();
 }
@@ -61,17 +66,19 @@ void RecordModel::setupModelData(const QModelIndex &index)
 
     switch (level) {
     case RecordModel::FundLevel:
-    {
-        QString filter = m_authorityId > 0 ? QString(" WHERE authority_id=") + QString::number(m_authorityId) : QString();
-        query.prepare(QString("SELECT id, number, comment, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter));
-    }
+        if(authorityId() && filter().isEmpty())
+            where("authority_id=" + QString::number(authorityId()));
+        else if(authorityId() && !filter().isEmpty())
+            andWhere("authority_id=" + QString::number(authorityId()));
+
+        query.prepare(QString("SELECT number, comment, id, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter()));
         break;
     case RecordModel::InventoryLevel:
-        query.prepare("SELECT id, number, comment FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
+        query.prepare("SELECT number, comment, id FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     case RecordModel::RecordLevel:
-        query.prepare("SELECT id, number, comment FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
+        query.prepare("SELECT number, comment, id FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     }
@@ -82,9 +89,11 @@ void RecordModel::setupModelData(const QModelIndex &index)
         while(query.next()) {
             RecordNode *node = new RecordNode();
 
-            node->id = query.record().value(0);
-            node->number.setValue(query.record().value(1));
-            node->comment.setValue(query.record().value(2).toString());
+            node->id = query.record().value(2);
+            node->number.setValue(query.record().value(0));
+            node->comment.setValue(query.record().value(1).toString());
+            if(level == FundLevel)
+                node->name.setValue(query.record().value(3).toString());
 
             node->level = level;
             node->row = query.at();
@@ -93,10 +102,6 @@ void RecordModel::setupModelData(const QModelIndex &index)
 
             parentNode->mapped = (level != FundLevel);
             parentNode->children.append(node);
-
-            // store fund name
-            if(level == FundLevel)
-                fundNames.insert(node, query.record().value(3));
         }
     } else {
         qDebug() << query.lastError().text();
@@ -105,7 +110,7 @@ void RecordModel::setupModelData(const QModelIndex &index)
 
 Qt::ItemFlags RecordModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid()) {
+    if (!index.isValid() || index.column() != 0) {
         return QAbstractItemModel::flags(index);
     }
 
@@ -203,12 +208,12 @@ bool RecordModel::insertRows(int row, int count, const QModelIndex &parent)
     RecordNode *parentNode = (parent.isValid()) ? static_cast<RecordNode*>(parent.internalPointer()) : rootNode;
 
     if(!parent.isValid()) {
-        if(m_authorityId == 0) {
+        if(authorityId() == 0) {
             return false;
         }
         name = tr("New fund");
         query.prepare("INSERT INTO pad_fund(authority_id, number) VALUES (?,?)");
-        query.bindValue(0, m_authorityId);
+        query.bindValue(0, authorityId());
         query.bindValue(1, name);
     } else if(parentNode->level == RecordModel::FundLevel) {
         name = tr("New inventory");
@@ -302,14 +307,14 @@ bool RecordModel::removeRows(int row, int count, const QModelIndex &parent)
             parentNode->children.removeAt(row);
 
             endRemoveRows();
-        } else {
-            qDebug() << query.lastError().text();
 
-            return false;
+            return true;
         }
+
+        qDebug() << query.lastError().text();
     }
 
-    return true;
+    return false;
 }
 
 int RecordModel::rowCount(const QModelIndex &parent) const
@@ -325,7 +330,7 @@ int RecordModel::rowCount(const QModelIndex &parent) const
 
 int RecordModel::columnCount(const QModelIndex &) const
 {
-    return 1;
+    return 4;
 }
 
 QVariant RecordModel::data(const QModelIndex &index, int role) const
@@ -333,10 +338,10 @@ QVariant RecordModel::data(const QModelIndex &index, int role) const
     RecordNode* currentNode = static_cast<RecordNode*>(index.internalPointer());
 
     switch (role) {
-        case Qt::DisplayRole:
-        {
+    case Qt::DisplayRole:
+    {
+        if(index.column() == 0) {
             QString prefix;
-
             switch (currentNode->level) {
             case RecordModel::FundLevel:
                 prefix = tr("F. ");
@@ -350,12 +355,22 @@ QVariant RecordModel::data(const QModelIndex &index, int role) const
             }
 
             return QVariant(prefix + currentNode->number.toString());
-            break;
+
+        } else if(index.column() == 1) {
+            return currentNode->comment;
+        }  else if(index.column() == 2) {
+            return currentNode->id;
+        } else if(index.column() == 3) {
+            return currentNode->name;
         }
-        case Qt::EditRole:
-            return currentNode->number.toString();
-            break;
-        case Qt::DecorationRole:
+        break;
+    }
+    case Qt::EditRole:
+        if(index.column() == 0)
+            return currentNode->number;
+        break;
+    case Qt::DecorationRole:
+        if(index.column() == 0)
             switch (currentNode->level) {
             case RecordModel::FundLevel:
                 return QIcon(":/icons/icons/folder-16.png");
@@ -367,16 +382,10 @@ QVariant RecordModel::data(const QModelIndex &index, int role) const
                 return QIcon(":/icons/icons/record-16.png");
                 break;
             }
-            break;
-        case ReferenceModel::IDRole:
-            return currentNode->id;
         break;
-        case ReferenceModel::CommentRole:
-            return currentNode->comment;
-            break;
-        case ReferenceModel::InfoRole:
-            return fundNames.value(currentNode);
-            break;
+    case Qt::UserRole: // id
+        return currentNode->id;
+        break;
     }
 
     return QVariant();
@@ -384,27 +393,36 @@ QVariant RecordModel::data(const QModelIndex &index, int role) const
 
 bool RecordModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if(value.toString().size() == 0) {
-        return false;
-    }
-
     RecordNode* currentNode = static_cast<RecordNode*>(index.internalPointer());
 
     switch (role) {
     case Qt::EditRole:
     {
-        if(value != currentNode->number) {
+        if(value != index.data()) {
             QSqlQuery query;
+
+            QString field;
+            if(index.column() == 0) {
+                field = "number";
+            } else if (index.column() == 1) {
+                field = "comment";
+            } else if (index.column() == 2) {
+                return false; // id
+            } else if (index.column() == 3) {
+                if(currentNode->level != FundLevel)
+                    return false;
+                field = "name";
+            }
 
             switch (currentNode->level) {
             case RecordModel::FundLevel:
-                query.prepare("UPDATE pad_fund SET number=? WHERE id=?");
+                query.prepare(QString("UPDATE pad_fund SET %1=? WHERE id=?").arg(field));
                 break;
             case RecordModel::InventoryLevel:
-                query.prepare("UPDATE pad_inventory SET number=? WHERE id=?");
+                query.prepare(QString("UPDATE pad_inventory SET %1=? WHERE id=?").arg(field));
                 break;
             case RecordModel::RecordLevel:
-                query.prepare("UPDATE pad_record SET number=? WHERE id=?");
+                query.prepare(QString("UPDATE pad_record SET %1=? WHERE id=?").arg(field));
                 break;
             }
 
@@ -413,7 +431,14 @@ bool RecordModel::setData(const QModelIndex &index, const QVariant &value, int r
             query.exec();
 
             if(query.isActive()) {
-                currentNode->number.setValue(value);
+                if(index.column() == 0) {
+                    currentNode->number.setValue(value);
+                } else if (index.column() == 1) {
+                    currentNode->comment.setValue(value);
+                } else if (index.column() == 3) {
+                    currentNode->name.setValue(value);
+                }
+
                 emit dataChanged(index, index);
 
                 return true;
@@ -423,56 +448,6 @@ bool RecordModel::setData(const QModelIndex &index, const QVariant &value, int r
         }
     }
         break;
-    case ReferenceModel::CommentRole: // update comment
-    {
-        QSqlQuery query;
-
-        switch (currentNode->level) {
-        case RecordModel::FundLevel:
-            query.prepare("UPDATE pad_fund SET comment=? WHERE id=?");
-            break;
-        case RecordModel::InventoryLevel:
-            query.prepare("UPDATE pad_inventory SET comment=? WHERE id=?");
-            break;
-        case RecordModel::RecordLevel:
-            query.prepare("UPDATE pad_record SET comment=? WHERE id=?");
-            break;
-        }
-
-        query.bindValue(0, value);
-        query.bindValue(1, currentNode->id);
-        query.exec();
-
-        if(query.isActive()) {
-            currentNode->comment.setValue(value);
-            emit dataChanged(index, index);
-
-            return true;
-        }
-
-        qDebug() << query.lastError().text();
-    }
-        break;
-    case ReferenceModel::InfoRole: // update fund name
-    {
-        if(currentNode->level == RecordModel::FundLevel) {
-            QSqlQuery query;
-            query.prepare("UPDATE pad_fund SET name=? WHERE id=?");
-            query.bindValue(0, value);
-            query.bindValue(1, currentNode->id);
-            query.exec();
-
-            if(query.isActive()) {
-                fundNames.insert(currentNode, value);
-
-                emit dataChanged(index, index);
-                return true;
-            }
-
-            qDebug() << query.lastError().text();
-        }
-    }
-    break;
     }
 
     return false;
