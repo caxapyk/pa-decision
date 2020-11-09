@@ -3,7 +3,7 @@
 
 #include "models/referencemodel.h"
 
-#include <QAbstractProxyModel>
+#include <QSortFilterProxyModel>
 #include <QDialog>
 #include <QShortcut>
 
@@ -51,7 +51,7 @@ protected:
     QShortcut *removeShortcut = nullptr;
     QShortcut *refreshShortcut = nullptr;
 
-    void setDialogModel(QAbstractProxyModel *model);
+    void setDialogModel(QSortFilterProxyModel *model);
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) = 0;
@@ -63,7 +63,7 @@ private:
     bool choice_mode = false;
     int m_choice = 0;
 
-    QAbstractProxyModel *m_dialogProxyModel = nullptr;
+    QSortFilterProxyModel *m_dialogProxyModel = nullptr;
 
 
 private slots:

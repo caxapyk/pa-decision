@@ -4,7 +4,7 @@
 #include "models/decisionmodel.h"
 
 #include "models/authorityflatmodel.h"
-#include "models/doctypemodel.h"
+#include "models/documenttypemodel.h"
 
 #include <QDialog>
 
@@ -24,7 +24,7 @@ private:
     Ui::DecisionBaseDialog *ui;
 
     AuthorityFlatModel *m_authorityModel;
-    DoctypeModel *m_doctypeModel;
+    DocumentTypeModel *m_doctypeModel;
     DecisionModel *m_decisionModel;
 
     int recordId = 0;

@@ -55,7 +55,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lE_comment"/>
+       <widget class="QLineEdit" name="lE_comment">
+        <property name="maxLength">
+         <number>255</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

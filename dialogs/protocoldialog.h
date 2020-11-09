@@ -2,11 +2,12 @@
 #define PROTOCOLDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/recordmodel.h"
-#include "models/recordproxymodel.h"
+#include "models/protocolmodel.h"
+#include "widgets/dialogheader.h"
 
 #include <QDialog>
 #include <QPushButton>
+#include <QSortFilterProxyModel>
 
 class ProtocolDialog : public ReferenceDialog
 {
@@ -22,14 +23,22 @@ public:
 public slots:
     void edit() override;
     void insert() override;
-    void refresh() override;
-    void remove() override;
 
 private:
-    RecordModel *m_model;
-    RecordProxyModel *m_proxyModel;
+    ProtocolModel *m_model;
+    QSortFilterProxyModel *m_proxyModel;
 
     QPushButton *pB_comment;
+    QPushButton *pB_details;
+    DialogHeader *m_headerWidget;
+
+private slots:
+    void details();
+    void editComment();
+    void loadByAuthorityId(int id);
+
+protected:
+    bool choiceButtonEnabled() override;
 
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) override;

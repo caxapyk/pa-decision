@@ -36,11 +36,9 @@ public:
 
 private:
     QMap<int, QVariant> columnHeaders;
+    NodeList *m_nodeList;
 
     void setupModelData();
-
-protected:
-    NodeList *m_nodeList;
 };
 
 #endif // DOCUMENTTYPEMODEL_H

@@ -2,7 +2,6 @@
 #define DOCTYPEDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/doctypemodel.h"
 #include "models/documenttypemodel.h"
 
 #include <QDialog>
@@ -30,7 +29,6 @@ private:
 protected slots:
     virtual void selected(const QModelIndex &current, const QModelIndex &) override;
     virtual int choice(const QModelIndex &current) const override { return 0; };
-
 };
 
 #endif // DOCTYPEDIALOG_H

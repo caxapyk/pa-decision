@@ -17,7 +17,6 @@ ReferenceDialog::ReferenceDialog(QWidget *parent) :
     setInfoIconVisible(false);
     ui->label_commentIcon->setVisible(false);
 
-    restoreDialogState();
     setupShortcuts();
 
     connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ReferenceDialog::accept);
@@ -105,7 +104,7 @@ void ReferenceDialog::clearInfoText()
     ui->label_info->clear();
 }
 
-void ReferenceDialog::setDialogModel(QAbstractProxyModel *model)
+void ReferenceDialog::setDialogModel(QSortFilterProxyModel *model)
 {
     m_dialogProxyModel = model;
 
@@ -149,11 +148,16 @@ void ReferenceDialog::insert()
 void ReferenceDialog::refresh()
 {
     if(m_dialogProxyModel != nullptr) {
+        m_dialogProxyModel->invalidate();
+        ui->tV_itemView->sortByColumn(-1, Qt::AscendingOrder);
+
         ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
 
         ui->tV_itemView->selectionModel()->clearCurrentIndex();
         model->select();
-        ui->tV_itemView->setCurrentIndex(QModelIndex());
+
+        _selected(QModelIndex(), QModelIndex());
+        selected(QModelIndex(), QModelIndex());
     }
 }
 

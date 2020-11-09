@@ -2,6 +2,7 @@
 #include "ui_referencedialog.h"
 
 #include "application.h"
+#include "dialogs/protocoldetailsdialog.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -12,25 +13,48 @@
 ProtocolDialog::ProtocolDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
+    restoreDialogState();
+
     setWindowTitle(tr("Protocols"));
     ui->label_infoIcon->setVisible(false);
+
+    pB_details = new QPushButton(tr("Details"));
+    pB_details->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_details);
 
     pB_comment = new QPushButton(tr("Comment"));
     pB_comment->setDisabled(true);
 
     ui->vL_buttonGroup->addWidget(pB_comment);
+    connect(pB_comment, &QPushButton::clicked, this, &ProtocolDialog::editComment);
 
-    m_model = new RecordModel;
-    m_model->select();
+    m_headerWidget = new DialogHeader;
+    ui->hL_header->addWidget(m_headerWidget);
 
-    m_proxyModel = new RecordProxyModel;
+    connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ProtocolDialog::loadByAuthorityId);
+
+    m_model = new ProtocolModel;
+
+    m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
+    ui->tV_itemView->setModel(m_proxyModel);
+    ui->tV_itemView->hideColumn(3);
+    ui->tV_itemView->hideColumn(4);
+    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    setDialogModel(m_proxyModel);
+
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+
+    loadByAuthorityId(m_headerWidget->id());
 }
 
 ProtocolDialog::~ProtocolDialog()
 {
+    saveDialogState();
+
     delete m_model;
     delete m_proxyModel;
     delete pB_comment;
@@ -40,15 +64,15 @@ void ProtocolDialog::restoreDialogState()
 {
     QSettings* settings = application->applicationSettings();
 
-    restoreGeometry(settings->value("RecordDialog/geometry").toByteArray());
-    ui->tV_itemView->header()->restoreState(settings->value("RecordDialog/tV_itemView").toByteArray());
+    restoreGeometry(settings->value("ProtocolDialog/geometry").toByteArray());
+    ui->tV_itemView->header()->restoreState(settings->value("ProtocolDialog/tV_itemView").toByteArray());
 }
 
 void ProtocolDialog::saveDialogState()
 {
     QSettings* settings = application->applicationSettings();
 
-    settings->beginGroup("RecordDialog");
+    settings->beginGroup("ProtocolDialog");
     settings->setValue("geometry", saveGeometry());
     settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();
@@ -56,37 +80,47 @@ void ProtocolDialog::saveDialogState()
 
 void ProtocolDialog::selected(const QModelIndex &current, const QModelIndex &)
 {
-    RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
-
-    insertShortcut->setEnabled(node == nullptr || node->level != RecordModel::RecordLevel);
+    insertShortcut->setEnabled(true);
     editShortcut->setEnabled(current.isValid());
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
 
-    //pB_comment->setEnabled(current.isValid());
+    pB_details->setEnabled(current.isValid());
+    pB_comment->setEnabled(current.isValid());
 
-    //ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(chr_mode && node->level != RecordModel::RecordLevel);
+    setComment(current.siblingAtColumn(3).data().toString());
+}
 
-    //setInfoText();
+void ProtocolDialog::details()
+{
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
-    /*change choosed*/
-    /*QMap<int, QString> curr;
-    QStringList text;
+    ProtocolDetailsDialog dialog(index.data(Qt::UserRole));
+    int res = dialog.exec();
 
-    QModelIndex c = current;
-    while(c.isValid()) {
-        text.append(m_proxyModel->mapToSource(c).data().toString());
-        c = c.parent();
+    if(res == ProtocolDetailsDialog::Accepted) {
+        setComment(dialog.comment());
     }
-    std::reverse(text.begin(), text.end());
+}
 
-    curr.insert(node->id.toInt(), text.join(' '));
-    m_current = curr;*/
+bool ProtocolDialog::choiceButtonEnabled()
+{
+    return !isChoiceMode() || ui->tV_itemView->currentIndex().isValid();
 }
 
 int ProtocolDialog::choice(const QModelIndex &current) const
 {
-    return 0;
+    return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
+}
+
+void ProtocolDialog::loadByAuthorityId(int id)
+{
+    clearInfoText();
+
+    m_model->setAuthorityId(id);
+    m_model->select();
+
+    selected(QModelIndex(), QModelIndex());
 }
 
 void ProtocolDialog::edit()
@@ -123,65 +157,22 @@ void ProtocolDialog::insert()
     }
 }
 
-/*void ProtocolDialog::editComment()
+void ProtocolDialog::editComment()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
+    QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(3);
+    QString title = tr("Comment");
 
-    QInputDialog inputDialog;
-    inputDialog.setWindowTitle(tr("Comment"));
-    inputDialog.setLabelText(tr("Enter comment:"));
-    inputDialog.setTextValue(index.data(Qt::UserRole + 1).toString());
-    inputDialog.setTextEchoMode(QLineEdit::Normal);
+    QVariant value = inputDialog(title, tr("Enter comment"), index.data());
 
-    inputDialog.setMinimumWidth(480);
-    inputDialog.resize(inputDialog.size());
-
-    bool res = inputDialog.exec();
-
-    if (res && !inputDialog.textValue().isEmpty()) {
-        bool set;
-        set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()), inputDialog.textValue(), Qt::UserRole + 1);
-
+    if (value.isValid() && value != index.data()) {
+        bool set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(index), value);
         if(set) {
-            setInfoText();
+            setComment(value.toString());
         } else {
-            bool tooLong = false;
-            if(inputDialog.textValue().length() >= 255) {
-                tooLong = true;
-            }
             QMessageBox::warning(this,
-                    tr("Comment"),
-                    tr("Could not set the comment data.") + (tooLong ? tr(" Too long.") : ""),
-                    QMessageBox::Ok);
-        }
-    }
-}*/
-
-void ProtocolDialog::refresh()
-{
-    ui->tV_itemView->selectionModel()->clearCurrentIndex();
-
-    m_proxyModel->invalidate();
-    m_model->select();
-}
-
-void ProtocolDialog::remove()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex();
-    QModelIndex parent = m_proxyModel->parent(index);
-
-    int res = QMessageBox::critical(this,
-        tr("Deleting item"),
-        tr("Are you shure that you want to delete this item?"),
-        QMessageBox::No | QMessageBox::Yes);
-
-    if (res == QMessageBox::Yes) {
-        bool remove = m_proxyModel->removeRow(index.row(), parent);
-        if (!remove) {
-            QMessageBox::warning(this,
-                    tr("Deleting item"),
-                    tr("Could not remove the item."),
-                    QMessageBox::Ok);
+                                 title,
+                                 tr("Could not set data.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
+                                 QMessageBox::Ok);
         }
     }
 }

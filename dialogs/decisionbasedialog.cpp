@@ -32,10 +32,10 @@ void DecisionBaseDialog::initialize()
     m_authorityModel->select();
     ui->cB_authority->setModel(m_authorityModel);
 
-    m_doctypeModel = new DoctypeModel;
+    m_doctypeModel = new DocumentTypeModel;
     m_doctypeModel->select();
     ui->cB_doctype->setModel(m_doctypeModel);
-    ui->cB_doctype->setModelColumn(1);
+    ui->cB_doctype->setModelColumn(0);
 
     connect(ui->pB_record, &QPushButton::clicked, this, &DecisionBaseDialog::chooseRecord);
 }
@@ -49,14 +49,6 @@ void DecisionBaseDialog::chooseRecord()
 
     if(res == RecordDialog::Accepted) {
         int choice = dialog.currentChoice();
-        /*if(!choice.isEmpty()) {
-            ui->cB_record->clear();
-            ui->cB_record->addItem(choice.first());
-            ui->cB_record->setEnabled(true);
-
-            recordId = choice.keys().first();
-        }*/
-
         qDebug() << "selected id:" << choice;
     }
 }

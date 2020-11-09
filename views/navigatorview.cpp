@@ -46,7 +46,7 @@ void NavigatorView::initialize()
     ui->tV_authority->hideColumn(2);
     ui->tV_authority->expandAll();
 
-    connect(ui->tV_authority, &QTreeView::clicked, this, [=] { if(ui->cB_dynamic->isChecked()) load(current); });
+    connect(ui->tV_authority, &QTreeView::clicked, this, [=] { load(current); });
 
     ui->tV_collection->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tV_collection, &QMenu::customContextMenuRequested, this, &NavigatorView::contextMenu);
@@ -55,11 +55,6 @@ void NavigatorView::initialize()
     connect(m_refreshShortcut, &QShortcut::activated, this, [=] { load(current); });
 
     connect(ui->cB_collection, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NavigatorView::load);
-
-    // load all data on dynamic stage chenged
-    connect(ui->cB_dynamic, &QCheckBox::stateChanged, this, [=] (int state) {
-        load(current);
-    });
 }
 
 void NavigatorView::restoreViewState()
@@ -73,8 +68,6 @@ void NavigatorView::restoreViewState()
     ui->cB_collection->setCurrentIndex(currentModel);
     load(currentModel);
 
-    ui->cB_dynamic->setChecked(settings->value("Views/cB_dynamic").toBool());
-
     ui->tV_collection->header()->restoreState(settings->value("Views/tV_collection").toByteArray());
 }
 
@@ -87,7 +80,6 @@ void NavigatorView::saveViewState()
     settings->setValue("tV_authority", ui->tV_authority->header()->saveState());
     settings->setValue("tV_collection", ui->tV_collection->header()->saveState());
     settings->setValue("cB_collection", QVariant(ui->cB_collection->currentIndex()));
-    settings->setValue("cB_dynamic", QVariant(ui->cB_dynamic->isChecked()));
     settings->endGroup();
 }
 
@@ -142,12 +134,10 @@ void NavigatorView::load(int collection)
         break;
     }
 
-    if(ui->cB_dynamic->isChecked()) {
-        QModelIndex v = ui->tV_authority->currentIndex();
-        if(v.parent().isValid()) {
-            int id = v.data(Qt::UserRole).toInt();
-            m_collectionModel->setAuthorityId(id);
-        }
+    QModelIndex v = ui->tV_authority->currentIndex();
+    if(v.parent().isValid()) {
+        int id = v.data(Qt::UserRole).toInt();
+        m_collectionModel->setAuthorityId(id);
     }
 
     m_collectionModel->select();

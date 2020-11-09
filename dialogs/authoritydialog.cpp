@@ -5,16 +5,21 @@
 #include "dialogs/authoritydetailsdialog.h"
 #include "dialogs/recorddialog.h"
 
+#include <QDebug>
 #include <QMenu>
 #include <QMessageBox>
 
 AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
+    restoreDialogState();
+
     setWindowTitle(tr("Public authorities"));
 
     pB_details = new QPushButton(tr("Details"));
     pB_details->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_details);
 
     pB_comment = new QPushButton(tr("Comment"));
     pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
@@ -23,8 +28,6 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ui->vL_buttonGroup->addWidget(pB_comment);
 
     connect(pB_comment, &QPushButton::clicked, this, &AuthorityDialog::editComment);
-
-    ui->vL_buttonGroup->addWidget(pB_details);
 
     m_model = new AuthorityModel;
     m_model->select();
@@ -47,6 +50,8 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
 
 AuthorityDialog::~AuthorityDialog()
 {
+    saveDialogState();
+
     delete pB_details;
     delete pB_comment;
 

@@ -15,6 +15,8 @@
 RecordDialog::RecordDialog(QWidget *parent) :
      ReferenceDialog(parent)
 {
+    restoreDialogState();
+
     setWindowTitle(tr("Archive records"));
 
     pB_comment = new QPushButton(tr("Comment"));
@@ -34,6 +36,7 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->hL_header->addWidget(m_headerWidget);
 
     connect(m_headerWidget, &DialogHeader::authorityChanged, this, &RecordDialog::loadByAuthorityId);
+
     m_model = new RecordModel;
 
     m_proxyModel = new RecordProxyModel;
@@ -55,6 +58,8 @@ RecordDialog::RecordDialog(QWidget *parent) :
 
 RecordDialog::~RecordDialog()
 {
+    saveDialogState();
+
     delete m_headerWidget;
     delete pB_fundTitle;
     delete pB_comment;
@@ -117,7 +122,9 @@ void RecordDialog::loadByAuthorityId(int id)
     clearInfoText();
 
     m_model->setAuthorityId(id);
-    refresh();
+    m_model->select();
+
+    selected(QModelIndex(), QModelIndex());
 }
 
 void RecordDialog::editComment()
@@ -134,7 +141,7 @@ void RecordDialog::editComment()
         } else {
             QMessageBox::warning(this,
                                  title,
-                                 tr("Could not set data.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
+                                 tr("Could not set data."),
                                  QMessageBox::Ok);
         }
     }
@@ -182,7 +189,7 @@ void RecordDialog::insert()
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
-                tr("Could not create item."),
+                tr("Could not create item.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
                 QMessageBox::Ok);
     }
 }

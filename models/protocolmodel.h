@@ -1,27 +1,17 @@
-#ifndef AUTHORITYMODEL_H
-#define AUTHORITYMODEL_H
+#ifndef PROTOCOLMODEL_H
+#define PROTOCOLMODEL_H
 
-#include "models/referencemodel.h"
+#include "referencemodel.h"
 
-#include <QAbstractItemModel>
-#include <QMap>
-#include <QRegExp>
-#include <QVariant>
-#include <QVector>
-
-class AuthorityModel : public ReferenceModel
+class ProtocolModel : public ReferenceModel
 {
     Q_OBJECT
-
 public:
-    typedef QVector<QVariant> AT_Node;
-    typedef QVector<AT_Node*> AT_NodeList;
+    ProtocolModel(QObject *parent = nullptr);
+    ~ProtocolModel();
 
-    AuthorityModel(QObject *parent = nullptr);
-    ~AuthorityModel();
-
-    int itemMaxNum(int column, const QRegExp &rule) const;
-    QModelIndex rootItem() const;
+    typedef QVector<QVariant> Node;
+    typedef QVector<Node*> NodeList;
 
     void clear() override;
     void select() override;
@@ -29,7 +19,7 @@ public:
     int columnCount(const QModelIndex &parent=QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
-    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     bool insertRows(int row, int count, const QModelIndex &parent) override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex parent(const QModelIndex &index) const override;
@@ -40,12 +30,9 @@ public:
 
 private:
     QMap<int, QVariant> columnHeaders;
+    NodeList *m_nodeList;
 
     void setupModelData();
-
-protected:
-    AT_Node *m_rootNode;
-    AT_NodeList *m_nodeList;
 };
 
-#endif // AUTHORITYMODEL_H
+#endif // PROTOCOLMODEL_H

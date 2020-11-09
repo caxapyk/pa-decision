@@ -11,6 +11,8 @@
 DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
+    restoreDialogState();
+
     setWindowTitle(tr("Document types"));
     setInfoIconVisible();
     setInfoText(tr("Use color to highlight documents!"));
@@ -35,6 +37,8 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
 
 DoctypeDialog::~DoctypeDialog()
 {
+    saveDialogState();
+
     delete m_model;
     delete m_proxyModel;
 }

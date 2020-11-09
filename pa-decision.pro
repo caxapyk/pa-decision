@@ -26,6 +26,7 @@ SOURCES += \
     dialogs/decisionbasedialog.cpp \
     dialogs/decisionnewdialog.cpp \
     dialogs/doctypedialog.cpp \
+    dialogs/protocoldetailsdialog.cpp \
     dialogs/protocoldialog.cpp \
     dialogs/recorddialog.cpp \
     dialogs/referencedialog.cpp \
@@ -37,8 +38,8 @@ SOURCES += \
     models/colorpickeritemdelegate.cpp \
     models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
-    models/doctypemodel.cpp \
     models/documenttypemodel.cpp \
+    models/protocolmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/referencemodel.cpp \
@@ -63,6 +64,7 @@ HEADERS += \
     dialogs/decisionbasedialog.h \
     dialogs/decisionnewdialog.h \
     dialogs/doctypedialog.h \
+    dialogs/protocoldetailsdialog.h \
     dialogs/protocoldialog.h \
     dialogs/recorddialog.h \
     dialogs/referencedialog.h \
@@ -73,8 +75,8 @@ HEADERS += \
     models/colorpickeritemdelegate.h \
     models/decisionmodel.h \
     models/decisionproxymodel.h \
-    models/doctypemodel.h \
     models/documenttypemodel.h \
+    models/protocolmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/referencemodel.h \
@@ -94,6 +96,7 @@ FORMS += \
     dialogs/authoritydetailsdialog.ui \
     dialogs/connectiondialog.ui \
     dialogs/decisionbasedialog.ui \
+    dialogs/protocoldetailsdialog.ui \
     dialogs/protocoldialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \
