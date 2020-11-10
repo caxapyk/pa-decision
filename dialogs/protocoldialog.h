@@ -28,7 +28,6 @@ private:
     ProtocolModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
-    QPushButton *pB_comment;
     QPushButton *pB_details;
     DialogHeader *m_headerWidget;
 

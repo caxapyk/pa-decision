@@ -189,7 +189,7 @@ void RecordDialog::insert()
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
-                tr("Could not create item.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
+                tr("Could not create item."),
                 QMessageBox::Ok);
     }
 }

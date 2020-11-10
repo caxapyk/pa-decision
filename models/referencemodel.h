@@ -19,6 +19,7 @@ public:
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const = 0;
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const = 0;
+    virtual bool setRow(int row, QMap<QString, QVariant> &values, const QModelIndex &parent=QModelIndex()) { return false ;};
 
     virtual void clear() = 0;
     virtual void select() = 0;

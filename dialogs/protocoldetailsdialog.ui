@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Edit protocol</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources.qrc">
+    <normaloff>:/icons/icons/protocol-16.png</normaloff>:/icons/icons/protocol-16.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -53,7 +57,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QDateEdit" name="dE_date"/>
+         <widget class="QDateEdit" name="dE_date">
+          <property name="displayFormat">
+           <string>dd.MM.yyyy</string>
+          </property>
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -65,7 +76,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lE_comment_2">
+       <widget class="QLineEdit" name="lE_comment">
         <property name="maxLength">
          <number>255</number>
         </property>
@@ -99,6 +110,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -21,13 +21,9 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     pB_details = new QPushButton(tr("Details"));
     pB_details->setDisabled(true);
 
+    connect(pB_details, &QPushButton::clicked, this, &ProtocolDialog::details);
+
     ui->vL_buttonGroup->addWidget(pB_details);
-
-    pB_comment = new QPushButton(tr("Comment"));
-    pB_comment->setDisabled(true);
-
-    ui->vL_buttonGroup->addWidget(pB_comment);
-    connect(pB_comment, &QPushButton::clicked, this, &ProtocolDialog::editComment);
 
     m_headerWidget = new DialogHeader;
     ui->hL_header->addWidget(m_headerWidget);
@@ -57,7 +53,6 @@ ProtocolDialog::~ProtocolDialog()
 
     delete m_model;
     delete m_proxyModel;
-    delete pB_comment;
 }
 
 void ProtocolDialog::restoreDialogState()
@@ -86,7 +81,6 @@ void ProtocolDialog::selected(const QModelIndex &current, const QModelIndex &)
     refreshShortcut->setEnabled(true);
 
     pB_details->setEnabled(current.isValid());
-    pB_comment->setEnabled(current.isValid());
 
     setComment(current.siblingAtColumn(3).data().toString());
 }
@@ -95,11 +89,11 @@ void ProtocolDialog::details()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
-    ProtocolDetailsDialog dialog(index.data(Qt::UserRole));
+    ProtocolDetailsDialog dialog(m_model, index.row());
     int res = dialog.exec();
 
-    if(res == ProtocolDetailsDialog::Accepted) {
-        setComment(dialog.comment());
+    if(res == ProtocolDetailsDialog::Accepted && dialog.property().contains("comment")) {
+        setComment(dialog.property().value("comment").toString());
     }
 }
 
@@ -141,20 +135,17 @@ void ProtocolDialog::insert()
 
     int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
 
-    bool insert = m_proxyModel->sourceModel()->insertRow(v, sourceParent);
+    ProtocolDetailsDialog dialog(m_model, v);
+    int res = dialog.exec();
 
-    if(insert) {
-        QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
-
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
-    } else {
-        QMessageBox::warning(this,
-                tr("Creating items"),
-                tr("Could not create item."),
-                QMessageBox::Ok);
+    if(res == ProtocolDetailsDialog::Accepted && dialog.property().contains("comment")) {
+        setComment(dialog.property().value("comment").toString());
     }
+
+    QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
+
+    ui->tV_itemView->setCurrentIndex(currentIndex);
+    ui->tV_itemView->scrollTo(currentIndex);
 }
 
 void ProtocolDialog::editComment()

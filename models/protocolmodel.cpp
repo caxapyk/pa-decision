@@ -1,5 +1,6 @@
 #include "protocolmodel.h"
 
+#include <QDate>
 #include <QDebug>
 #include <QIcon>
 #include <QSqlError>
@@ -97,21 +98,40 @@ QModelIndex ProtocolModel::index(int row, int column, const QModelIndex &parent)
 
 bool ProtocolModel::insertRows(int row, int count, const QModelIndex &parent)
 {
+    if(mSetRow.isEmpty()) {
+        return false;
+    }
+
     QSqlQuery query;
 
-    QVariant name = tr("Document type");
+    QList<QString> v;
+    for(int i = 0; i < mSetRow.size(); ++i) {
+        v.append("?");
+    }
 
-    query.prepare("INSERT INTO pad_doctype(name) VALUES (?)");
-    query.bindValue(0, name.toString());
+    query.prepare(QString("INSERT INTO pad_protocol(%1) VALUES (%2)")
+                  .arg(mSetRow.keys().join(","))
+                  .arg(v.join(",")));
+
+    for(int i = 0; i < mSetRow.size(); ++i) {
+        QString v = mSetRow.values().at(i).toString();
+        if(mSetRow.keys().at(i) == "date") {
+            v = QDate().fromString(v, "dd.MM.yyyy").toString("yyyy-MM-dd");
+        }
+
+        query.bindValue(i, v);
+    }
+
     query.exec();
 
     if(query.isActive()) {
-
         beginInsertRows(parent, row, row + count -1);
 
         Node *node = new Node();
-        node->append(name);
-        node->append(QVariant("white"));
+        node->append(mSetRow.contains("number") ? mSetRow.value("number") : QVariant());
+        node->append(mSetRow.contains("date") ? mSetRow.value("date") : QVariant());
+        node->append(mSetRow.contains("title") ? mSetRow.value("title") : QVariant());
+        node->append(mSetRow.contains("comment") ? mSetRow.value("comment") : QVariant());
         node->append(QVariant(query.lastInsertId()));
 
         m_nodeList->append(node);
@@ -211,40 +231,45 @@ bool ProtocolModel::setData(const QModelIndex &index, const QVariant &value, int
 
     switch (role) {
     case Qt::EditRole:
-        if(value.toString().size() > 0) {
-            QSqlQuery query;
+        QSqlQuery query;
 
-            QString field;
-            if(index.column() == 0) {
-                field = "number";
-            } else if (index.column() == 1) {
-                field = "date";
-            } else if (index.column() == 2) {
-                field = "title";
-            } else if (index.column() == 3) {
-                field = "comment";
-            } else if (index.column() == 4) {
-                return false; // id
-            }
-
-            query.prepare(QString("UPDATE pad_protocol SET %1=? WHERE id=?").arg(field));
-            query.bindValue(0, value);
-            query.bindValue(1, currentNode->at(4));
-            query.exec();
-
-            if(query.isActive()) {
-                currentNode->replace(index.column(), value);
-                emit dataChanged(index, index);
-
-                return true;
-            }
-
-            qDebug() << query.lastError().text();
+        QString field;
+        if(index.column() == 0) {
+            field = "number";
+        } else if (index.column() == 1) {
+            field = "date";
+        } else if (index.column() == 2) {
+            field = "title";
+        } else if (index.column() == 3) {
+            field = "comment";
+        } else if (index.column() == 4) {
+            return false; // id
         }
+
+        query.prepare(QString("UPDATE pad_protocol SET %1=? WHERE id=?").arg(field));
+        query.bindValue(0, value);
+        query.bindValue(1, currentNode->at(4));
+        query.exec();
+
+        if(query.isActive()) {
+            currentNode->replace(index.column(), value);
+            emit dataChanged(index, index);
+
+            return true;
+        }
+
+        qDebug() << query.lastError().text();
         break;
     }
 
     return false;
+}
+
+bool ProtocolModel::setRow(int row, QMap<QString, QVariant> &values, const QModelIndex &parent)
+{
+    mSetRow.swap(values);
+
+    return insertRow(row, parent);
 }
 
 bool ProtocolModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int)
