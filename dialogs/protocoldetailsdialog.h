@@ -15,13 +15,15 @@ class ProtocolDetailsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ProtocolDetailsDialog(ProtocolModel *model, int row = -1,  QWidget *parent = nullptr);
+    explicit ProtocolDetailsDialog(int mode, ProtocolModel *model, int row = -1,  QWidget *parent = nullptr);
     ~ProtocolDetailsDialog();
 
     void accept() override;
     void reject() override;
 
     QMap<QString, QVariant> property() { return prop; };
+
+    enum { InsertMode, UpdateMode };
 
 private:
     Ui::ProtocolDetailsDialog *ui;
@@ -30,7 +32,9 @@ private:
     ProtocolModel *m_model;
 
     QMap<QString, QVariant> prop;
+
     int mrow;
+    int mmode;
 };
 
 #endif // PROTOCOLDETAILSDIALOG_H

@@ -4,13 +4,13 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-ProtocolDetailsDialog::ProtocolDetailsDialog(ProtocolModel *model, int row, QWidget *parent):
+ProtocolDetailsDialog::ProtocolDetailsDialog(int mode, ProtocolModel *model, int row, QWidget *parent):
     QDialog(parent),
     ui(new Ui::ProtocolDetailsDialog)
 {
     ui->setupUi(this);
 
-    if(row >= 0) {
+    if(mode == UpdateMode) {
         setWindowTitle(tr("Edit protocol"));
 
         m_mapper = new QDataWidgetMapper;
@@ -24,12 +24,13 @@ ProtocolDetailsDialog::ProtocolDetailsDialog(ProtocolModel *model, int row, QWid
 
         m_mapper->setCurrentIndex(row);
 
-    } else {
+    } else if(mode == InsertMode) {
         setWindowTitle(tr("New protocol"));
     }
 
     m_model = model;
     mrow = row;
+    mmode = mode;
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ProtocolDetailsDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &ProtocolDetailsDialog::reject);
@@ -58,7 +59,7 @@ void ProtocolDetailsDialog::accept()
     prop.insert("title", ui->lE_title->text());
     prop.insert("comment", ui->lE_comment->text());
 
-    if(mrow > 0) {
+    if(mmode == UpdateMode) {
         if(!m_mapper->submit()) {
             QMessageBox::warning(this,
                     tr("Update items"),
@@ -67,8 +68,8 @@ void ProtocolDetailsDialog::accept()
 
             return;
         }
-    } else {
-        bool insert = m_model->setRow(mrow, prop);
+    } else if(mmode == InsertMode) {
+        bool insert = m_model->setRow(0, prop);
 
         if(!insert) {
             QMessageBox::warning(this,

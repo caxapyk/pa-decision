@@ -89,7 +89,7 @@ void ProtocolDialog::details()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
-    ProtocolDetailsDialog dialog(m_model, index.row());
+    ProtocolDetailsDialog dialog(ProtocolDetailsDialog::UpdateMode, m_model, index.row());
     int res = dialog.exec();
 
     if(res == ProtocolDetailsDialog::Accepted && dialog.property().contains("comment")) {
@@ -135,7 +135,7 @@ void ProtocolDialog::insert()
 
     int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
 
-    ProtocolDetailsDialog dialog(m_model, v);
+    ProtocolDetailsDialog dialog(ProtocolDetailsDialog::InsertMode, m_model, v);
     int res = dialog.exec();
 
     if(res == ProtocolDetailsDialog::Accepted && dialog.property().contains("comment")) {
