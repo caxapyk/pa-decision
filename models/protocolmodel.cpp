@@ -114,12 +114,7 @@ bool ProtocolModel::insertRows(int row, int count, const QModelIndex &parent)
                   .arg(v.join(",")));
 
     for(int i = 0; i < mSetRow.size(); ++i) {
-        QString v = mSetRow.values().at(i).toString();
-        if(mSetRow.keys().at(i) == "date") {
-            v = QDate().fromString(v, "dd.MM.yyyy").toString("yyyy-MM-dd");
-        }
-
-        query.bindValue(i, v);
+        query.bindValue(i, mSetRow.values().at(i));
     }
 
     query.exec();

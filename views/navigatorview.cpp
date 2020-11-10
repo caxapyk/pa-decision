@@ -134,6 +134,9 @@ void NavigatorView::load(int collection)
         break;
     }
 
+    if(m_collectionModel == nullptr)
+        return;
+
     QModelIndex v = ui->tV_authority->currentIndex();
     if(v.parent().isValid()) {
         int id = v.data(Qt::UserRole).toInt();

@@ -1,6 +1,7 @@
 #include "protocoldetailsdialog.h"
 #include "ui_protocoldetailsdialog.h"
 
+#include <QDate>
 #include <QPushButton>
 #include <QMessageBox>
 
@@ -55,7 +56,7 @@ void ProtocolDetailsDialog::accept()
 
     prop.insert("authority_id", m_model->authorityId());
     prop.insert("number", ui->lE_number->text());
-    prop.insert("date", ui->dE_date->text());
+    prop.insert("date", QDate().fromString(ui->dE_date->text(), "dd.MM.yyyy"));
     prop.insert("title", ui->lE_title->text());
     prop.insert("comment", ui->lE_comment->text());
 
@@ -86,7 +87,7 @@ void ProtocolDetailsDialog::accept()
 
 void ProtocolDetailsDialog::reject()
 {
-    if(m_model != nullptr) {
+    if(mmode == UpdateMode) {
         m_mapper->revert();
     }
 
