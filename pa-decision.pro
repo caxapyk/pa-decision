@@ -47,6 +47,7 @@ SOURCES += \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/referencemodel.cpp \
+    models/standardreferencemodel.cpp \
     utils/stringsort.cpp \
     views/decisionview.cpp \
     views/navigatorview.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/referencemodel.h \
+    models/standardreferencemodel.h \
     utils/stringsort.h \
     views/decisionview.h \
     views/navigatorview.h \

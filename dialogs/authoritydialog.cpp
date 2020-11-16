@@ -22,15 +22,6 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ui->vL_buttonGroup->addWidget(pB_details);
 
     connect(pB_details, &QPushButton::clicked, this, &AuthorityDialog::details);
-
-    pB_comment = new QPushButton(tr("Comment"));
-    pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
-    pB_comment->setDisabled(true);
-
-    ui->vL_buttonGroup->addWidget(pB_comment);
-
-    connect(pB_comment, &QPushButton::clicked, this, &AuthorityDialog::editComment);
-
     m_model = new AuthorityModel;
     m_model->select();
 
@@ -40,13 +31,17 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ui->tV_itemView->setModel(m_proxyModel);
     ui->tV_itemView->hideColumn(1);
     ui->tV_itemView->hideColumn(2);
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
+
     ui->tV_itemView->setCurrentIndex(m_proxyModel->mapFromSource(m_model->rootItem()));
     ui->tV_itemView->expandAll();
 
-    setDialogModel(m_proxyModel);
+    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+
+    setDialogModel(m_proxyModel);
+    addCommentButton();
+    setCommentColumn(1);
 }
 
 AuthorityDialog::~AuthorityDialog()
@@ -54,7 +49,6 @@ AuthorityDialog::~AuthorityDialog()
     saveDialogState();
 
     delete pB_details;
-    delete pB_comment;
 
     delete m_model;
     delete m_proxyModel;
@@ -88,7 +82,7 @@ void AuthorityDialog::selected(const QModelIndex &current, const QModelIndex &)
     removeShortcut->setEnabled(current.isValid() && current != root);
 
     pB_details->setEnabled(current.isValid() && current != root);
-    pB_comment->setEnabled(current.isValid() && current != root);
+    commentButton()->setEnabled(current.isValid() && current != root);
 
     setComment(current.siblingAtColumn(1).data().toString());
 }
@@ -98,31 +92,7 @@ void AuthorityDialog::details()
     QModelIndex index = ui->tV_itemView->currentIndex();
 
     AuthorityDetailsDialog dialog(index.data(Qt::UserRole));
-    int res = dialog.exec();
-
-    if(res == AuthorityDialog::Accepted) {
-        refresh();
-    }
-}
-
-void AuthorityDialog::editComment()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(1);
-    QString title = tr("Comment");
-
-    QVariant value  = inputDialog(title, tr("Enter comment"), index.data());
-
-    if (value.isValid() && value != index.data()) {
-        bool set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(index), value);
-        if(set) {
-            setComment(value.toString());
-        } else {
-            QMessageBox::warning(this,
-                                 title,
-                                 tr("Could not set data.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
-                                 QMessageBox::Ok);
-        }
-    }
+    dialog.exec();
 }
 
 void AuthorityDialog::insert()

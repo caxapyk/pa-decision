@@ -2,7 +2,6 @@
 #define PROTOCOLDETAILSDIALOG_H
 
 #include "dialogs/detailsdialog.h"
-#include "models/protocolmodel.h"
 
 #include <QDialog>
 #include <QDataWidgetMapper>

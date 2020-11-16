@@ -2,7 +2,7 @@
 #define PROTOCOLDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/protocolmodel.h"
+#include "models/standardreferencemodel.h"
 #include "widgets/dialogheader.h"
 
 #include <QDialog>
@@ -22,11 +22,10 @@ public:
     void saveDialogState() override;
 
 public slots:
-    void edit() override;
     void insert() override;
 
 private:
-    ProtocolModel *m_model;
+    StandardReferenceModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
     QDataWidgetMapper *m_mapper = nullptr;
 
@@ -36,8 +35,6 @@ private:
 
 private slots:
     void details();
-    void editComment();
-    void loadByAuthorityId(int id);
 
 protected:
     bool choiceButtonEnabled() override;

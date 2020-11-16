@@ -1,7 +1,7 @@
 #include "protocoldetailsdialog.h"
 #include "ui_protocoldetailsdialog.h"
 
-#include "models/protocolmodel.h"
+#include "models/standardreferencemodel.h"
 
 #include <QDebug>
 #include <QDate>
@@ -74,7 +74,7 @@ void ProtocolDetailsDialog::insert()
         return;
     }
 
-    ProtocolModel *m = dynamic_cast<ProtocolModel*>(model());
+    StandardReferenceModel *m = dynamic_cast<StandardReferenceModel*>(model());
     connect(m->sourceModel(), &QSqlTableModel::primeInsert, this, &ProtocolDetailsDialog::setRecord);
 
     if(!m->insertRow(0)) {

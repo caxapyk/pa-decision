@@ -23,7 +23,7 @@ public slots:
     void insert() override;
 
 private:
-    DocumentTypeModel *m_model;
+    StandardReferenceModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
 protected slots:

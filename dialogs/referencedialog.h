@@ -6,6 +6,7 @@
 #include <QSortFilterProxyModel>
 #include <QDialog>
 #include <QShortcut>
+#include <QPushButton>
 
 namespace Ui {
 class ReferenceDialog;
@@ -23,18 +24,25 @@ public:
     virtual void saveDialogState() {};
     virtual bool choiceButtonEnabled() { return true; };
 
+    virtual void editComment();
+
     void contextMenu(const QPoint &pos);
 
+    void addCommentButton();
+    QPushButton *commentButton() { return pB_comment; };
     void clearComment();
+
     void clearInfoText();
 
     int currentChoice() { return m_choice; };
     bool isChoiceMode() { return choice_mode; };
     QVariant inputDialog(const QString &title, const QString &label = QString(), const QVariant &value = QVariant());
 
+
     void setChoiceMode() { choice_mode = true; };
     void setInfoText(const QString &text);
     void setComment(const QString &text);
+    void setCommentColumn(int column) { m_commentColumn = column; };
     void setInfoIconVisible(bool ok = true);
 
 public slots:
@@ -42,6 +50,8 @@ public slots:
     virtual void insert();
     virtual void refresh();
     virtual void remove();
+
+    void loadByAuthorityId(int id);
 
 protected:
     Ui::ReferenceDialog *ui;
@@ -62,6 +72,9 @@ private:
 
     bool choice_mode = false;
     int m_choice = 0;
+    int m_commentColumn = -1;
+
+    QPushButton *pB_comment = nullptr;
 
     QSortFilterProxyModel *m_dialogProxyModel = nullptr;
 

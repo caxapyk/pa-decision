@@ -27,18 +27,10 @@ RecordDialog::RecordDialog(QWidget *parent) :
 
     connect(pB_details, &QPushButton::clicked, this, &RecordDialog::details);
 
-    pB_comment = new QPushButton(tr("Comment"));
-    pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
-    pB_comment->setDisabled(true);
-
-    ui->vL_buttonGroup->addWidget(pB_comment);
-
-    connect(pB_comment, &QPushButton::clicked, this, &RecordDialog::editComment);
-
     m_headerWidget = new DialogHeader;
     ui->hL_header->addWidget(m_headerWidget);
 
-    connect(m_headerWidget, &DialogHeader::authorityChanged, this, &RecordDialog::loadByAuthorityId);
+    connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ReferenceDialog::loadByAuthorityId);
 
     m_model = new RecordModel;
 
@@ -51,10 +43,11 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->tV_itemView->hideColumn(3);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    setDialogModel(m_proxyModel);
-
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
 
+    setDialogModel(m_proxyModel);
+    addCommentButton();
+    setCommentColumn(1);
     loadByAuthorityId(m_headerWidget->id());
 }
 
@@ -64,7 +57,6 @@ RecordDialog::~RecordDialog()
 
     delete m_headerWidget;
     delete pB_details;
-    delete pB_comment;
 
     delete m_model;
     delete m_proxyModel;
@@ -98,7 +90,7 @@ void RecordDialog::selected(const QModelIndex &current, const QModelIndex &)
     refreshShortcut->setEnabled(true);
 
     pB_details->setEnabled(current.isValid());
-    pB_comment->setEnabled(current.isValid());
+    commentButton()->setEnabled(current.isValid());
 
     if(current.isValid() && node->level == RecordModel::FundLevel)
         setInfoText(current.siblingAtColumn(3).data().toString());
@@ -117,16 +109,6 @@ bool RecordDialog::choiceButtonEnabled()
 int RecordDialog::choice(const QModelIndex &current) const
 {
     return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
-}
-
-void RecordDialog::loadByAuthorityId(int id)
-{
-    clearInfoText();
-
-    m_model->setAuthorityId(id);
-    m_model->select();
-
-    selected(QModelIndex(), QModelIndex());
 }
 
 void RecordDialog::details()
@@ -148,26 +130,6 @@ void RecordDialog::details()
 
     RecordDetailsDialog dialog(index.data(Qt::UserRole));
     dialog.exec();
-}
-
-void RecordDialog::editComment()
-{
-    QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(1);
-    QString title = tr("Comment");
-
-    QVariant value = inputDialog(title, tr("Enter comment"), index.data());
-
-    if (value.isValid() && value != index.data()) {
-        bool set = m_proxyModel->sourceModel()->setData(m_proxyModel->mapToSource(index), value);
-        if(set) {
-            setComment(value.toString());
-        } else {
-            QMessageBox::warning(this,
-                                 title,
-                                 tr("Could not set data."),
-                                 QMessageBox::Ok);
-        }
-    }
 }
 
 void RecordDialog::insert()

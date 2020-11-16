@@ -28,7 +28,6 @@ private:
     AuthorityModel *m_model;
     AuthorityProxyModel *m_proxyModel;
 
-    QPushButton *pB_comment;
     QPushButton *pB_details;
 
 protected slots:
@@ -37,7 +36,6 @@ protected slots:
 
 private slots:
     void details();
-    void editComment();
 };
 
 #endif // AUTHORITYDIALOG_H

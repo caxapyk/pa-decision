@@ -30,7 +30,6 @@ private:
     RecordModel *m_model;
     RecordProxyModel *m_proxyModel;
 
-    QPushButton *pB_comment;
     QPushButton *pB_details;
     DialogHeader *m_headerWidget;
 
@@ -42,9 +41,7 @@ protected slots:
     virtual int choice(const QModelIndex &current) const override;
 
 private slots:
-    void editComment();
     void details();
-    void loadByAuthorityId(int id);
 };
 
 #endif // RECORDDIALOG_H

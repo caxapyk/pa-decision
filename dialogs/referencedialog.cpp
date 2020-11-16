@@ -31,6 +31,8 @@ ReferenceDialog::~ReferenceDialog()
     delete editShortcut;
     delete removeShortcut;
     delete refreshShortcut;
+
+    delete pB_comment;
 }
 
 void ReferenceDialog::setupShortcuts()
@@ -77,6 +79,17 @@ void ReferenceDialog::contextMenu(const QPoint &)
     menu.exec(QCursor().pos());
 }
 
+void ReferenceDialog::addCommentButton()
+{
+    pB_comment = new QPushButton(tr("Comment"));
+    pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
+    pB_comment->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_comment);
+
+    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
+}
+
 QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label, const QVariant &value)
 {
     QInputDialog inputDialog;
@@ -91,6 +104,21 @@ QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label
     inputDialog.exec();
 
     return QVariant(inputDialog.textValue());
+}
+
+void ReferenceDialog::loadByAuthorityId(int id)
+{
+    ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
+
+    if(model) {
+        clearInfoText();
+
+        model->setAuthorityId(id);
+        model->select();
+
+        _selected(QModelIndex(), QModelIndex());
+        selected(QModelIndex(), QModelIndex());
+    }
 }
 
 void ReferenceDialog::clearComment()
@@ -142,6 +170,28 @@ void ReferenceDialog::_selected(const QModelIndex &current, const QModelIndex &)
 void ReferenceDialog::edit()
 {
     ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+}
+
+void ReferenceDialog::editComment()
+{
+    if(m_commentColumn) {
+        QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(m_commentColumn);
+        QString title = tr("Comment");
+
+        QVariant value = inputDialog(title, tr("Enter comment"), index.data());
+
+        if (value.isValid() && value != index.data()) {
+            bool set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(index), value);
+            if(set) {
+                setComment(value.toString());
+            } else {
+                QMessageBox::warning(this,
+                                     title,
+                                     tr("Could not set data.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
+                                     QMessageBox::Ok);
+            }
+        }
+    }
 }
 
 void ReferenceDialog::insert()

@@ -18,38 +18,21 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     setInfoText(tr("Use color to highlight documents!"));
 
     m_model = new DocumentTypeModel;
+    m_model->setTable("pad_doctype");
     m_model->select();
 
     m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
     ui->tV_itemView->setModel(m_proxyModel);
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
-
     ui->tV_itemView->hideColumn(0);
     ui->tV_itemView->resizeColumnToContents(1);
     ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
+    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
 
     setDialogModel(m_proxyModel);
-    /*m_model = new DoctypeModel;
-    m_model->select();
-
-    m_proxyModel = new QSortFilterProxyModel;
-    m_proxyModel->setSourceModel(m_model);
-
-    ui->tV_itemView->setModel(m_proxyModel);
-    ui->tV_itemView->hideColumn(2);
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    ui->tV_itemView->resizeColumnToContents(0);
-    ui->tV_itemView->setItemDelegateForColumn(1, new ColorPickerItemDelegate);
-
-    setDialogModel(m_proxyModel);*
-
-    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-    */
 }
 
 DoctypeDialog::~DoctypeDialog()
@@ -84,30 +67,6 @@ void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
 }
-
-/*void DoctypeDialog::insert()
-{
-    int v = m_proxyModel->sourceModel()->rowCount() - 1;
-
-    bool insert = m_proxyModel->sourceModel()->insertRow(v);
-
-    if(insert) {
-        v += 1;
-        QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0));
-
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(currentIndex);
-
-        ui->tV_itemView->resizeColumnToContents(0);
-    } else {
-        QMessageBox::warning(this,
-                tr("Creating items"),
-                tr("Could not create item."),
-                QMessageBox::Ok);
-    }
-}*/
-
 
 void DoctypeDialog::insert()
 {
