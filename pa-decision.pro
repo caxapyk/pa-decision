@@ -25,6 +25,7 @@ SOURCES += \
     dialogs/connectiondialog.cpp \
     dialogs/decisionbasedialog.cpp \
     dialogs/decisionnewdialog.cpp \
+    dialogs/detailsdialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/protocoldetailsdialog.cpp \
     dialogs/protocoldialog.cpp \
@@ -66,6 +67,7 @@ HEADERS += \
     dialogs/connectiondialog.h \
     dialogs/decisionbasedialog.h \
     dialogs/decisionnewdialog.h \
+    dialogs/detailsdialog.h \
     dialogs/doctypedialog.h \
     dialogs/protocoldetailsdialog.h \
     dialogs/protocoldialog.h \

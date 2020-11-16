@@ -6,6 +6,7 @@
 #include "widgets/dialogheader.h"
 
 #include <QDialog>
+#include <QDataWidgetMapper>
 #include <QPushButton>
 #include <QSortFilterProxyModel>
 
@@ -27,6 +28,7 @@ public slots:
 private:
     ProtocolModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
+    QDataWidgetMapper *m_mapper = nullptr;
 
     QPushButton *pB_comment;
     QPushButton *pB_details;

@@ -3,21 +3,15 @@
 
 #include "models/referencemodel.h"
 
-#include <QAbstractItemModel>
+#include <QSqlTableModel>
 
 class DocumentTypeModel : public ReferenceModel
 {
 
     Q_OBJECT
-
 public:
-    typedef QVector<QVariant> Node;
-    typedef QVector<Node*> NodeList;
-
     DocumentTypeModel();
     ~DocumentTypeModel();
-
-    int itemMaxNum(int column, const QRegExp &rule) const;
 
     void clear() override;
     void select() override;
@@ -35,10 +29,10 @@ public:
     bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
 
 private:
-    QMap<int, QVariant> columnHeaders;
-    NodeList *m_nodeList;
+    QSqlTableModel *m_internalModel;
 
-    void setupModelData();
+private slots:
+    void setDefaults(int row, QSqlRecord &record);
 };
 
 #endif // DOCUMENTTYPEMODEL_H

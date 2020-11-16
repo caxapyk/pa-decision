@@ -39,6 +39,9 @@ private:
     int m_authorityId = 0;
     QString cond;
 
+protected:
+    int itemMaxNum(int column, const QRegExp &rule) const;
+
 };
 
 #endif // ReferenceModel_H

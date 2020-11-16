@@ -1,41 +1,39 @@
 #ifndef PROTOCOLDETAILSDIALOG_H
 #define PROTOCOLDETAILSDIALOG_H
 
+#include "dialogs/detailsdialog.h"
 #include "models/protocolmodel.h"
 
 #include <QDialog>
-#include <QSqlTableModel>
 #include <QDataWidgetMapper>
-
+#include <QSqlRecord>
 
 namespace Ui {
 class ProtocolDetailsDialog;
 }
 
-class ProtocolDetailsDialog : public QDialog
+class ProtocolDetailsDialog : public DetailsDialog
 {
     Q_OBJECT
 
 public:
-    explicit ProtocolDetailsDialog(QVariant id = QVariant(), QWidget *parent = nullptr);
+    explicit ProtocolDetailsDialog(QWidget *parent = nullptr);
     ~ProtocolDetailsDialog();
 
-    void setAuthority(int id) { aid = QVariant(id); };
+    int exec() override;
 
 public slots:
     void reject() override;
 
 private:
     Ui::ProtocolDetailsDialog *ui;
-
-    QSqlTableModel *m_model;
     QDataWidgetMapper *m_mapper = nullptr;
 
     bool _form_changed = false;
-    QVariant aid;
 
 private slots:
     void insert();
+    void setRecord(int row, QSqlRecord &record);
 };
 
 #endif // PROTOCOLDETAILSDIALOG_H

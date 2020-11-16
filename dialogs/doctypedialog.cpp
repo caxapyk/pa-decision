@@ -17,7 +17,7 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     setInfoIconVisible();
     setInfoText(tr("Use color to highlight documents!"));
 
-    m_model = new DoctypeModel;
+    m_model = new DocumentTypeModel;
     m_model->select();
 
     m_proxyModel = new QSortFilterProxyModel;

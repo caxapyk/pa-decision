@@ -44,8 +44,9 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     m_proxyModel->setSourceModel(m_model);
 
     ui->tV_itemView->setModel(m_proxyModel);
-    ui->tV_itemView->hideColumn(3);
-    ui->tV_itemView->hideColumn(4);
+    ui->tV_itemView->hideColumn(0);
+    ui->tV_itemView->hideColumn(1);
+     ui->tV_itemView->hideColumn(5);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
@@ -94,18 +95,21 @@ void ProtocolDialog::selected(const QModelIndex &current, const QModelIndex &)
     pB_details->setEnabled(current.isValid());
     pB_comment->setEnabled(current.isValid());
 
-    setComment(current.siblingAtColumn(3).data().toString());
+    setComment(current.siblingAtColumn(5).data().toString());
 }
 
 void ProtocolDialog::details()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
-    ProtocolDetailsDialog dialog(index.data(Qt::UserRole));
+    ProtocolDetailsDialog dialog;
+    dialog.setModel(m_model);
+    dialog.setCurrentIndex(m_proxyModel->mapToSource(index));
+
     int res = dialog.exec();
 
     if(res == ProtocolDialog::Accepted) {
-        refresh();
+        //refresh();
     }
 }
 
@@ -132,26 +136,24 @@ void ProtocolDialog::loadByAuthorityId(int id)
 void ProtocolDialog::edit()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
-
     ui->tV_itemView->edit(index);
 }
 
 void ProtocolDialog::insert()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
+    ProtocolDetailsDialog dialog;
+    dialog.setModel(m_model);
 
-    ProtocolDetailsDialog dialog(index.data(Qt::UserRole));
-    dialog.setAuthority(m_model->authorityId());
     int res = dialog.exec();
 
     if(res == ProtocolDialog::Accepted) {
-        refresh();
+        //refresh();
     }
 }
 
 void ProtocolDialog::editComment()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(3);
+    QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(5);
     QString title = tr("Comment");
 
     QVariant value = inputDialog(title, tr("Enter comment"), index.data());

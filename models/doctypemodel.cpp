@@ -16,7 +16,7 @@ DoctypeModel::DoctypeModel()
 
 void DoctypeModel::setDefaults(int, QSqlRecord &record)
 {
-    record.setValue("name", tr("New document type"));
+    record.setValue("name", tr("Document type"));
     record.setGenerated("name", true);
 }
 
