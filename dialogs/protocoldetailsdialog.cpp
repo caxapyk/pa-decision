@@ -46,7 +46,7 @@ int ProtocolDetailsDialog::exec()
                     accept();
                 } else {
                     QMessageBox::critical(this,
-                            tr("New protocol"),
+                            tr("Protocol"),
                             tr("Could not save protocol"),
                             QMessageBox::Ok);
                 }

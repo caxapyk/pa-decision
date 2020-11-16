@@ -1,6 +1,8 @@
 #ifndef RECORDDETAILSDIALOG_H
 #define RECORDDETAILSDIALOG_H
 
+#include "dialogs/detailsdialog.h"
+
 #include <QDialog>
 #include <QSqlTableModel>
 #include <QDataWidgetMapper>
@@ -9,7 +11,7 @@ namespace Ui {
 class RecordDetailsDialog;
 }
 
-class RecordDetailsDialog : public QDialog
+class RecordDetailsDialog : public DetailsDialog
 {
     Q_OBJECT
 

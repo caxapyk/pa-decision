@@ -6,7 +6,7 @@
 #include <QPushButton>
 
 RecordDetailsDialog::RecordDetailsDialog(QVariant id, QWidget *parent) :
-    QDialog(parent),
+    DetailsDialog(parent),
     ui(new Ui::RecordDetailsDialog)
 {
     ui->setupUi(this);

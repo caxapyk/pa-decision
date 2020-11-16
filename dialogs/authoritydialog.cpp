@@ -92,7 +92,11 @@ void AuthorityDialog::details()
     QModelIndex index = ui->tV_itemView->currentIndex();
 
     AuthorityDetailsDialog dialog(index.data(Qt::UserRole));
-    dialog.exec();
+    int res = dialog.exec();
+
+    if(res == AuthorityDetailsDialog::Accepted) {
+        refresh();
+    }
 }
 
 void AuthorityDialog::insert()

@@ -1,6 +1,8 @@
 #ifndef AUTHORITYDETAILSDIALOG_H
 #define AUTHORITYDETAILSDIALOG_H
 
+#include "dialogs/detailsdialog.h"
+
 #include <QDialog>
 #include <QSqlTableModel>
 #include <QDataWidgetMapper>
@@ -9,7 +11,7 @@ namespace Ui {
 class AuthorityDetailsDialog;
 }
 
-class AuthorityDetailsDialog : public QDialog
+class AuthorityDetailsDialog : public DetailsDialog
 {
     Q_OBJECT
 

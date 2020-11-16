@@ -6,7 +6,7 @@
 #include <QPushButton>
 
 AuthorityDetailsDialog::AuthorityDetailsDialog(QVariant id, QWidget *parent) :
-    QDialog(parent),
+    DetailsDialog(parent),
     ui(new Ui::AuthorityDetailsDialog)
 {
     ui->setupUi(this);
