@@ -138,6 +138,8 @@ void ReferenceDialog::setDialogModel(QSortFilterProxyModel *model)
 
     connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::_selected);
     connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::selected);
+
+    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
 }
 
 void ReferenceDialog::setComment(const QString &text)
@@ -196,7 +198,23 @@ void ReferenceDialog::editComment()
 
 void ReferenceDialog::insert()
 {
+    bool insert = m_dialogProxyModel->sourceModel()->insertRow(0);
 
+    if(insert) {
+        QModelIndex currentIndex = m_dialogProxyModel->mapFromSource(
+                    m_dialogProxyModel->sourceModel()->index(0, 1));
+
+        ui->tV_itemView->resizeColumnToContents(1);
+
+        ui->tV_itemView->setCurrentIndex(currentIndex);
+        ui->tV_itemView->scrollTo(currentIndex);
+        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+    } else {
+        QMessageBox::warning(this,
+                tr("Creating items"),
+                tr("Could not create item."),
+                QMessageBox::Ok);
+    }
 }
 
 void ReferenceDialog::refresh()

@@ -49,26 +49,3 @@ void SubjectDialog::selected(const QModelIndex &current, const QModelIndex &)
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
 }
-
-void SubjectDialog::insert()
-{
-    int v = m_proxyModel->sourceModel()->rowCount() - 1;
-
-    bool insert = m_proxyModel->sourceModel()->insertRow(v);
-
-    if(insert) {
-        v += 1;
-        QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0));
-
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(currentIndex);
-
-        ui->tV_itemView->resizeColumnToContents(0);
-    } else {
-        QMessageBox::warning(this,
-                tr("Creating items"),
-                tr("Could not create item."),
-                QMessageBox::Ok);
-    }
-}

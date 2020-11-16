@@ -37,8 +37,6 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
 
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-
     setDialogModel(m_proxyModel);
     addCommentButton();
     setCommentColumn(1);

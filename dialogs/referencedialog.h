@@ -38,7 +38,6 @@ public:
     bool isChoiceMode() { return choice_mode; };
     QVariant inputDialog(const QString &title, const QString &label = QString(), const QVariant &value = QVariant());
 
-
     void setChoiceMode() { choice_mode = true; };
     void setInfoText(const QString &text);
     void setComment(const QString &text);
@@ -77,7 +76,6 @@ private:
     QPushButton *pB_comment = nullptr;
 
     QSortFilterProxyModel *m_dialogProxyModel = nullptr;
-
 
 private slots:
     void _selected(const QModelIndex &current, const QModelIndex &);

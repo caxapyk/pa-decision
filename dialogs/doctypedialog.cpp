@@ -30,8 +30,6 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
-
     setDialogModel(m_proxyModel);
 }
 
@@ -66,25 +64,4 @@ void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
     editShortcut->setEnabled(current.isValid());
     removeShortcut->setEnabled(current.isValid());
     refreshShortcut->setEnabled(true);
-}
-
-void DoctypeDialog::insert()
-{
-    bool insert = m_proxyModel->sourceModel()->insertRow(0);
-
-    if(insert) {
-        QModelIndex currentIndex = m_proxyModel->mapFromSource(
-                    m_proxyModel->sourceModel()->index(0, 1));
-
-        ui->tV_itemView->resizeColumnToContents(1);
-
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
-    } else {
-        QMessageBox::warning(this,
-                tr("Creating items"),
-                tr("Could not create item."),
-                QMessageBox::Ok);
-    }
 }

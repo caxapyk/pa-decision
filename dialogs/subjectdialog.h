@@ -19,9 +19,6 @@ public:
     void restoreDialogState() override;
     void saveDialogState() override;
 
-public slots:
-    void insert() override;
-
 private:
     DocumentTypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
