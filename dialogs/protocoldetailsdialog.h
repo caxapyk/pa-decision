@@ -3,8 +3,10 @@
 
 #include "models/protocolmodel.h"
 
-#include <QDataWidgetMapper>
 #include <QDialog>
+#include <QSqlTableModel>
+#include <QDataWidgetMapper>
+
 
 namespace Ui {
 class ProtocolDetailsDialog;
@@ -15,26 +17,25 @@ class ProtocolDetailsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ProtocolDetailsDialog(int mode, ProtocolModel *model, int row = -1,  QWidget *parent = nullptr);
+    explicit ProtocolDetailsDialog(QVariant id = QVariant(), QWidget *parent = nullptr);
     ~ProtocolDetailsDialog();
 
-    void accept() override;
+    void setAuthority(int id) { aid = QVariant(id); };
+
+public slots:
     void reject() override;
-
-    QMap<QString, QVariant> property() { return prop; };
-
-    enum { InsertMode, UpdateMode };
 
 private:
     Ui::ProtocolDetailsDialog *ui;
 
+    QSqlTableModel *m_model;
     QDataWidgetMapper *m_mapper = nullptr;
-    ProtocolModel *m_model;
 
-    QMap<QString, QVariant> prop;
+    bool _form_changed = false;
+    QVariant aid;
 
-    int mrow;
-    int mmode;
+private slots:
+    void insert();
 };
 
 #endif // PROTOCOLDETAILSDIALOG_H

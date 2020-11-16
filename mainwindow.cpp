@@ -7,6 +7,7 @@
 #include "dialogs/connectiondialog.h"
 #include "dialogs/protocoldialog.h"
 #include "dialogs/recorddialog.h"
+#include "dialogs/subjectdialog.h"
 
 #include <QDebug>
 
@@ -120,6 +121,7 @@ void MainWindow::setupToolBar()
     connect(m_referenceButton->actionProtocol(), &QAction::triggered, this, &MainWindow::openProtocol);
     connect(m_referenceButton->actionRecord(), &QAction::triggered, this, &MainWindow::openRecords);
     connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, &MainWindow::openDoctype);
+    connect(m_referenceButton->actionSubject(), &QAction::triggered, this, &MainWindow::openSubject);
     ui->toolBar->addWidget(m_referenceButton);
 
     m_searchPanel = new SearchPanel;
@@ -170,8 +172,8 @@ void MainWindow::openProtocol()
     ProtocolDialog dialog;
     int res = dialog.exec();
 
-    if(res == ProtocolDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionProtocol) {
-        m_navigatorView->refreshCollection();
+    if(res == ProtocolDialog::Accepted && m_navigatorView->currentGroup() == NavigatorView::GroupProtocol) {
+        m_navigatorView->refreshGroup();
     }
 }
 
@@ -180,7 +182,17 @@ void MainWindow::openRecords()
     RecordDialog dialog;
     int res = dialog.exec();
 
-    if(res == RecordDialog::Accepted && m_navigatorView->currentCollection() == NavigatorView::CollectionRecord) {
-        m_navigatorView->refreshCollection();
+    if(res == RecordDialog::Accepted && m_navigatorView->currentGroup() == NavigatorView::GroupRecord) {
+        m_navigatorView->refreshGroup();
+    }
+}
+
+void MainWindow::openSubject()
+{
+    SubjectDialog dialog;
+    int res = dialog.exec();
+
+    if(res == SubjectDialog::Accepted && m_navigatorView->currentGroup() == NavigatorView::GroupSubject) {
+        m_navigatorView->refreshGroup();
     }
 }

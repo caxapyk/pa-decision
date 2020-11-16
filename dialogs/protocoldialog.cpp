@@ -25,6 +25,14 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
 
     ui->vL_buttonGroup->addWidget(pB_details);
 
+    pB_comment = new QPushButton(tr("Comment"));
+    pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
+    pB_comment->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_comment);
+
+    connect(pB_comment, &QPushButton::clicked, this, &ProtocolDialog::editComment);
+
     m_headerWidget = new DialogHeader;
     ui->hL_header->addWidget(m_headerWidget);
 
@@ -50,6 +58,9 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
 ProtocolDialog::~ProtocolDialog()
 {
     saveDialogState();
+
+    delete pB_details;
+    delete pB_comment;
 
     delete m_model;
     delete m_proxyModel;
@@ -81,6 +92,7 @@ void ProtocolDialog::selected(const QModelIndex &current, const QModelIndex &)
     refreshShortcut->setEnabled(true);
 
     pB_details->setEnabled(current.isValid());
+    pB_comment->setEnabled(current.isValid());
 
     setComment(current.siblingAtColumn(3).data().toString());
 }
@@ -89,11 +101,11 @@ void ProtocolDialog::details()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
 
-    ProtocolDetailsDialog dialog(ProtocolDetailsDialog::UpdateMode, m_model, index.row());
+    ProtocolDetailsDialog dialog(index.data(Qt::UserRole));
     int res = dialog.exec();
 
-    if(res == ProtocolDetailsDialog::Accepted && dialog.property().contains("comment")) {
-        setComment(dialog.property().value("comment").toString());
+    if(res == ProtocolDialog::Accepted) {
+        refresh();
     }
 }
 
@@ -126,26 +138,15 @@ void ProtocolDialog::edit()
 
 void ProtocolDialog::insert()
 {
-    QModelIndex proxyParent = ui->tV_itemView->currentIndex();
-    QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
-    if(!ui->tV_itemView->isExpanded(proxyParent)) {
-        ui->tV_itemView->expand(proxyParent);
-    }
-
-    int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
-
-    ProtocolDetailsDialog dialog(ProtocolDetailsDialog::InsertMode, m_model, v);
+    ProtocolDetailsDialog dialog(index.data(Qt::UserRole));
+    dialog.setAuthority(m_model->authorityId());
     int res = dialog.exec();
 
-    if(res == ProtocolDetailsDialog::Accepted && dialog.property().contains("comment")) {
-        setComment(dialog.property().value("comment").toString());
+    if(res == ProtocolDialog::Accepted) {
+        refresh();
     }
-
-    QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
-
-    ui->tV_itemView->setCurrentIndex(currentIndex);
-    ui->tV_itemView->scrollTo(currentIndex);
 }
 
 void ProtocolDialog::editComment()

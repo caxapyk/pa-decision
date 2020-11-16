@@ -21,6 +21,8 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
 
     ui->vL_buttonGroup->addWidget(pB_details);
 
+    connect(pB_details, &QPushButton::clicked, this, &AuthorityDialog::details);
+
     pB_comment = new QPushButton(tr("Comment"));
     pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
     pB_comment->setDisabled(true);
@@ -44,7 +46,6 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
 
     setDialogModel(m_proxyModel);
 
-    connect(pB_details, &QPushButton::clicked, this, &AuthorityDialog::details);
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
 }
 
@@ -100,7 +101,7 @@ void AuthorityDialog::details()
     int res = dialog.exec();
 
     if(res == AuthorityDialog::Accepted) {
-        setComment(dialog.comment());
+        refresh();
     }
 }
 

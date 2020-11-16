@@ -102,7 +102,7 @@ void NavigatorView::refreshAuthority()
     ui->tV_authority->expandAll();
 }
 
-void NavigatorView::refreshCollection()
+void NavigatorView::refreshGroup()
 {
     load(current);
 }
@@ -113,24 +113,24 @@ void NavigatorView::load(int collection)
     delete m_collectionProxyModel;
 
     switch(collection){
-    case NavigatorView::CollectionRecord:
+    case NavigatorView::GroupRecord:
         m_collectionModel = new RecordModel();
         m_collectionProxyModel = new RecordProxyModel;
-        current = NavigatorView::CollectionRecord;
+        current = NavigatorView::GroupRecord;
         break;
-    case NavigatorView::CollectionProtocol:
-        current = NavigatorView::CollectionProtocol;
+    case NavigatorView::GroupProtocol:
+        current = NavigatorView::GroupProtocol;
         break;
-    case NavigatorView::CollectionDoctype:
+    case NavigatorView::GroupDoctype:
         m_collectionModel = new DocumentTypeModel;
         m_collectionProxyModel = new QSortFilterProxyModel;
-        current = NavigatorView::CollectionDoctype;
+        current = NavigatorView::GroupDoctype;
         break;
-    case NavigatorView::CollectionYear:
-        current = NavigatorView::CollectionYear;
+    case NavigatorView::GroupYear:
+        current = NavigatorView::GroupYear;
         break;
-    case NavigatorView::CollectionObject:
-        current = NavigatorView::CollectionObject;
+    case NavigatorView::GroupSubject:
+        current = NavigatorView::GroupSubject;
         break;
     }
 

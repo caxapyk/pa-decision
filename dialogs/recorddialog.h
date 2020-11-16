@@ -31,7 +31,7 @@ private:
     RecordProxyModel *m_proxyModel;
 
     QPushButton *pB_comment;
-    QPushButton *pB_fundTitle;
+    QPushButton *pB_details;
     DialogHeader *m_headerWidget;
 
 protected:
@@ -43,7 +43,7 @@ protected slots:
 
 private slots:
     void editComment();
-    void editFundName();
+    void details();
     void loadByAuthorityId(int id);
 };
 

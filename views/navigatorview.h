@@ -18,8 +18,8 @@ class NavigatorView : public View
     Q_OBJECT
 
 public:
-    enum Tabs {TabCollection, TabSearch};
-    enum Collection {CollectionRecord, CollectionProtocol, CollectionDoctype, CollectionYear, CollectionObject};
+    enum Tabs {TabGroup, TabSearch};
+    enum Group {GroupRecord, GroupProtocol, GroupDoctype, GroupYear, GroupSubject};
 
     explicit NavigatorView(QWidget *parent = nullptr);
     ~NavigatorView();
@@ -29,9 +29,9 @@ public:
     void restoreViewState() override;
     void saveViewState() override;
 
-    int currentCollection() { return current; };
+    int currentGroup() { return current; };
     void refreshAuthority();
-    void refreshCollection();
+    void refreshGroup();
 
 private:
     Ui::NavigatorView *ui;

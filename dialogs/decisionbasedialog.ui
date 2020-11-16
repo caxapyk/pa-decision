@@ -314,7 +314,7 @@
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Objects</string>
+       <string>Subjects</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <property name="spacing">

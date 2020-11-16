@@ -35,6 +35,7 @@ public slots:
     void openAuthorities();
     void openProtocol();
     void openRecords();
+    void openSubject();
 
 private:
     Ui::MainWindow *ui;

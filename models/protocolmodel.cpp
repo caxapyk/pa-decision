@@ -96,7 +96,7 @@ QModelIndex ProtocolModel::index(int row, int column, const QModelIndex &parent)
     return QModelIndex();
 }
 
-bool ProtocolModel::insertRows(int row, int count, const QModelIndex &parent)
+/*bool ProtocolModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     if(mSetRow.isEmpty()) {
         return false;
@@ -139,7 +139,7 @@ bool ProtocolModel::insertRows(int row, int count, const QModelIndex &parent)
     qDebug() << query.lastError().text();
 
     return false;
-}
+}*/
 
 QVariant ProtocolModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -260,12 +260,12 @@ bool ProtocolModel::setData(const QModelIndex &index, const QVariant &value, int
     return false;
 }
 
-bool ProtocolModel::setRow(int row, QMap<QString, QVariant> &values, const QModelIndex &parent)
+/*bool ProtocolModel::setRow(int row, QMap<QString, QVariant> &values, const QModelIndex &parent)
 {
     mSetRow.swap(values);
 
     return insertRow(row, parent);
-}
+}*/
 
 bool ProtocolModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int)
 {

@@ -132,6 +132,10 @@ void ReferenceDialog::_selected(const QModelIndex &current, const QModelIndex &)
 {
     m_choice = choice(current);
 
+    if(!current.isValid()) {
+        clearInfoText();
+    }
+
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
 
@@ -153,11 +157,13 @@ void ReferenceDialog::refresh()
 
         ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
 
-        ui->tV_itemView->selectionModel()->clearCurrentIndex();
-        model->select();
+        if(model) {
+            ui->tV_itemView->selectionModel()->clearCurrentIndex();
+            model->select();
 
-        _selected(QModelIndex(), QModelIndex());
-        selected(QModelIndex(), QModelIndex());
+            _selected(QModelIndex(), QModelIndex());
+            selected(QModelIndex(), QModelIndex());
+        }
     }
 }
 

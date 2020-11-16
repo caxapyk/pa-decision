@@ -1,20 +1,20 @@
-#ifndef DOCTYPEDIALOG_H
-#define DOCTYPEDIALOG_H
+#ifndef SUBJECTDIALOG_H
+#define SUBJECTDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/doctypemodel.h"
+#include "models/documenttypemodel.h"
 
 #include <QDialog>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 
-class DoctypeDialog : public ReferenceDialog
+class SubjectDialog : public ReferenceDialog
 {
     Q_OBJECT
 
 public:
-    explicit DoctypeDialog(QWidget *parent = nullptr);
-    ~DoctypeDialog();
+    explicit SubjectDialog(QWidget *parent = nullptr);
+    ~SubjectDialog();
 
     void restoreDialogState() override;
     void saveDialogState() override;
@@ -23,7 +23,7 @@ public slots:
     void insert() override;
 
 private:
-    DoctypeModel *m_model;
+    DocumentTypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
 protected slots:
@@ -31,4 +31,4 @@ protected slots:
     virtual int choice(const QModelIndex &current) const override { return 0; };
 };
 
-#endif // DOCTYPEDIALOG_H
+#endif // SUBJECTDIALOG_H

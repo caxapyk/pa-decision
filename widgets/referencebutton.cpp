@@ -7,16 +7,18 @@ ReferenceButton::ReferenceButton(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_action_authority = new QAction(QIcon(":/icons/icons/icon-16.png"), tr("Public authorities"));
-    m_action_protocol = new QAction(QIcon(":/icons/icons/protocol-16.png"), tr("Protocols"));
-    m_action_record = new QAction(QIcon(":/icons/icons/record-16.png"), tr("Records"));
-    m_action_doctype = new QAction(QIcon(":/icons/icons/doctype-16.png"), tr("Document types"));
+    m_actionAuthority = new QAction(QIcon(":/icons/icons/icon-16.png"), tr("Public authorities"));
+    m_actionProtocol = new QAction(QIcon(":/icons/icons/protocol-16.png"), tr("Protocols"));
+    m_actionRecord = new QAction(QIcon(":/icons/icons/record-16.png"), tr("Records"));
+    m_actionDoctype = new QAction(QIcon(":/icons/icons/doctype-16.png"), tr("Document types"));
+    m_actionSubject = new QAction(QIcon(":/icons/icons/subject-16.png"), tr("Subjects"));
 
     m_menu = new QMenu;
-    m_menu->addAction(m_action_authority);
-    m_menu->addAction(m_action_protocol);
-    m_menu->addAction(m_action_record);
-    m_menu->addAction(m_action_doctype);
+    m_menu->addAction(m_actionAuthority);
+    m_menu->addAction(m_actionProtocol);
+    m_menu->addAction(m_actionRecord);
+    m_menu->addAction(m_actionDoctype);
+    m_menu->addAction(m_actionSubject);
 
     ui->pB_references->setMenu(m_menu);
 }
@@ -25,8 +27,9 @@ ReferenceButton::~ReferenceButton()
 {
     delete ui;
 
-    delete m_action_authority;
-    delete m_action_protocol;
-    delete m_action_record;
-    delete m_action_doctype;
+    delete m_actionAuthority;
+    delete m_actionProtocol;
+    delete m_actionRecord;
+    delete m_actionDoctype;
+    delete m_actionSubject;
 }

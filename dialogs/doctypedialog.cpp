@@ -17,7 +17,23 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     setInfoIconVisible();
     setInfoText(tr("Use color to highlight documents!"));
 
-    m_model = new DocumentTypeModel;
+    m_model = new DoctypeModel;
+    m_model->select();
+
+    m_proxyModel = new QSortFilterProxyModel;
+    m_proxyModel->setSourceModel(m_model);
+
+    ui->tV_itemView->setModel(m_proxyModel);
+    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    ui->tV_itemView->hideColumn(0);
+    ui->tV_itemView->resizeColumnToContents(1);
+    ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
+
+    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+
+    setDialogModel(m_proxyModel);
+    /*m_model = new DoctypeModel;
     m_model->select();
 
     m_proxyModel = new QSortFilterProxyModel;
@@ -30,9 +46,10 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->resizeColumnToContents(0);
     ui->tV_itemView->setItemDelegateForColumn(1, new ColorPickerItemDelegate);
 
-    setDialogModel(m_proxyModel);
+    setDialogModel(m_proxyModel);*
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+    */
 }
 
 DoctypeDialog::~DoctypeDialog()
@@ -68,7 +85,7 @@ void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
     refreshShortcut->setEnabled(true);
 }
 
-void DoctypeDialog::insert()
+/*void DoctypeDialog::insert()
 {
     int v = m_proxyModel->sourceModel()->rowCount() - 1;
 
@@ -83,6 +100,28 @@ void DoctypeDialog::insert()
         ui->tV_itemView->edit(currentIndex);
 
         ui->tV_itemView->resizeColumnToContents(0);
+    } else {
+        QMessageBox::warning(this,
+                tr("Creating items"),
+                tr("Could not create item."),
+                QMessageBox::Ok);
+    }
+}*/
+
+
+void DoctypeDialog::insert()
+{
+    bool insert = m_proxyModel->sourceModel()->insertRow(0);
+
+    if(insert) {
+        QModelIndex currentIndex = m_proxyModel->mapFromSource(
+                    m_proxyModel->sourceModel()->index(0, 1));
+
+        ui->tV_itemView->resizeColumnToContents(1);
+
+        ui->tV_itemView->setCurrentIndex(currentIndex);
+        ui->tV_itemView->scrollTo(currentIndex);
+        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),

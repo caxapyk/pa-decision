@@ -17,8 +17,6 @@ public:
     explicit AuthorityDetailsDialog(QVariant id, QWidget *parent = nullptr);
     ~AuthorityDetailsDialog();
 
-    QString comment();
-
 public slots:
     void reject() override;
 

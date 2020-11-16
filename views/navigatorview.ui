@@ -61,7 +61,7 @@
         <normaloff>:/icons/icons/collection-16.png</normaloff>:/icons/icons/collection-16.png</iconset>
       </attribute>
       <attribute name="title">
-       <string>Collections</string>
+       <string>Groups</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
@@ -217,11 +217,11 @@
              </item>
              <item>
               <property name="text">
-               <string>Object collection</string>
+               <string>Subject collection</string>
               </property>
               <property name="icon">
                <iconset resource="../resources.qrc">
-                <normaloff>:/icons/icons/object-16.png</normaloff>:/icons/icons/object-16.png</iconset>
+                <normaloff>:/icons/icons/subject-16.png</normaloff>:/icons/icons/subject-16.png</iconset>
               </property>
              </item>
             </widget>
