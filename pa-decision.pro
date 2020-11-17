@@ -41,13 +41,13 @@ SOURCES += \
     models/colorpickeritemdelegate.cpp \
     models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
-    models/doctypemodel.cpp \
     models/documenttypemodel.cpp \
     models/protocolmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/referencemodel.cpp \
     models/standardreferencemodel.cpp \
+    models/subjectmodel.cpp \
     utils/stringsort.cpp \
     views/decisionview.cpp \
     views/navigatorview.cpp \
@@ -83,13 +83,13 @@ HEADERS += \
     models/colorpickeritemdelegate.h \
     models/decisionmodel.h \
     models/decisionproxymodel.h \
-    models/doctypemodel.h \
     models/documenttypemodel.h \
     models/protocolmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/referencemodel.h \
     models/standardreferencemodel.h \
+    models/subjectmodel.h \
     utils/stringsort.h \
     views/decisionview.h \
     views/navigatorview.h \

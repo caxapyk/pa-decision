@@ -2,7 +2,7 @@
 #define SUBJECTDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/documenttypemodel.h"
+#include "models/subjectmodel.h"
 
 #include <QDialog>
 #include <QShortcut>
@@ -20,11 +20,10 @@ public:
     void saveDialogState() override;
 
 private:
-    DocumentTypeModel *m_model;
+    SubjectModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
 protected slots:
-    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
     virtual int choice(const QItemSelection &selected) const override { return 0; };
 };
 

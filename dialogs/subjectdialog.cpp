@@ -14,7 +14,20 @@ SubjectDialog::SubjectDialog(QWidget *parent) :
     restoreDialogState();
 
     setWindowTitle(tr("Subjects"));
-    setInfoText(tr("Use subjects for grouping desicions by members type!"));
+
+    ui->label_infoIcon->setVisible(true);
+    setInfoText(tr("Use subjects for grouping desicions!"));
+
+    m_model = new SubjectModel;
+    m_model->select();
+
+    m_proxyModel = new QSortFilterProxyModel;
+    m_proxyModel->setSourceModel(m_model);
+
+    ui->tV_itemView->setModel(m_proxyModel);
+    ui->tV_itemView->hideColumn(0);
+
+    setDialogModel(m_proxyModel);
 }
 
 SubjectDialog::~SubjectDialog()
@@ -40,12 +53,4 @@ void SubjectDialog::saveDialogState()
     settings->setValue("geometry", saveGeometry());
     settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();
-}
-
-void SubjectDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
-{
-    /*insertShortcut->setEnabled(!current.isValid());
-    editShortcut->setEnabled(current.isValid());
-    removeShortcut->setEnabled(current.isValid());
-    refreshShortcut->setEnabled(true);*/
 }

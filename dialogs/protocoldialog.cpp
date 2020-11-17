@@ -16,7 +16,6 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     restoreDialogState();
 
     setWindowTitle(tr("Protocols"));
-    ui->label_infoIcon->setVisible(false);
 
     pB_details = new QPushButton(tr("Details"));
     pB_details->setDisabled(true);
@@ -47,8 +46,6 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     m_model->setHeaderData(2, Qt::Horizontal, tr("Number"));
     m_model->setHeaderData(3, Qt::Horizontal, tr("Date"));
     m_model->setHeaderData(4, Qt::Horizontal, tr("Title"));
-
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
     loadByAuthorityId(m_headerWidget->id());
@@ -82,15 +79,12 @@ void ProtocolDialog::saveDialogState()
     settings->endGroup();
 }
 
-void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &)
+void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    insertShortcut->setEnabled(selected.isEmpty());
-    editShortcut->setEnabled(!selected.isEmpty());
-    removeShortcut->setEnabled(!selected.isEmpty());
-    refreshShortcut->setEnabled(true);
-
     pB_details->setEnabled(!selected.isEmpty());
     commentButton()->setEnabled(!selected.isEmpty());
+
+    ReferenceDialog::selected(selected, deselected);
 }
 
 void ProtocolDialog::details()

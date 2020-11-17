@@ -20,8 +20,6 @@ ProtocolModel::ProtocolModel(QObject *parent) : ReferenceModel(parent)
     setHeaderData(3, Qt::Horizontal, tr("Date"));
     setHeaderData(4, Qt::Horizontal, tr("Title"));
     setHeaderData(5, Qt::Horizontal, tr("Comment"));
-
-    //connect(m_internalModel, &QSqlTableModel::primeInsert, this, &ProtocolModel::setDefaults);
 }
 
 ProtocolModel::~ProtocolModel()

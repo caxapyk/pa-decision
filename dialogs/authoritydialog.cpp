@@ -39,8 +39,6 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ui->tV_itemView->setCurrentIndex(m_proxyModel->mapFromSource(m_model->rootItem()));
     ui->tV_itemView->expandAll();
 
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
-
     setDialogModel(m_proxyModel);
 }
 

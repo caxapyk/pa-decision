@@ -107,6 +107,8 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
         }
 
         setInfoText(fundIndex.siblingAtColumn(3).data().toString());
+    } else {
+        clearInfoText();
     }
 }
 

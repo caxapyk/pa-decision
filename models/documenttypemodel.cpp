@@ -6,7 +6,7 @@
 #include <QColor>
 #include <QSqlRecord>
 
-DocumentTypeModel::DocumentTypeModel(QWidget *parent) :
+DocumentTypeModel::DocumentTypeModel(QObject *parent) :
     StandardReferenceModel(parent)
 {
    setTable("pad_doctype");

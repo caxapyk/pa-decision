@@ -27,9 +27,7 @@ public slots:
 private:
     StandardReferenceModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
-    QDataWidgetMapper *m_mapper = nullptr;
 
-    QPushButton *pB_comment;
     QPushButton *pB_details;
     DialogHeader *m_headerWidget;
 

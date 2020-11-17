@@ -144,7 +144,9 @@ void ReferenceDialog::setDialogModel(QSortFilterProxyModel *model)
     connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ReferenceDialog::_selected);
     connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ReferenceDialog::selected);
 
+    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+
     clearSelection();
 }
 
@@ -166,10 +168,6 @@ void ReferenceDialog::setInfoIconVisible(bool ok)
 
 void ReferenceDialog::_selected(const QItemSelection &selected, const QItemSelection &)
 {
-    if(selected.isEmpty()) {
-        clearInfoText();
-    }
-
     if(!selected.isEmpty()) {
         if(m_commentColumn >= 0) {
             QModelIndex index = selected.indexes().at(m_commentColumn);
@@ -181,6 +179,14 @@ void ReferenceDialog::_selected(const QItemSelection &selected, const QItemSelec
 
     m_choice = choice(selected);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
+}
+
+void ReferenceDialog::selected(const QItemSelection &selected, const QItemSelection &)
+{
+    insertShortcut->setEnabled(selected.isEmpty());
+    editShortcut->setEnabled(!selected.isEmpty());
+    removeShortcut->setEnabled(!selected.isEmpty());
+    refreshShortcut->setEnabled(true);
 }
 
 void ReferenceDialog::edit()
@@ -265,7 +271,9 @@ void ReferenceDialog::remove()
 
         if (res == QMessageBox::Yes) {
             bool remove = m_dialogProxyModel->removeRow(index.row(), parent);
-            if (!remove) {
+            if (remove) {
+                clearSelection();
+            } else {
                 QMessageBox::warning(this,
                         tr("Deleting item"),
                         tr("Could not remove the item."),

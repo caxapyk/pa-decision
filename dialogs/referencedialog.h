@@ -64,7 +64,7 @@ protected:
     void clearSelection();
 
 protected slots:
-    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) = 0;
+    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);
     virtual int choice(const QItemSelection &selected) const = 0;
 
 private:

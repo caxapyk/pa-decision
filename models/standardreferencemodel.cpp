@@ -12,13 +12,6 @@ StandardReferenceModel::StandardReferenceModel(QObject *parent) : ReferenceModel
     m_internalModel = new QSqlTableModel;
     m_internalModel->setEditStrategy(QSqlTableModel::OnFieldChange);
     m_internalModel->setSort(0, Qt::AscendingOrder);
-
-    setHeaderData(0, Qt::Horizontal, tr("ID"));
-    setHeaderData(1, Qt::Horizontal, tr("Authority ID"));
-    setHeaderData(2, Qt::Horizontal, tr("Number"));
-    setHeaderData(3, Qt::Horizontal, tr("Date"));
-    setHeaderData(4, Qt::Horizontal, tr("Title"));
-    setHeaderData(5, Qt::Horizontal, tr("Comment"));
 }
 
 void StandardReferenceModel::setTable(const QString &table)

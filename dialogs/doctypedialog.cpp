@@ -28,7 +28,6 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->hideColumn(0);
     ui->tV_itemView->resizeColumnToContents(1);
     ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
 }
@@ -56,12 +55,4 @@ void DoctypeDialog::saveDialogState()
     settings->setValue("geometry", saveGeometry());
     settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();
-}
-
-void DoctypeDialog::selected(const QItemSelection &selected, const QItemSelection &)
-{
-    insertShortcut->setEnabled(selected.isEmpty());
-    editShortcut->setEnabled(!selected.isEmpty());
-    removeShortcut->setEnabled(!selected.isEmpty());
-    refreshShortcut->setEnabled(true);
 }
