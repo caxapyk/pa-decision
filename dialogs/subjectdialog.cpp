@@ -42,10 +42,10 @@ void SubjectDialog::saveDialogState()
     settings->endGroup();
 }
 
-void SubjectDialog::selected(const QModelIndex &current, const QModelIndex &)
+void SubjectDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    insertShortcut->setEnabled(!current.isValid());
+    /*insertShortcut->setEnabled(!current.isValid());
     editShortcut->setEnabled(current.isValid());
     removeShortcut->setEnabled(current.isValid());
-    refreshShortcut->setEnabled(true);
+    refreshShortcut->setEnabled(true);*/
 }

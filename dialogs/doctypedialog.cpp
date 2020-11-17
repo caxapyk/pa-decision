@@ -58,10 +58,10 @@ void DoctypeDialog::saveDialogState()
     settings->endGroup();
 }
 
-void DoctypeDialog::selected(const QModelIndex &current, const QModelIndex &)
+void DoctypeDialog::selected(const QItemSelection &selected, const QItemSelection &)
 {
-    insertShortcut->setEnabled(!current.isValid());
-    editShortcut->setEnabled(current.isValid());
-    removeShortcut->setEnabled(current.isValid());
+    insertShortcut->setEnabled(selected.isEmpty());
+    editShortcut->setEnabled(!selected.isEmpty());
+    removeShortcut->setEnabled(!selected.isEmpty());
     refreshShortcut->setEnabled(true);
 }

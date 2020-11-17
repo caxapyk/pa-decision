@@ -27,6 +27,9 @@ RecordDialog::RecordDialog(QWidget *parent) :
 
     connect(pB_details, &QPushButton::clicked, this, &RecordDialog::details);
 
+    addCommentButton();
+    setCommentColumn(1);
+
     m_headerWidget = new DialogHeader;
     ui->hL_header->addWidget(m_headerWidget);
 
@@ -44,8 +47,6 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
-    addCommentButton();
-    setCommentColumn(1);
     loadByAuthorityId(m_headerWidget->id());
 }
 
@@ -78,22 +79,35 @@ void RecordDialog::saveDialogState()
     settings->endGroup();
 }
 
-void RecordDialog::selected(const QModelIndex &current, const QModelIndex &)
+void RecordDialog::selected(const QItemSelection &selected, const QItemSelection &)
 {
+    QModelIndex current = !selected.isEmpty() ? selected.indexes().at(0) : QModelIndex();
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
     insertShortcut->setEnabled(node == nullptr || node->level != RecordModel::RecordLevel);
-    editShortcut->setEnabled(current.isValid());
-    removeShortcut->setEnabled(current.isValid());
+    editShortcut->setEnabled(!selected.isEmpty());
+    removeShortcut->setEnabled(!selected.isEmpty());
     refreshShortcut->setEnabled(true);
 
-    pB_details->setEnabled(current.isValid());
-    commentButton()->setEnabled(current.isValid());
+    pB_details->setEnabled(!selected.isEmpty());
+    commentButton()->setEnabled(!selected.isEmpty());
 
-    if(current.isValid() && node->level == RecordModel::FundLevel)
-        setInfoText(current.siblingAtColumn(3).data().toString());
+    if(!selected.isEmpty()) {
+        QModelIndex fundIndex;
+        switch (node->level) {
+        case RecordModel::FundLevel:
+            fundIndex = ui->tV_itemView->currentIndex();
+            break;
+        case RecordModel::InventoryLevel:
+            fundIndex = ui->tV_itemView->currentIndex().parent();
+            break;
+        case RecordModel::RecordLevel:
+            fundIndex = ui->tV_itemView->currentIndex().parent().parent();
+            break;
+        }
 
-    setComment(current.siblingAtColumn(1).data().toString());
+        setInfoText(fundIndex.siblingAtColumn(3).data().toString());
+    }
 }
 
 bool RecordDialog::choiceButtonEnabled()
@@ -104,9 +118,10 @@ bool RecordDialog::choiceButtonEnabled()
     return e;
 }
 
-int RecordDialog::choice(const QModelIndex &current) const
+int RecordDialog::choice(const QItemSelection &selected) const
 {
-    return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
+    return 0;
+   // return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
 }
 
 void RecordDialog::details()

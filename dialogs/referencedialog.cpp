@@ -79,6 +79,12 @@ void ReferenceDialog::contextMenu(const QPoint &)
     menu.exec(QCursor().pos());
 }
 
+void ReferenceDialog::clearSelection()
+{
+    _selected(QItemSelection(), QItemSelection());
+    selected(QItemSelection(), QItemSelection());
+}
+
 void ReferenceDialog::addCommentButton()
 {
     pB_comment = new QPushButton(tr("Comment"));
@@ -116,8 +122,7 @@ void ReferenceDialog::loadByAuthorityId(int id)
         model->setAuthorityId(id);
         model->select();
 
-        _selected(QModelIndex(), QModelIndex());
-        selected(QModelIndex(), QModelIndex());
+        clearSelection();
     }
 }
 
@@ -136,10 +141,11 @@ void ReferenceDialog::setDialogModel(QSortFilterProxyModel *model)
 {
     m_dialogProxyModel = model;
 
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::_selected);
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ReferenceDialog::selected);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ReferenceDialog::_selected);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ReferenceDialog::selected);
 
     connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+    clearSelection();
 }
 
 void ReferenceDialog::setComment(const QString &text)
@@ -158,14 +164,22 @@ void ReferenceDialog::setInfoIconVisible(bool ok)
     ui->label_infoIcon->setVisible(ok);
 }
 
-void ReferenceDialog::_selected(const QModelIndex &current, const QModelIndex &)
+void ReferenceDialog::_selected(const QItemSelection &selected, const QItemSelection &)
 {
-    m_choice = choice(current);
-
-    if(!current.isValid()) {
+    if(selected.isEmpty()) {
         clearInfoText();
     }
 
+    if(!selected.isEmpty()) {
+        if(m_commentColumn >= 0) {
+            QModelIndex index = selected.indexes().at(m_commentColumn);
+            setComment(index.data().toString());
+        }
+    } else {
+        clearComment();
+    }
+
+    m_choice = choice(selected);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
 
@@ -176,7 +190,7 @@ void ReferenceDialog::edit()
 
 void ReferenceDialog::editComment()
 {
-    if(m_commentColumn) {
+    if(m_commentColumn >= 0) {
         QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(m_commentColumn);
         QString title = tr("Comment");
 
@@ -201,14 +215,18 @@ void ReferenceDialog::insert()
     bool insert = m_dialogProxyModel->sourceModel()->insertRow(0);
 
     if(insert) {
-        QModelIndex currentIndex = m_dialogProxyModel->mapFromSource(
-                    m_dialogProxyModel->sourceModel()->index(0, 1));
+        for (int i = 0; i < m_dialogProxyModel->columnCount(); ++i) {
+            ui->tV_itemView->resizeColumnToContents(i);
+        }
 
-        ui->tV_itemView->resizeColumnToContents(1);
+        QModelIndex topLeft = m_dialogProxyModel->mapFromSource(
+                    m_dialogProxyModel->sourceModel()->index(0, 0));
+        QModelIndex bottomRight = m_dialogProxyModel->mapFromSource(
+                    m_dialogProxyModel->sourceModel()->index(0, m_dialogProxyModel->columnCount() - 1));
 
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+        QItemSelection selection(topLeft, bottomRight);
+        ui->tV_itemView->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+        ui->tV_itemView->scrollTo(topLeft);
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
@@ -229,8 +247,7 @@ void ReferenceDialog::refresh()
             ui->tV_itemView->selectionModel()->clearCurrentIndex();
             model->select();
 
-            _selected(QModelIndex(), QModelIndex());
-            selected(QModelIndex(), QModelIndex());
+            clearSelection();
         }
     }
 }

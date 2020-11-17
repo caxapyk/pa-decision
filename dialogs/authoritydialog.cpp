@@ -22,6 +22,10 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ui->vL_buttonGroup->addWidget(pB_details);
 
     connect(pB_details, &QPushButton::clicked, this, &AuthorityDialog::details);
+
+    addCommentButton();
+    setCommentColumn(1);
+
     m_model = new AuthorityModel;
     m_model->select();
 
@@ -38,8 +42,6 @@ AuthorityDialog::AuthorityDialog(QWidget *parent) :
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
-    addCommentButton();
-    setCommentColumn(1);
 }
 
 AuthorityDialog::~AuthorityDialog()
@@ -70,19 +72,18 @@ void AuthorityDialog::saveDialogState()
     settings->endGroup();
 }
 
-void AuthorityDialog::selected(const QModelIndex &current, const QModelIndex &)
+void AuthorityDialog::selected(const QItemSelection &selected, const QItemSelection &)
 {
+    QModelIndex current = !selected.isEmpty() ? selected.indexes().at(0) : QModelIndex();
     QModelIndex root = m_proxyModel->mapFromSource(m_model->rootItem());
 
     refreshShortcut->setEnabled(true);
-    insertShortcut->setEnabled(!current.isValid() || current == root);
-    editShortcut->setEnabled(current.isValid() && current !=root);
-    removeShortcut->setEnabled(current.isValid() && current != root);
+    insertShortcut->setEnabled(selected.isEmpty() || current == root);
+    editShortcut->setEnabled(!selected.isEmpty() && current !=root);
+    removeShortcut->setEnabled(!selected.isEmpty() && current != root);
 
-    pB_details->setEnabled(current.isValid() && current != root);
-    commentButton()->setEnabled(current.isValid() && current != root);
-
-    setComment(current.siblingAtColumn(1).data().toString());
+    pB_details->setEnabled(!selected.isEmpty() && current != root);
+    commentButton()->setEnabled(!selected.isEmpty() && current != root);
 }
 
 void AuthorityDialog::details()

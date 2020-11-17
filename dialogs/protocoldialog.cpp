@@ -25,6 +25,9 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
 
     connect(pB_details, &QPushButton::clicked, this, &ProtocolDialog::details);
 
+    addCommentButton();
+    setCommentColumn(5);
+
     m_headerWidget = new DialogHeader;
     ui->hL_header->addWidget(m_headerWidget);
 
@@ -40,11 +43,14 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     ui->tV_itemView->hideColumn(0);
     ui->tV_itemView->hideColumn(1);
     ui->tV_itemView->hideColumn(5);
+
+    m_model->setHeaderData(2, Qt::Horizontal, tr("Number"));
+    m_model->setHeaderData(3, Qt::Horizontal, tr("Date"));
+    m_model->setHeaderData(4, Qt::Horizontal, tr("Title"));
+
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
-    addCommentButton();
-    setCommentColumn(5);
     loadByAuthorityId(m_headerWidget->id());
 }
 
@@ -53,7 +59,6 @@ ProtocolDialog::~ProtocolDialog()
     saveDialogState();
 
     delete pB_details;
-    delete pB_comment;
 
     delete m_model;
     delete m_proxyModel;
@@ -77,17 +82,15 @@ void ProtocolDialog::saveDialogState()
     settings->endGroup();
 }
 
-void ProtocolDialog::selected(const QModelIndex &current, const QModelIndex &)
+void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &)
 {
-    insertShortcut->setEnabled(true);
-    editShortcut->setEnabled(current.isValid());
-    removeShortcut->setEnabled(current.isValid());
+    insertShortcut->setEnabled(selected.isEmpty());
+    editShortcut->setEnabled(!selected.isEmpty());
+    removeShortcut->setEnabled(!selected.isEmpty());
     refreshShortcut->setEnabled(true);
 
-    pB_details->setEnabled(current.isValid());
-    commentButton()->setEnabled(current.isValid());
-
-    setComment(current.siblingAtColumn(5).data().toString());
+    pB_details->setEnabled(!selected.isEmpty());
+    commentButton()->setEnabled(!selected.isEmpty());
 }
 
 void ProtocolDialog::details()
@@ -106,9 +109,10 @@ bool ProtocolDialog::choiceButtonEnabled()
     return !isChoiceMode() || ui->tV_itemView->currentIndex().isValid();
 }
 
-int ProtocolDialog::choice(const QModelIndex &current) const
+int ProtocolDialog::choice(const QItemSelection &selected) const
 {
-    return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
+    return 0;
+    //return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
 }
 
 void ProtocolDialog::insert()
@@ -116,5 +120,16 @@ void ProtocolDialog::insert()
     ProtocolDetailsDialog dialog;
 
     dialog.setModel(m_model);
-    dialog.exec();
+    int res = dialog.exec();
+
+    if(res == ProtocolDetailsDialog::Accepted) {
+        QModelIndex topLeft = m_proxyModel->mapFromSource(
+                    m_proxyModel->sourceModel()->index(0, 0));
+        QModelIndex bottomRight = m_proxyModel->mapFromSource(
+                    m_proxyModel->sourceModel()->index(0, m_proxyModel->columnCount() - 1));
+
+        QItemSelection selection(topLeft, bottomRight);
+        ui->tV_itemView->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+        ui->tV_itemView->scrollTo(topLeft);
+    }
 }

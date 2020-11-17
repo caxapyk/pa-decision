@@ -31,8 +31,8 @@ private:
     QPushButton *pB_details;
 
 protected slots:
-    virtual void selected(const QModelIndex &current, const QModelIndex &) override;
-    virtual int choice(const QModelIndex &current) const override { return 0; };
+    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
+    virtual int choice(const QItemSelection &selected) const override { return 0; };
 
 private slots:
     void details();

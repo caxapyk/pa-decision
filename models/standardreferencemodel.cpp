@@ -56,6 +56,7 @@ bool StandardReferenceModel::submit()
     }
 
     qDebug() << m_internalModel->lastError().text();
+    select();
 
     return false;
 }
@@ -95,6 +96,7 @@ bool StandardReferenceModel::insertRows(int row, int count, const QModelIndex &p
     }
 
     qDebug() << m_internalModel->lastError().text();
+    select();
 
     return false;
 }
@@ -123,6 +125,7 @@ bool StandardReferenceModel::removeRows(int row, int count, const QModelIndex &p
     }
 
     qDebug() << m_internalModel->lastError().text();
+    select();
 
     return false;
 }
@@ -153,6 +156,7 @@ bool StandardReferenceModel::setData(const QModelIndex &index, const QVariant &v
     }
 
     qDebug() << m_internalModel->lastError().text();
+    select();
 
     return false;
 }

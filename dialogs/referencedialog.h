@@ -61,10 +61,11 @@ protected:
     QShortcut *refreshShortcut = nullptr;
 
     void setDialogModel(QSortFilterProxyModel *model);
+    void clearSelection();
 
 protected slots:
-    virtual void selected(const QModelIndex &current, const QModelIndex &) = 0;
-    virtual int choice(const QModelIndex &current) const = 0;
+    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) = 0;
+    virtual int choice(const QItemSelection &selected) const = 0;
 
 private:
     void setupShortcuts();
@@ -78,12 +79,11 @@ private:
     QSortFilterProxyModel *m_dialogProxyModel = nullptr;
 
 private slots:
-    void _selected(const QModelIndex &current, const QModelIndex &);
+    void _selected(const QItemSelection &selected, const QItemSelection &deselected);
 
     void accept() override;
     void reject() override;
     void closeEvent(QCloseEvent *event) override;
-
 };
 
 #endif // REFERENCEDIALOG_H
