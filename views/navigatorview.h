@@ -45,6 +45,8 @@ private:
 
     int current = 0;
 
+    void openIndexTab();
+
 private slots:
     void contextMenu(const QPoint &pos);
     void load(int collection);

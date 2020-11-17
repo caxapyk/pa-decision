@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "views/view.h"
 #include "views/navigatorview.h"
-#include "views/decisionview.h"
+#include "views/explorerview.h"
 #include "widgets/referencebutton.h"
 #include "widgets/statusbarpanel.h"
 #include "widgets/searchpanel.h"
@@ -21,6 +22,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    ExplorerView *explorer() { return m_explorerView; };
 
     QAction *action_edit;
     QAction *action_new;
@@ -41,7 +44,7 @@ private:
     Ui::MainWindow *ui;
 
     NavigatorView *m_navigatorView;
-    DecisionView *m_decisionView;
+    ExplorerView *m_explorerView;
 
     ReferenceButton *m_referenceButton;
     StatusBarPanel *m_statusBarPanel;

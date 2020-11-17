@@ -50,6 +50,7 @@ SOURCES += \
     models/subjectmodel.cpp \
     utils/stringsort.cpp \
     views/decisionview.cpp \
+    views/explorerview.cpp \
     views/navigatorview.cpp \
     views/view.cpp \
     widgets/colorrect.cpp \
@@ -92,6 +93,7 @@ HEADERS += \
     models/subjectmodel.h \
     utils/stringsort.h \
     views/decisionview.h \
+    views/explorerview.h \
     views/navigatorview.h \
     views/view.h \
     widgets/colorrect.h \
@@ -112,6 +114,7 @@ FORMS += \
     dialogs/referencedialog.ui \
     mainwindow.ui \
     views/decisionview.ui \
+    views/explorerview.ui \
     views/navigatorview.ui \
     widgets/dialogheader.ui \
     widgets/paginator.ui \

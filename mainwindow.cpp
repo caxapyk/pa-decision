@@ -28,7 +28,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete m_navigatorView;
-    delete m_decisionView;
+    delete m_explorerView;
     delete m_statusBarPanel;
     delete m_searchPanel;
 
@@ -45,7 +45,7 @@ MainWindow::~MainWindow()
 void MainWindow::initialize()
 {
     m_navigatorView = new NavigatorView(ui->splitter_layout);
-    m_decisionView = new DecisionView(ui->splitter_layout);
+    m_explorerView = new ExplorerView(ui->splitter_layout);
 
     ui->splitter_layout->setCollapsible(0, false);
 
@@ -85,14 +85,14 @@ void MainWindow::setupStatusBar()
 void MainWindow::setupToolBar()
 {
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
-    connect(action_new, &QAction::triggered, m_decisionView, &DecisionView::insert);
+    //connect(action_new, &QAction::triggered, m_decisionView, &DecisionView::insert);
 
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
     action_print->setDisabled(true);
 
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
     action_edit->setDisabled(true);
-    connect(action_edit, &QAction::triggered, m_decisionView, &DecisionView::edit);
+    //connect(action_edit, &QAction::triggered, m_decisionView, &DecisionView::edit);
 
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
