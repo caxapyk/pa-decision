@@ -5,6 +5,7 @@
 #include "models/authorityproxymodel.h"
 #include "models/referencemodel.h"
 #include "views/view.h"
+#include "views/explorerview.h"
 
 #include <QShortcut>
 #include <QSortFilterProxyModel>
@@ -30,8 +31,13 @@ public:
     void saveViewState() override;
 
     int currentGroup() { return current; };
+
+    void openIndexTab();
+
     void refreshAuthority();
     void refreshGroup();
+
+    void setExplorer(ExplorerView *exp) { _explorer = exp; };
 
 private:
     Ui::NavigatorView *ui;
@@ -45,7 +51,7 @@ private:
 
     int current = 0;
 
-    void openIndexTab();
+    ExplorerView *_explorer;
 
 private slots:
     void contextMenu(const QPoint &pos);

@@ -15,5 +15,7 @@ ExplorerView::~ExplorerView()
 
 void ExplorerView::createTab(View *view, const QString &title)
 {
-    ui->tW_panel->addTab(view, title);
+    QWidget *tab = new QWidget;
+
+    ui->tW_panel->addTab(tab, title);
 }

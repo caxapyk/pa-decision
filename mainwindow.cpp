@@ -53,6 +53,9 @@ void MainWindow::initialize()
     setupToolBar();
     setupStatusBar();
     restoreAppState();
+
+    m_navigatorView->setExplorer(m_explorerView);
+    m_navigatorView->openIndexTab();
 }
 
 void MainWindow::restoreAppState()

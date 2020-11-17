@@ -56,8 +56,6 @@ void NavigatorView::initialize()
     connect(m_refreshShortcut, &QShortcut::activated, this, [=] { load(current); });
 
     connect(ui->cB_collection, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NavigatorView::load);
-
-    openIndexTab();
 }
 
 void NavigatorView::restoreViewState()
@@ -101,7 +99,7 @@ void NavigatorView::contextMenu(const QPoint &)
 
 void NavigatorView::openIndexTab() {
     DecisionView view;
-    //application->mainWindow()->explorer()->createTab(&view, tr("All desicions"));
+    _explorer->createTab(&view, tr("All desicions"));
 }
 
 void NavigatorView::refreshAuthority()
