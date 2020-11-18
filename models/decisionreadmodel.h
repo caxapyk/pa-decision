@@ -13,6 +13,8 @@ public:
     explicit DecisionReadModel(QObject *parent = nullptr);
     ~DecisionReadModel();
 
+    int total();
+
     void clear() override;
     void select() override;
 

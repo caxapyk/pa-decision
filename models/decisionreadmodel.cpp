@@ -55,6 +55,25 @@ void DecisionReadModel::select()
     endResetModel();
 }
 
+int DecisionReadModel::total()
+{
+    if(authorityId()) {
+        where("authority_id=" + QString::number(authorityId()));
+    }
+
+    QSqlQuery query;
+    query.prepare(
+                QString("SELECT COUNT(id) FROM pad_decision %1")
+                .arg(filter().isEmpty() ? QString() : filter()));
+
+    if (query.exec()) {
+        query.first();
+        return query.value(0).toInt();
+    }
+
+    return 0;
+}
+
 QVariant DecisionReadModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     return m_internalModel->headerData(section, orientation, role);

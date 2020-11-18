@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // MainWindow actions
     connect(ui->action_about, &QAction::triggered, application, &Application::about);
-    connect(ui->action_connection, &QAction::triggered, this, &MainWindow::openConnection);
+    connect(ui->action_connection, &QAction::triggered, this, [=] { openDialog(new ConnectionDialog); });
 }
 
 MainWindow::~MainWindow()
@@ -118,11 +118,11 @@ void MainWindow::setupToolBar()
     ui->toolBar->addSeparator();
 
     m_referenceButton = new ReferenceButton;
-    connect(m_referenceButton->actionAuthority(), &QAction::triggered, this, &MainWindow::openAuthorities);
-    connect(m_referenceButton->actionProtocol(), &QAction::triggered, this, &MainWindow::openProtocol);
-    connect(m_referenceButton->actionRecord(), &QAction::triggered, this, &MainWindow::openRecords);
-    connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, &MainWindow::openDoctype);
-    connect(m_referenceButton->actionSubject(), &QAction::triggered, this, &MainWindow::openSubject);
+    connect(m_referenceButton->actionAuthority(), &QAction::triggered, this, [=] { openDialog(new AuthorityDialog); });
+    connect(m_referenceButton->actionProtocol(), &QAction::triggered, this, [=] { openDialog(new ProtocolDialog); });
+    connect(m_referenceButton->actionRecord(), &QAction::triggered, this, [=] { openDialog(new RecordDialog); });
+    connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, [=] { openDialog(new DoctypeDialog); });
+    connect(m_referenceButton->actionSubject(), &QAction::triggered, this, [=] { openDialog(new SubjectDialog); });
     ui->toolBar->addWidget(m_referenceButton);
 
     m_searchPanel = new SearchPanel;
@@ -142,58 +142,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QMainWindow::closeEvent(event);
 }
 
-/* *
- * Dialogs
- * */
-
-void MainWindow::openDoctype()
-{
-    DoctypeDialog dialog;
-    dialog.exec();
-}
-
-void MainWindow::openConnection()
-{
-    ConnectionDialog dialog;
-    dialog.exec();
-}
-
-void MainWindow::openAuthorities()
-{
-    AuthorityDialog dialog;
-    int res = dialog.exec();
-
-    if(res == AuthorityDialog::Accepted) {
-        m_navigatorView->refreshAuthority();
-    }
-}
-
-void MainWindow::openProtocol()
-{
-    ProtocolDialog dialog;
-    int res = dialog.exec();
-
-    if(res == ProtocolDialog::Accepted && m_navigatorView->currentGroup() == NavigatorView::GroupProtocol) {
-        m_navigatorView->refreshGroup();
-    }
-}
-
-void MainWindow::openRecords()
-{
-    RecordDialog dialog;
-    int res = dialog.exec();
-
-    if(res == RecordDialog::Accepted && m_navigatorView->currentGroup() == NavigatorView::GroupRecord) {
-        m_navigatorView->refreshGroup();
-    }
-}
-
-void MainWindow::openSubject()
-{
-    SubjectDialog dialog;
-    int res = dialog.exec();
-
-    if(res == SubjectDialog::Accepted && m_navigatorView->currentGroup() == NavigatorView::GroupSubject) {
-        m_navigatorView->refreshGroup();
-    }
+void MainWindow::openDialog(QDialog *dialog) {
+    dialog->exec();
+    delete dialog;
 }

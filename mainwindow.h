@@ -33,12 +33,7 @@ public:
     QAction *action_tree;
 
 public slots:
-    void openDoctype();
-    void openConnection();
-    void openAuthorities();
-    void openProtocol();
-    void openRecords();
-    void openSubject();
+    void openDialog(QDialog *dialog);
 
 private:
     Ui::MainWindow *ui;

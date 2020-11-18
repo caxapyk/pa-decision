@@ -106,7 +106,7 @@
          </widget>
          <widget class="QFrame" name="frame">
           <property name="frameShape">
-           <enum>QFrame::Box</enum>
+           <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
@@ -128,34 +128,6 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QTreeView" name="tV_collection">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>4</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Sunken</enum>
-             </property>
-             <property name="editTriggers">
-              <set>QAbstractItemView::NoEditTriggers</set>
-             </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="Line" name="line">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -163,68 +135,17 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="cB_collection">
-             <property name="minimumSize">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
               <size>
-               <width>0</width>
-               <height>30</height>
+               <width>20</width>
+               <height>40</height>
               </size>
              </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border:0px;background-color:#333;color:#fff;</string>
-             </property>
-             <property name="frame">
-              <bool>false</bool>
-             </property>
-             <item>
-              <property name="text">
-               <string>Archive record collection</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../resources.qrc">
-                <normaloff>:/icons/icons/record-16.png</normaloff>:/icons/icons/record-16.png</iconset>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Protocol collection</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../resources.qrc">
-                <normaloff>:/icons/icons/protocol-16.png</normaloff>:/icons/icons/protocol-16.png</iconset>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Document type collection</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../resources.qrc">
-                <normaloff>:/icons/icons/doctype-16.png</normaloff>:/icons/icons/doctype-16.png</iconset>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Year groups collection</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../resources.qrc">
-                <normaloff>:/icons/icons/calendar-16.png</normaloff>:/icons/icons/calendar-16.png</iconset>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Subject collection</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../resources.qrc">
-                <normaloff>:/icons/icons/subject-16.png</normaloff>:/icons/icons/subject-16.png</iconset>
-              </property>
-             </item>
-            </widget>
+            </spacer>
            </item>
           </layout>
          </widget>

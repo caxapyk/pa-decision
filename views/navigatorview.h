@@ -20,7 +20,6 @@ class NavigatorView : public View
 
 public:
     enum Tabs {TabGroup, TabSearch};
-    enum Group {GroupRecord, GroupProtocol, GroupDoctype, GroupYear, GroupSubject};
 
     explicit NavigatorView(QWidget *parent = nullptr);
     ~NavigatorView();
@@ -30,12 +29,7 @@ public:
     void restoreViewState() override;
     void saveViewState() override;
 
-    int currentGroup() { return currentGroupIndex; };
-
     void openIndexTab();
-
-    void refreshAuthority();
-    void refreshGroup();
 
     ExplorerView *explorer() { return _explorer; };
     void setExplorer(ExplorerView *exp);
@@ -47,17 +41,11 @@ private:
     AuthorityModel *m_authorityModel;
     AuthorityProxyModel *m_authorityProxyModel;
 
-    ReferenceModel *m_collectionModel = nullptr;
-    QSortFilterProxyModel *m_collectionProxyModel = nullptr;
-
-    int currentGroupIndex = 0;
-
     ExplorerView *_explorer;
 
 private slots:
     void contextMenu(const QPoint &pos);
-    void loadGroup(int collection);
-    void openInNewTab();
+    void openInNewTab(const QModelIndex &index);
 };
 
 #endif // NAVIGATORVIEW_H

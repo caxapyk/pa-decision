@@ -51,6 +51,7 @@ private:
 
 private slots:
     void selected(const QItemSelection &selected, const QItemSelection &deselected);
+    void updated();
 };
 
 #endif // DECISIONVIEW_H

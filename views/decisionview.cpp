@@ -24,6 +24,7 @@ DecisionView::DecisionView(QWidget *parent) :
 DecisionView::~DecisionView()
 {
     saveViewState();
+    disconnect(m_proxyModel->sourceModel(), &QAbstractItemModel::modelReset, this, &DecisionView::updated);
 
     delete ui;
     delete m_paginator;
@@ -45,6 +46,8 @@ void DecisionView::initialize()
 
     ui->tV_decision->setModel(m_proxyModel);
     ui->tV_decision->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(m_proxyModel->sourceModel(), &QAbstractItemModel::modelReset, this, &DecisionView::updated);
 
     connect(ui->tV_decision, &QMenu::customContextMenuRequested, this, &DecisionView::contextMenu);
     connect(ui->tV_decision->selectionModel(), &QItemSelectionModel::selectionChanged, this, &DecisionView::selected);
@@ -149,4 +152,9 @@ void DecisionView::selected(const QItemSelection &, const QItemSelection &)
 
     application->mainWindow()->action_edit->setEnabled(len == 1);
     application->mainWindow()->action_remove->setEnabled(len > 0);
+}
+
+void DecisionView::updated()
+{
+    ui->lcdn_counter->display(m_model->total());
 }

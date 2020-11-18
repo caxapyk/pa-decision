@@ -3,6 +3,8 @@
 
 #include "widgets/tab.h"
 
+#include <QDebug>
+
 ExplorerView::ExplorerView(QWidget *parent) :
     View(parent),
     ui(new Ui::ExplorerView)
@@ -25,5 +27,4 @@ void ExplorerView::createTab(Tab *tab, const QString &title, QIcon icon)
 void ExplorerView::closeTab(int index)
 {
     delete ui->tW_panel->widget(index);
-    ui->tW_panel->removeTab(index);
 }
