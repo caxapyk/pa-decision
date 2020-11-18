@@ -23,8 +23,11 @@ private:
     StandardReferenceModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
+protected:
+    bool choiceButtonEnabled() override;
+
 protected slots:
-    virtual int choice(const QItemSelection &selected) const override { return 0; };
+    virtual int choice(const QItemSelection &selected) const override;
 };
 
 #endif // DOCTYPEDIALOG_H

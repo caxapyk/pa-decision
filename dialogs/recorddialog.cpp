@@ -122,7 +122,7 @@ bool RecordDialog::choiceButtonEnabled()
 
 int RecordDialog::choice(const QItemSelection &selected) const
 {
-    return 0;
+    return -1;
    // return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
 }
 

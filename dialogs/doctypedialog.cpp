@@ -56,3 +56,18 @@ void DoctypeDialog::saveDialogState()
     settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();
 }
+
+bool DoctypeDialog::choiceButtonEnabled()
+{
+    return isChoiceMode() && ui->tV_itemView->currentIndex().isValid();
+}
+
+int DoctypeDialog::choice(const QItemSelection &selected) const
+{
+    if(!selected.isEmpty()) {
+        QModelIndex current = selected.indexes().at(0).siblingAtColumn(0);
+        return m_proxyModel->mapToSource(current).data().toInt();
+    }
+
+    return -1;
+}

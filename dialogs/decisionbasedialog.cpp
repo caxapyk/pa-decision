@@ -1,7 +1,9 @@
 #include "decisionbasedialog.h"
 #include "ui_decisionbasedialog.h"
 
+#include "dialogs/doctypedialog.h"
 #include "dialogs/recorddialog.h"
+#include "dialogs/protocoldialog.h"
 
 #include <QDebug>
 
@@ -35,32 +37,41 @@ void DecisionBaseDialog::initialize()
     m_doctypeModel = new DocumentTypeModel;
     m_doctypeModel->select();
     ui->cB_doctype->setModel(m_doctypeModel);
-    ui->cB_doctype->setModelColumn(0);
+    ui->cB_doctype->setModelColumn(1);
 
-    connect(ui->pB_record, &QPushButton::clicked, this, &DecisionBaseDialog::chooseRecord);
+    connect(ui->pB_doctype, &QPushButton::clicked, this, [=] { openExternal(ui->cB_doctype, new DoctypeDialog, 0); });
+    connect(ui->pB_record, &QPushButton::clicked, this, [=] { openExternal(ui->cB_record, new RecordDialog, 2); });
+    connect(ui->pB_protocol, &QPushButton::clicked, this, [=] { openExternal(ui->cB_protocol, new ProtocolDialog, 2); });
 }
 
-void DecisionBaseDialog::chooseRecord()
+void DecisionBaseDialog::openExternal(QComboBox *cb, ReferenceDialog *dialog, int col)
 {
-    RecordDialog dialog;
-    dialog.setChoiceMode();
+    ReferenceModel *model = dynamic_cast<ReferenceModel*>(cb->model());
 
-    int res = dialog.exec();
+    if(model) {
+        dialog->setChoiceMode();
+        int res = dialog->exec();
 
-    if(res == RecordDialog::Accepted) {
-        int choice = dialog.currentChoice();
-        qDebug() << "selected id:" << choice;
+        model->select();
+
+        if(res == RecordDialog::Accepted) {
+            setChosenId(cb, dialog->currentChoice(), col);
+        }
     }
+
+    delete dialog;
 }
 
-void DecisionBaseDialog::setChosenId(QComboBox *cb, int id, int column)
+bool DecisionBaseDialog::setChosenId(QComboBox *cb, int id, int column)
 {
     QAbstractItemModel *model = cb->model();
     for (int i = 0; i < model->rowCount(); ++i) {
-        qDebug() << model->index(i, column).data().toInt() << "==" << id;
-        if(model->index(i, 0).data().toInt() == id) {
+        qDebug() << model->index(i, column).data() << "==" << id;
+        if(model->index(i, column).data().toInt() == id) {
             cb->setCurrentIndex(i);
-            break;
+            return true;
         }
     }
+
+    return false;
 }

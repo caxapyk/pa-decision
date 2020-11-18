@@ -14,5 +14,7 @@ DecisionNewDialog::~DecisionNewDialog()
 
 void DecisionNewDialog::setAuthorityId(int id)
 {
-    setChosenId(ui->cB_authority, id, 1);
+    if(setChosenId(ui->cB_authority, id, 2)) {
+        ui->cB_authority->setDisabled(true);
+    }
 }

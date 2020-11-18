@@ -1,6 +1,7 @@
 #ifndef DECISIONBASEDIALOG_H
 #define DECISIONBASEDIALOG_H
 
+#include "dialogs/referencedialog.h"
 #include "models/decisionmodel.h"
 #include "models/authorityflatmodel.h"
 #include "models/documenttypemodel.h"
@@ -20,10 +21,12 @@ public:
     explicit DecisionBaseDialog(QWidget *parent = nullptr);
     ~DecisionBaseDialog();
 
-    void setChosenId(QComboBox *cb, int id, int column = 0);
+    bool setChosenId(QComboBox *cb, int id, int column = 0);
 
 protected:
     Ui::DecisionBaseDialog *ui;
+
+    void openExternal(QComboBox *cb, ReferenceDialog *dialog, int col);
 
 private:
     AuthorityFlatModel *m_authorityModel;
@@ -33,7 +36,6 @@ private:
     int recordId = 0;
 
     void initialize();
-    void chooseRecord();
 };
 
 #endif // DECISIONBASEDIALOG_H

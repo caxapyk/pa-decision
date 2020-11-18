@@ -36,9 +36,9 @@ int AuthorityFlatModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int AuthorityFlatModel::columnCount(const QModelIndex &) const
+int AuthorityFlatModel::columnCount(const QModelIndex &parent) const
 {
-    return 2;
+    return AuthorityModel::columnCount(parent);
 }
 
 QVariant AuthorityFlatModel::data(const QModelIndex &index, int role) const

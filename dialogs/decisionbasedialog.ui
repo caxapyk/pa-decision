@@ -109,14 +109,35 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="cB_doctype">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="spacing">
+           <number>0</number>
           </property>
-         </widget>
+          <item>
+           <widget class="QComboBox" name="cB_doctype">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pB_doctype">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/icons/icons/open-16.png</normaloff>:/icons/icons/open-16.png</iconset>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="horizontalSpacer_2">
@@ -262,7 +283,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QCheckBox" name="cB_protocol">
+         <widget class="QCheckBox" name="cB_related">
           <property name="text">
            <string>As part of protocol</string>
           </property>
@@ -274,7 +295,7 @@
            <number>1</number>
           </property>
           <item>
-           <widget class="QComboBox" name="cB_related">
+           <widget class="QComboBox" name="cB_protocol">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -386,7 +407,7 @@
        <item>
         <widget class="QTextEdit" name="textEdit">
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
         </widget>
        </item>

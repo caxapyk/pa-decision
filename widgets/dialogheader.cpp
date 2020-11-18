@@ -22,7 +22,7 @@ DialogHeader::~DialogHeader()
 
 void DialogHeader::currentIndexChanged(int index)
 {
-    QVariant data = m_authorityModel.data(m_authorityModel.index(index, 0), Qt::UserRole);
+    QVariant data = m_authorityModel.data(m_authorityModel.index(index, 2));
 
     if(data.isValid()) {
         currentId = data.toInt();

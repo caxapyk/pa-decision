@@ -71,7 +71,7 @@ private:
     void setupShortcuts();
 
     bool choice_mode = false;
-    int m_choice = 0;
+    int m_choice = -1;
     int m_commentColumn = -1;
 
     QPushButton *pB_comment = nullptr;
