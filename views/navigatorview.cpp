@@ -98,16 +98,7 @@ void NavigatorView::contextMenu(const QPoint &)
     CustomContextMenu menu(CustomContextMenu::Refresh);
 
     QAction openInNTab(tr("Open in new tab"));
-    connect(&openInNTab, &QAction::triggered, this, [=] {
-        QModelIndex currentIndex = ui->tV_authority->indexAt(ui->tV_authority->viewport()->mapFromGlobal(QCursor().pos()));
-
-        if(currentIndex.isValid()) {
-            DecisionTab *tab = new DecisionTab;
-            tab->model()->select();
-
-            explorer()->createTab(new DecisionTab, currentIndex.data().toString());
-        }
-    });
+    connect(&openInNTab, &QAction::triggered, this, &NavigatorView::openInNewTab);
     menu.insertAction(menu.action(CustomContextMenu::Refresh), &openInNTab);
 
     QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
@@ -117,6 +108,22 @@ void NavigatorView::contextMenu(const QPoint &)
     });
 
     menu.exec(QCursor().pos());
+}
+
+void NavigatorView::openInNewTab()
+{
+    QModelIndex currentIndex = ui->tV_authority->indexAt(ui->tV_authority->viewport()->mapFromGlobal(QCursor().pos()));
+    ui->tV_authority->setCurrentIndex(currentIndex);
+
+    if(currentIndex.isValid()) {
+        DecisionTab *tab = new DecisionTab;
+        tab->view()->model()->setAuthorityId(currentIndex.data(Qt::UserRole).toInt());
+        tab->view()->model()->select();
+
+        QIcon icon(currentIndex.data(Qt::DecorationRole).toString());
+
+        explorer()->createTab(tab, currentIndex.data().toString(), icon);
+    }
 }
 
 void NavigatorView::openIndexTab() {

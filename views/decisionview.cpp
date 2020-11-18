@@ -38,8 +38,7 @@ DecisionView::~DecisionView()
 
 void DecisionView::initialize()
 {
-    m_model = new DecisionModel;
-    m_model->select();
+    m_model = new DecisionReadModel;
 
     m_proxyModel = new DecisionProxyModel;
     m_proxyModel->setSourceModel(m_model);

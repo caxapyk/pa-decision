@@ -57,6 +57,7 @@ private:
 private slots:
     void contextMenu(const QPoint &pos);
     void loadGroup(int collection);
+    void openInNewTab();
 };
 
 #endif // NAVIGATORVIEW_H

@@ -129,9 +129,9 @@ int StandardReferenceModel::rowCount(const QModelIndex &parent) const
     return m_internalModel->rowCount(internalParent);
 }
 
-int StandardReferenceModel::columnCount(const QModelIndex &index) const
+int StandardReferenceModel::columnCount(const QModelIndex &parent) const
 {
-    QModelIndex internalIndex = m_internalModel->index(index.row(), index.column());
+    QModelIndex internalIndex = m_internalModel->index(parent.row(), parent.column());
     return m_internalModel->columnCount(internalIndex);
 }
 

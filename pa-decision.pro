@@ -41,6 +41,7 @@ SOURCES += \
     models/colorpickeritemdelegate.cpp \
     models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
+    models/decisionreadmodel.cpp \
     models/documenttypemodel.cpp \
     models/protocolmodel.cpp \
     models/recordmodel.cpp \
@@ -86,6 +87,7 @@ HEADERS += \
     models/colorpickeritemdelegate.h \
     models/decisionmodel.h \
     models/decisionproxymodel.h \
+    models/decisionreadmodel.h \
     models/documenttypemodel.h \
     models/protocolmodel.h \
     models/recordmodel.h \

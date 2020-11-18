@@ -31,11 +31,10 @@
      <property name="styleSheet">
       <string notr="true">QTabWidget {
 background-color: #333;
-color: white;
 }
 QTabWidget::pane {
 border: 1px solid gray;
-padding: 2px;
+padding: 3px;
 margin:  0px;
 }
 QTabBar {
@@ -43,8 +42,7 @@ border: 0px solid white;
 color: white;
 }
 QTabBar::tab:top:selected {
-color: white;
-background-color: #333;
+background-color: gray;
 }</string>
      </property>
      <property name="tabShape">

@@ -7,17 +7,17 @@ ReferenceModel::ReferenceModel(QObject *parent)
 
 void ReferenceModel::where(const QString &condition)
 {
-    cond = QString(" WHERE %1").arg(condition);
+    m_filter = QString(" WHERE %1").arg(condition);
 }
 
 void ReferenceModel::andWhere(const QString &condition)
 {
-    cond = QString("%1 AND %2").arg(cond).arg(condition);
+    m_filter = QString("%1 AND %2").arg(m_filter).arg(condition);
 }
 
 void ReferenceModel::orWhere(const QString &condition)
 {
-    cond = QString("%1 OR %2").arg(cond).arg(condition);
+    m_filter = QString("%1 OR %2").arg(m_filter).arg(condition);
 }
 
 int ReferenceModel::itemMaxNum(int column, const QRegExp &rule) const

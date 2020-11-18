@@ -20,7 +20,7 @@ public:
     explicit ExplorerView(QWidget *parent = nullptr);
     ~ExplorerView();
 
-    void createTab(Tab *tab, const QString &title);
+    void createTab(Tab *tab, const QString &title, QIcon icon = QIcon());
     void closeTab(int index);
 
 private:

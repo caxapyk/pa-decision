@@ -10,17 +10,6 @@ class ReferenceModel : public QAbstractItemModel
 public:
     explicit ReferenceModel(QObject *parent = nullptr);
 
-    virtual QVariant headerData(int, Qt::Orientation, int role = Qt::DisplayRole) const = 0;
-    virtual QModelIndex index(int row, int column,
-                              const QModelIndex &parent = QModelIndex()) const = 0;
-    virtual QModelIndex parent(const QModelIndex &index) const = 0;
-
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const = 0;
-
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const = 0;
-    virtual bool setRow(int row, QMap<QString, QVariant> &values, const QModelIndex &parent=QModelIndex()) { return false ;};
-
     virtual void clear() = 0;
     virtual void select() = 0;
 
@@ -31,17 +20,16 @@ public:
     void orWhere(const QString &condition);
     void where(const QString &condition);
 
-    void clearFilter() { cond = QString(); };
+    void clearFilter() { m_filter.clear(); };
 
-    QString filter() { return cond; };
+    QString filter() const { return m_filter; };
 
 private:
     int m_authorityId = 0;
-    QString cond;
+    QString m_filter;
 
 protected:
     int itemMaxNum(int column, const QRegExp &rule) const;
-
 };
 
 #endif // ReferenceModel_H
