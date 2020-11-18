@@ -43,7 +43,7 @@ void DecisionReadModel::select()
                           pad_doctype.color AS color \
                           FROM pad_decision \
                           LEFT JOIN pad_doctype ON pad_decision.doctype_id=pad_doctype.id \
-    %1 ORDER BY pad_decision.id DESC"
+                          %1 ORDER BY pad_decision.id DESC"
     ).arg(filter().isEmpty() ? QString() : filter()));
 
     if (query.exec()) {
@@ -53,6 +53,13 @@ void DecisionReadModel::select()
     }
 
     endResetModel();
+
+    setHeaderData(0, Qt::Horizontal, tr("ID"));
+    setHeaderData(1, Qt::Horizontal, tr("Date"));
+    setHeaderData(2, Qt::Horizontal, tr("Number"));
+    setHeaderData(3, Qt::Horizontal, tr("Title"));
+    setHeaderData(4, Qt::Horizontal, tr("Comment"));
+    setHeaderData(5, Qt::Horizontal, tr("Color"));
 }
 
 int DecisionReadModel::total()
@@ -118,4 +125,9 @@ QVariant DecisionReadModel::data(const QModelIndex &index, int role) const
     }
 
     return m_internalModel->data(internalIndex, role);
+}
+
+bool DecisionReadModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+{
+    return m_internalModel->setHeaderData(section, orientation, value, role);
 }

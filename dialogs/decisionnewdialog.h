@@ -11,6 +11,8 @@ public:
     explicit DecisionNewDialog(QWidget *parent = nullptr);
     ~DecisionNewDialog();
 
+    void setAuthorityId(int id);
+
 private:
 
 };

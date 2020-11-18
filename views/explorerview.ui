@@ -34,14 +34,18 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tW_panel">
+     <property name="minimumSize">
+      <size>
+       <width>640</width>
+       <height>480</height>
+      </size>
+     </property>
      <property name="styleSheet">
       <string notr="true">QTabWidget {
 background-color: #333;
 }
 QTabWidget::pane {
-border: 1px solid gray;
-padding: 3px;
-margin:  0px;
+border: 0px solid gray;
 }
 QTabBar {
 border: 0px solid white;

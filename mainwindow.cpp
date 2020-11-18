@@ -3,6 +3,7 @@
 
 #include "application.h"
 #include "dialogs/authoritydialog.h"
+#include "dialogs/decisionnewdialog.h"
 #include "dialogs/doctypedialog.h"
 #include "dialogs/connectiondialog.h"
 #include "dialogs/protocoldialog.h"
@@ -86,7 +87,7 @@ void MainWindow::setupStatusBar()
 void MainWindow::setupToolBar()
 {
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
-    //connect(action_new, &QAction::triggered, m_decisionView, &DecisionView::insert);
+    connect(action_new, &QAction::triggered, this, [=] { openDialog(new DecisionNewDialog); });
 
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
     action_print->setDisabled(true);
@@ -100,7 +101,7 @@ void MainWindow::setupToolBar()
 
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
 
-    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Navigation"));
+    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Left panel"));
     action_tree->setCheckable(true);
     action_tree->setChecked(true);
     connect(action_tree, &QAction::triggered, this, [=]{

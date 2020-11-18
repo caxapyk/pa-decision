@@ -3,10 +3,10 @@
 
 #include "models/referencemodel.h"
 
-#include <QSortFilterProxyModel>
 #include <QDialog>
 #include <QShortcut>
 #include <QPushButton>
+#include <QSortFilterProxyModel>
 
 namespace Ui {
 class ReferenceDialog;
@@ -30,9 +30,10 @@ public:
 
     void addCommentButton();
     QPushButton *commentButton() { return pB_comment; };
-    void clearComment();
 
+    void clearComment();
     void clearInfoText();
+    void clearSelection();
 
     int currentChoice() { return m_choice; };
     bool isChoiceMode() { return choice_mode; };
@@ -61,7 +62,6 @@ protected:
     QShortcut *refreshShortcut = nullptr;
 
     void setDialogModel(QSortFilterProxyModel *model);
-    void clearSelection();
 
 protected slots:
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);

@@ -52,3 +52,15 @@ void DecisionBaseDialog::chooseRecord()
         qDebug() << "selected id:" << choice;
     }
 }
+
+void DecisionBaseDialog::setChosenId(QComboBox *cb, int id, int column)
+{
+    QAbstractItemModel *model = cb->model();
+    for (int i = 0; i < model->rowCount(); ++i) {
+        qDebug() << model->index(i, column).data().toInt() << "==" << id;
+        if(model->index(i, 0).data().toInt() == id) {
+            cb->setCurrentIndex(i);
+            break;
+        }
+    }
+}

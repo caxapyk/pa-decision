@@ -43,8 +43,10 @@ void DecisionView::initialize()
 
     m_proxyModel = new DecisionProxyModel;
     m_proxyModel->setSourceModel(m_model);
+    m_proxyModel->sort(-1);
 
     ui->tV_decision->setModel(m_proxyModel);
+    ui->tV_decision->sortByColumn(-1, Qt::AscendingOrder);
     ui->tV_decision->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(m_proxyModel->sourceModel(), &QAbstractItemModel::modelReset, this, &DecisionView::updated);
@@ -123,10 +125,11 @@ void DecisionView::edit()
 void DecisionView::insert()
 {
     DecisionNewDialog dialog;
+    dialog.setAuthorityId(m_model->authorityId());
     int res = dialog.exec();
 
     if(res == DecisionNewDialog::Accepted) {
-        // do smth
+        refresh();
     }
 }
 
@@ -135,6 +138,7 @@ void DecisionView::refresh()
     ui->tV_decision->selectionModel()->clearSelection();
 
     m_proxyModel->invalidate();
+    ui->tV_decision->sortByColumn(-1, Qt::AscendingOrder);
     m_model->select();
 }
 

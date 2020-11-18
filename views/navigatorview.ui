@@ -55,13 +55,13 @@
      <property name="tabBarAutoHide">
       <bool>false</bool>
      </property>
-     <widget class="QWidget" name="tab_collection">
+     <widget class="QWidget" name="tab_nav">
       <attribute name="icon">
        <iconset resource="../resources.qrc">
-        <normaloff>:/icons/icons/collection-16.png</normaloff>:/icons/icons/collection-16.png</iconset>
+        <normaloff>:/icons/icons/icon-16.png</normaloff>:/icons/icons/icon-16.png</iconset>
       </attribute>
       <attribute name="title">
-       <string>Groups</string>
+       <string>Navigation</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
