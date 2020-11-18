@@ -5,8 +5,8 @@
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
 #include "models/documenttypemodel.h"
-#include "views/decisionview.h"
 #include "widgets/customcontextmenu.h"
+#include "widgets/decisiontab.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -47,15 +47,18 @@ void NavigatorView::initialize()
     ui->tV_authority->hideColumn(2);
     ui->tV_authority->expandAll();
 
-    connect(ui->tV_authority, &QTreeView::clicked, this, [=] { load(current); });
+    ui->tV_authority->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tV_authority, &QMenu::customContextMenuRequested, this, &NavigatorView::contextMenu);
+
+    connect(ui->tV_authority, &QTreeView::clicked, this, [=] { loadGroup(currentGroupIndex); });
 
     ui->tV_collection->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tV_collection, &QMenu::customContextMenuRequested, this, &NavigatorView::contextMenu);
 
     m_refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_collection, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(m_refreshShortcut, &QShortcut::activated, this, [=] { load(current); });
+    connect(m_refreshShortcut, &QShortcut::activated, this, [=] { loadGroup(currentGroupIndex); });
 
-    connect(ui->cB_collection, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NavigatorView::load);
+    connect(ui->cB_collection, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NavigatorView::loadGroup);
 }
 
 void NavigatorView::restoreViewState()
@@ -67,7 +70,7 @@ void NavigatorView::restoreViewState()
 
     int currentModel = settings->contains("Views/cB_collection") ? settings->value("Views/cB_collection").toInt() : 0;
     ui->cB_collection->setCurrentIndex(currentModel);
-    load(currentModel);
+    loadGroup(currentModel);
 
     ui->tV_collection->header()->restoreState(settings->value("Views/tV_collection").toByteArray());
 }
@@ -84,22 +87,40 @@ void NavigatorView::saveViewState()
     settings->endGroup();
 }
 
+void NavigatorView::setExplorer(ExplorerView *exp)
+{
+    _explorer = exp;
+    openIndexTab();
+}
+
 void NavigatorView::contextMenu(const QPoint &)
 {
     CustomContextMenu menu(CustomContextMenu::Refresh);
 
+    QAction openInNTab(tr("Open in new tab"));
+    connect(&openInNTab, &QAction::triggered, this, [=] {
+        QModelIndex currentIndex = ui->tV_authority->indexAt(ui->tV_authority->viewport()->mapFromGlobal(QCursor().pos()));
+
+        if(currentIndex.isValid()) {
+            DecisionTab *tab = new DecisionTab;
+            tab->model()->select();
+
+            explorer()->createTab(new DecisionTab, currentIndex.data().toString());
+        }
+    });
+    menu.insertAction(menu.action(CustomContextMenu::Refresh), &openInNTab);
+
     QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
     connect(refreshAction, &QAction::triggered, this, [=] {
-        load(ui->cB_collection->currentIndex());
+        loadGroup(ui->cB_collection->currentIndex());
     });
 
     menu.exec(QCursor().pos());
 }
 
 void NavigatorView::openIndexTab() {
-    DecisionView view;
-    _explorer->createTab(&view, tr("All desicions"));
+    // index tab page
 }
 
 void NavigatorView::refreshAuthority()
@@ -110,10 +131,10 @@ void NavigatorView::refreshAuthority()
 
 void NavigatorView::refreshGroup()
 {
-    load(current);
+    loadGroup(currentGroupIndex);
 }
 
-void NavigatorView::load(int collection)
+void NavigatorView::loadGroup(int collection)
 {
     delete m_collectionModel;
     delete m_collectionProxyModel;
@@ -122,21 +143,21 @@ void NavigatorView::load(int collection)
     case NavigatorView::GroupRecord:
         m_collectionModel = new RecordModel();
         m_collectionProxyModel = new RecordProxyModel;
-        current = NavigatorView::GroupRecord;
+        currentGroupIndex = NavigatorView::GroupRecord;
         break;
     case NavigatorView::GroupProtocol:
-        current = NavigatorView::GroupProtocol;
+        currentGroupIndex = NavigatorView::GroupProtocol;
         break;
     case NavigatorView::GroupDoctype:
         m_collectionModel = new DocumentTypeModel;
         m_collectionProxyModel = new QSortFilterProxyModel;
-        current = NavigatorView::GroupDoctype;
+        currentGroupIndex = NavigatorView::GroupDoctype;
         break;
     case NavigatorView::GroupYear:
-        current = NavigatorView::GroupYear;
+        currentGroupIndex = NavigatorView::GroupYear;
         break;
     case NavigatorView::GroupSubject:
-        current = NavigatorView::GroupSubject;
+        currentGroupIndex = NavigatorView::GroupSubject;
         break;
     }
 

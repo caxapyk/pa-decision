@@ -46,6 +46,7 @@ void MainWindow::initialize()
 {
     m_navigatorView = new NavigatorView(ui->splitter_layout);
     m_explorerView = new ExplorerView(ui->splitter_layout);
+    m_navigatorView->setExplorer(m_explorerView);
 
     ui->splitter_layout->setCollapsible(0, false);
 
@@ -53,9 +54,6 @@ void MainWindow::initialize()
     setupToolBar();
     setupStatusBar();
     restoreAppState();
-
-    m_navigatorView->setExplorer(m_explorerView);
-    m_navigatorView->openIndexTab();
 }
 
 void MainWindow::restoreAppState()

@@ -75,7 +75,7 @@ void ProtocolDetailsDialog::insert()
     }
 
     StandardReferenceModel *m = dynamic_cast<StandardReferenceModel*>(model());
-    connect(m->sourceModel(), &QSqlTableModel::primeInsert, this, &ProtocolDetailsDialog::setRecord);
+    connect(m->sourceModel(), &QSqlRelationalTableModel::primeInsert, this, &ProtocolDetailsDialog::setRecord);
 
     if(!m->insertRow(0)) {
         QMessageBox::critical(this,

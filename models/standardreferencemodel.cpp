@@ -9,8 +9,8 @@
 
 StandardReferenceModel::StandardReferenceModel(QObject *parent) : ReferenceModel(parent)
 {
-    m_internalModel = new QSqlTableModel;
-    m_internalModel->setEditStrategy(QSqlTableModel::OnFieldChange);
+    m_internalModel = new QSqlRelationalTableModel;
+    m_internalModel->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
     m_internalModel->setSort(0, Qt::AscendingOrder);
 }
 

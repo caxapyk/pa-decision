@@ -3,6 +3,7 @@
 
 #include "views/view.h"
 #include "views/decisionview.h"
+#include "widgets/tab.h"
 
 #include <QTabWidget>
 #include <QWidget>
@@ -19,7 +20,8 @@ public:
     explicit ExplorerView(QWidget *parent = nullptr);
     ~ExplorerView();
 
-    void createTab(View *view, const QString &title);
+    void createTab(Tab *tab, const QString &title);
+    void closeTab(int index);
 
 private:
     Ui::ExplorerView *ui;

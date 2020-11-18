@@ -1,11 +1,14 @@
 #include "explorerview.h"
 #include "ui_explorerview.h"
 
+#include "widgets/tab.h"
+
 ExplorerView::ExplorerView(QWidget *parent) :
     View(parent),
     ui(new Ui::ExplorerView)
 {
     ui->setupUi(this);
+    connect(ui->tW_panel, &QTabWidget::tabCloseRequested, this, &ExplorerView::closeTab);
 }
 
 ExplorerView::~ExplorerView()
@@ -13,9 +16,13 @@ ExplorerView::~ExplorerView()
     delete ui;
 }
 
-void ExplorerView::createTab(View *view, const QString &title)
+void ExplorerView::createTab(Tab *tab, const QString &title)
 {
-    QWidget *tab = new QWidget;
-
     ui->tW_panel->addTab(tab, title);
+}
+
+void ExplorerView::closeTab(int index)
+{
+    delete ui->tW_panel->widget(index);
+    ui->tW_panel->removeTab(index);
 }

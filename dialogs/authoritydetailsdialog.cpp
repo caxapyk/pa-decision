@@ -35,6 +35,11 @@ AuthorityDetailsDialog::~AuthorityDetailsDialog()
     delete m_mapper;
 }
 
+QString AuthorityDetailsDialog::getName() const
+{
+    return ui->lE_name->text();
+}
+
 void AuthorityDetailsDialog::reject()
 {
     bool commit = ui->lE_name->isModified() || ui->pTE_geo->document()->isModified();

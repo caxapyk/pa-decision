@@ -28,6 +28,25 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tW_panel">
+     <property name="styleSheet">
+      <string notr="true">QTabWidget {
+background-color: #333;
+color: white;
+}
+QTabWidget::pane {
+border: 1px solid gray;
+padding: 2px;
+margin:  0px;
+}
+QTabBar {
+border: 0px solid white;
+color: white;
+}
+QTabBar::tab:top:selected {
+color: white;
+background-color: #333;
+}</string>
+     </property>
      <property name="tabShape">
       <enum>QTabWidget::Triangular</enum>
      </property>

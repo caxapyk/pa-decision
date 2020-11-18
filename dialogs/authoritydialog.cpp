@@ -92,7 +92,7 @@ void AuthorityDialog::details()
     int res = dialog.exec();
 
     if(res == AuthorityDetailsDialog::Accepted) {
-        refresh();
+        m_proxyModel->setData(index, dialog.getName());
     }
 }
 

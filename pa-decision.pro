@@ -55,11 +55,13 @@ SOURCES += \
     views/view.cpp \
     widgets/colorrect.cpp \
     widgets/customcontextmenu.cpp \
+    widgets/decisiontab.cpp \
     widgets/dialogheader.cpp \
     widgets/paginator.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
-    widgets/statusbarpanel.cpp
+    widgets/statusbarpanel.cpp \
+    widgets/tab.cpp
 
 HEADERS += \
     application.h \
@@ -98,11 +100,13 @@ HEADERS += \
     views/view.h \
     widgets/colorrect.h \
     widgets/customcontextmenu.h \
+    widgets/decisiontab.h \
     widgets/dialogheader.h \
     widgets/paginator.h \
     widgets/referencebutton.h \
     widgets/searchpanel.h \
-    widgets/statusbarpanel.h
+    widgets/statusbarpanel.h \
+    widgets/tab.h
 
 FORMS += \
     dialogs/authoritydetailsdialog.ui \

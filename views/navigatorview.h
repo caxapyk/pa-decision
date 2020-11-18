@@ -30,14 +30,15 @@ public:
     void restoreViewState() override;
     void saveViewState() override;
 
-    int currentGroup() { return current; };
+    int currentGroup() { return currentGroupIndex; };
 
     void openIndexTab();
 
     void refreshAuthority();
     void refreshGroup();
 
-    void setExplorer(ExplorerView *exp) { _explorer = exp; };
+    ExplorerView *explorer() { return _explorer; };
+    void setExplorer(ExplorerView *exp);
 
 private:
     Ui::NavigatorView *ui;
@@ -49,13 +50,13 @@ private:
     ReferenceModel *m_collectionModel = nullptr;
     QSortFilterProxyModel *m_collectionProxyModel = nullptr;
 
-    int current = 0;
+    int currentGroupIndex = 0;
 
     ExplorerView *_explorer;
 
 private slots:
     void contextMenu(const QPoint &pos);
-    void load(int collection);
+    void loadGroup(int collection);
 };
 
 #endif // NAVIGATORVIEW_H

@@ -3,7 +3,7 @@
 
 #include "referencemodel.h"
 
-#include <QSqlTableModel>
+#include <QSqlRelationalTableModel>
 
 class StandardReferenceModel : public ReferenceModel
 {
@@ -35,7 +35,7 @@ public:
 signals:
 
 private:
-    QSqlTableModel *m_internalModel;
+    QSqlRelationalTableModel *m_internalModel;
     QString m_table;
 };
 
