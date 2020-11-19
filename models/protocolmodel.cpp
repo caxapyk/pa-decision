@@ -32,6 +32,9 @@ void ProtocolModel::clear()
 {
     beginResetModel();
     m_internalModel->clear();
+    m_internalModel->setTable("pad_protocol");
+    m_internalModel->setEditStrategy(QSqlTableModel::OnFieldChange);
+    m_internalModel->setSort(0, Qt::AscendingOrder);
     endResetModel();
 }
 
@@ -40,6 +43,7 @@ void ProtocolModel::select()
     beginResetModel();
     if(authorityId()) {
         m_internalModel->setFilter("authority_id=" + QString::number(authorityId()));
+        qDebug() << m_internalModel->filter();
     }
     m_internalModel->select();
     endResetModel();

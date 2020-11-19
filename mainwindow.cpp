@@ -145,5 +145,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::openDialog(QDialog *dialog) {
     dialog->exec();
-    delete dialog;
+
+    if(dialog != nullptr)
+        delete dialog;
 }

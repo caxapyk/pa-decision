@@ -105,8 +105,12 @@ bool ProtocolDialog::choiceButtonEnabled()
 
 int ProtocolDialog::choice(const QItemSelection &selected) const
 {
-    return 0;
-    //return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
+    if(!selected.isEmpty()) {
+        QModelIndex current = selected.indexes().at(0).siblingAtColumn(0);
+        return m_proxyModel->mapToSource(current).data().toInt();
+    }
+
+    return -1;
 }
 
 void ProtocolDialog::insert()

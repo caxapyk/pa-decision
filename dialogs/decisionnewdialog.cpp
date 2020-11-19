@@ -9,7 +9,6 @@ DecisionNewDialog::DecisionNewDialog(QWidget *parent) :
 
 DecisionNewDialog::~DecisionNewDialog()
 {
-
 }
 
 void DecisionNewDialog::setAuthorityId(int id)

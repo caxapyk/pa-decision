@@ -13,7 +13,7 @@ AuthorityModel::AuthorityModel(QObject *parent) : ReferenceModel(parent)
 
     setHeaderData(0, Qt::Horizontal, tr("Public Authorities"));
     setHeaderData(1, Qt::Horizontal, tr("Comment"));
-    setHeaderData(1, Qt::Horizontal, tr("ID"));
+    setHeaderData(2, Qt::Horizontal, tr("ID"));
 }
 
 AuthorityModel::~AuthorityModel()

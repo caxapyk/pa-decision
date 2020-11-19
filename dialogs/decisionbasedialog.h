@@ -5,6 +5,7 @@
 #include "models/decisionmodel.h"
 #include "models/authorityflatmodel.h"
 #include "models/documenttypemodel.h"
+#include "models/protocolmodel.h"
 
 #include <QComboBox>
 #include <QDialog>
@@ -26,16 +27,24 @@ public:
 protected:
     Ui::DecisionBaseDialog *ui;
 
-    void openExternal(QComboBox *cb, ReferenceDialog *dialog, int col);
+    void openExternal(QComboBox *cb, ReferenceDialog *dialog, int col = 0);
 
 private:
+    DecisionModel *m_decisionModel;
+
     AuthorityFlatModel *m_authorityModel;
     DocumentTypeModel *m_doctypeModel;
-    DecisionModel *m_decisionModel;
+    ProtocolModel *m_protocolModel;
 
     int recordId = 0;
 
     void initialize();
+
+    QVariant m_authorityId;
+
+private slots:
+    void authorityChanged(int index);
+    void protocolStateChanged(bool on);
 };
 
 #endif // DECISIONBASEDIALOG_H
