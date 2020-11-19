@@ -144,7 +144,13 @@ void RecordDialog::details()
     }
 
     RecordDetailsDialog dialog(index.data(Qt::UserRole));
-    dialog.exec();
+    int res = dialog.exec();
+
+    if(res == RecordDetailsDialog::Accepted) {
+         QString n = dialog.getFundName();
+         m_proxyModel->setData(index.siblingAtColumn(3), n);
+         setInfoText(n);
+    }
 }
 
 void RecordDialog::insert()

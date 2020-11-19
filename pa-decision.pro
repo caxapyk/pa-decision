@@ -39,11 +39,10 @@ SOURCES += \
     models/authoritymodel.cpp \
     models/authorityproxymodel.cpp \
     models/colorpickeritemdelegate.cpp \
-    models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
     models/decisionreadmodel.cpp \
     models/documenttypemodel.cpp \
-    models/protocolmodel.cpp \
+    models/protocolflatmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/referencemodel.cpp \
@@ -85,11 +84,10 @@ HEADERS += \
     models/authoritymodel.h \
     models/authorityproxymodel.h \
     models/colorpickeritemdelegate.h \
-    models/decisionmodel.h \
     models/decisionproxymodel.h \
     models/decisionreadmodel.h \
     models/documenttypemodel.h \
-    models/protocolmodel.h \
+    models/protocolflatmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/referencemodel.h \
@@ -115,7 +113,6 @@ FORMS += \
     dialogs/connectiondialog.ui \
     dialogs/decisionbasedialog.ui \
     dialogs/protocoldetailsdialog.ui \
-    dialogs/protocoldialog.ui \
     dialogs/recorddetailsdialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \

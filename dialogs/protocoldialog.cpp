@@ -100,7 +100,7 @@ void ProtocolDialog::details()
 
 bool ProtocolDialog::choiceButtonEnabled()
 {
-    return !isChoiceMode() || ui->tV_itemView->currentIndex().isValid();
+    return !isChoiceMode() || !ui->tV_itemView->selectionModel()->selection().isEmpty();
 }
 
 int ProtocolDialog::choice(const QItemSelection &selected) const

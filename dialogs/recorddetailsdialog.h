@@ -19,6 +19,8 @@ public:
     explicit RecordDetailsDialog(QVariant id, QWidget *parent = nullptr);
     ~RecordDetailsDialog();
 
+    QString getFundName() const;
+
 public slots:
     void reject() override;
 

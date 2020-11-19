@@ -5,6 +5,7 @@
 #include "dialogs/recorddialog.h"
 #include "dialogs/protocoldialog.h"
 
+#include <QDate>
 #include <QDebug>
 
 DecisionBaseDialog::DecisionBaseDialog(QWidget *parent) :
@@ -13,6 +14,7 @@ DecisionBaseDialog::DecisionBaseDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->dE_date->setDate(QDate::currentDate());
     initialize();
 }
 
@@ -20,7 +22,7 @@ DecisionBaseDialog::~DecisionBaseDialog()
 {
     delete ui;
 
-    delete m_decisionModel;
+    //delete m_decisionModel;
     delete m_authorityModel;
     delete m_doctypeModel;
     delete m_protocolModel;
@@ -29,19 +31,20 @@ DecisionBaseDialog::~DecisionBaseDialog()
 
 void DecisionBaseDialog::initialize()
 {
-    m_decisionModel = new DecisionModel;
+    //m_decisionModel = new DecisionModel;
 
     m_doctypeModel = new DocumentTypeModel;
     m_doctypeModel->select();
     ui->cB_doctype->setModel(m_doctypeModel);
     ui->cB_doctype->setModelColumn(1);
 
-    m_protocolModel = new ProtocolModel;
-    ui->cB_protocol->setModel(m_protocolModel);
+    m_protocolModel = new ProtocolFlatModel;
 
     m_authorityModel = new AuthorityFlatModel;
     ui->cB_authority->setModel(m_authorityModel);
+
     connect(ui->cB_authority, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionBaseDialog::authorityChanged);
+    connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionBaseDialog::accessChanged);
 
     connect(ui->pB_doctype, &QPushButton::clicked, this, [=] { openExternal(ui->cB_doctype, new DoctypeDialog); });
     connect(ui->pB_record, &QPushButton::clicked, this, [=] { openExternal(ui->cB_record, new RecordDialog, 2); });
@@ -60,6 +63,9 @@ void DecisionBaseDialog::authorityChanged(int index)
         if(ui->gB_protocol->isChecked()) {
             m_protocolModel->setAuthorityId(m_authorityId.toInt());
             m_protocolModel->select();
+
+            ui->cB_protocol->setModel(m_protocolModel);
+            ui->cB_protocol->setModelColumn(1);
         }
     }
 }
@@ -67,20 +73,25 @@ void DecisionBaseDialog::authorityChanged(int index)
 void DecisionBaseDialog::protocolStateChanged(bool on)
 {
     if(on) {
-        qDebug() << m_authorityId;
         if(m_authorityId.isValid()) {
             m_protocolModel->setAuthorityId(m_authorityId.toInt());
             m_protocolModel->select();
+            ui->cB_protocol->setModel(m_protocolModel);
+            ui->cB_protocol->setModelColumn(1);
 
-            qDebug() << "select" << "rows" << m_protocolModel->rowCount();
             ui->cB_protocol->setEnabled(true);
         }
     } else {
-        qDebug() << "clear";
         m_protocolModel->clear();
-        ui->cB_protocol->clear();
+        ui->cB_protocol->setModel(m_protocolModel);
     }
 }
+
+void DecisionBaseDialog::accessChanged(int index)
+{
+     ui->cB_access->setStyleSheet(QString("background-color:%1;").arg(index ? "green" : "red"));
+}
+
 void DecisionBaseDialog::openExternal(QComboBox *cb, ReferenceDialog *dialog, int col)
 {
     ReferenceModel *model = dynamic_cast<ReferenceModel*>(cb->model());

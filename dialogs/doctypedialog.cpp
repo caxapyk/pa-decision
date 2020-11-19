@@ -59,7 +59,7 @@ void DoctypeDialog::saveDialogState()
 
 bool DoctypeDialog::choiceButtonEnabled()
 {
-    return isChoiceMode() && ui->tV_itemView->currentIndex().isValid();
+    return !isChoiceMode() || !ui->tV_itemView->selectionModel()->selection().isEmpty();
 }
 
 int DoctypeDialog::choice(const QItemSelection &selected) const

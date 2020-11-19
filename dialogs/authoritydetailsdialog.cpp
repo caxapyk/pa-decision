@@ -23,7 +23,14 @@ AuthorityDetailsDialog::AuthorityDetailsDialog(QVariant id, QWidget *parent) :
     m_mapper->toFirst();
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
-        m_mapper->submit();
+        if(ui->lE_name->text().length() > 0 && m_mapper->submit()) {
+            accept();
+        } else {
+            QMessageBox::warning(this,
+                                 tr("Authority details"),
+                                 tr("Could not save data."),
+                                 QMessageBox::Ok);
+        }
     });
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &AuthorityDetailsDialog::reject);
 }
