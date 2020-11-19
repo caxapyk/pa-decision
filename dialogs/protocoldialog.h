@@ -21,6 +21,10 @@ public:
     void restoreDialogState() override;
     void saveDialogState() override;
 
+    int exec() override;
+
+    void setAuthorityId(int id) { m_authorityId = id; };
+
 public slots:
     void insert() override;
 
@@ -29,7 +33,9 @@ private:
     QSortFilterProxyModel *m_proxyModel;
 
     QPushButton *pB_details;
-    DialogHeader *m_headerWidget;
+    DialogHeader *m_headerWidget = nullptr;
+
+    int m_authorityId = -1;
 
 private slots:
     void details();
@@ -40,7 +46,6 @@ protected:
 protected slots:
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
     virtual int choice(const QItemSelection &selected) const override;
-
 };
 
 #endif // PROTOCOLDIALOG_H

@@ -27,11 +27,6 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     addCommentButton();
     setCommentColumn(5);
 
-    m_headerWidget = new DialogHeader;
-    ui->hL_header->addWidget(m_headerWidget);
-
-    connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ProtocolDialog::loadByAuthorityId);
-
     m_model = new StandardReferenceModel;
     m_model->setTable("pad_protocol");
 
@@ -48,7 +43,6 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     m_model->setHeaderData(4, Qt::Horizontal, tr("Title"));
 
     setDialogModel(m_proxyModel);
-    loadByAuthorityId(m_headerWidget->id());
 }
 
 ProtocolDialog::~ProtocolDialog()
@@ -77,6 +71,22 @@ void ProtocolDialog::saveDialogState()
     settings->setValue("geometry", saveGeometry());
     settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();
+}
+
+int ProtocolDialog::exec()
+{
+    if(m_authorityId < 0) {
+        m_headerWidget = new DialogHeader;
+        ui->hL_header->addWidget(m_headerWidget);
+
+        connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ReferenceDialog::loadByAuthorityId);
+
+        loadByAuthorityId(m_headerWidget->id());
+    } else {
+        loadByAuthorityId(m_authorityId);
+    }
+
+    return ReferenceDialog::exec();
 }
 
 void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)

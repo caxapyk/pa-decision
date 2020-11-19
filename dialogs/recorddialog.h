@@ -22,6 +22,10 @@ public:
     void restoreDialogState() override;
     void saveDialogState() override;
 
+    int exec() override;
+
+    void setAuthorityId(int id) { m_authorityId = id; };
+
 public slots:
     void insert() override;
     void remove() override;
@@ -31,7 +35,9 @@ private:
     RecordProxyModel *m_proxyModel;
 
     QPushButton *pB_details;
-    DialogHeader *m_headerWidget;
+    DialogHeader *m_headerWidget = nullptr;
+
+    int m_authorityId = -1;
 
 protected:
     bool choiceButtonEnabled() override;

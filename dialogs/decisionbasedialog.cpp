@@ -26,6 +26,7 @@ DecisionBaseDialog::~DecisionBaseDialog()
     delete m_authorityModel;
     delete m_doctypeModel;
     delete m_protocolModel;
+    delete m_recordModel;
 }
 
 
@@ -38,6 +39,7 @@ void DecisionBaseDialog::initialize()
     ui->cB_doctype->setModel(m_doctypeModel);
     ui->cB_doctype->setModelColumn(1);
 
+    m_recordModel = new RecordFlatModel;
     m_protocolModel = new ProtocolFlatModel;
 
     m_authorityModel = new AuthorityFlatModel;
@@ -46,9 +48,9 @@ void DecisionBaseDialog::initialize()
     connect(ui->cB_authority, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionBaseDialog::authorityChanged);
     connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionBaseDialog::accessChanged);
 
-    connect(ui->pB_doctype, &QPushButton::clicked, this, [=] { openExternal(ui->cB_doctype, new DoctypeDialog); });
-    connect(ui->pB_record, &QPushButton::clicked, this, [=] { openExternal(ui->cB_record, new RecordDialog, 2); });
-    connect(ui->pB_protocol, &QPushButton::clicked, this, [=] { openExternal(ui->cB_protocol, new ProtocolDialog); });
+    connect(ui->pB_doctype, &QPushButton::clicked, this, &DecisionBaseDialog::openDoctypeDialog);
+    connect(ui->pB_protocol, &QPushButton::clicked, this,  &DecisionBaseDialog::openProtocolDialog);
+    connect(ui->pB_record, &QPushButton::clicked, this, &DecisionBaseDialog::openRecordDialog);
 
     connect(ui->gB_protocol, &QGroupBox::toggled, this, &DecisionBaseDialog::protocolStateChanged);
 
@@ -60,13 +62,21 @@ void DecisionBaseDialog::authorityChanged(int index)
     m_authorityId = m_authorityModel->index(index, 2).data();
 
     if(m_authorityId.isValid()) {
+        // load protocol
         if(ui->gB_protocol->isChecked()) {
+
             m_protocolModel->setAuthorityId(m_authorityId.toInt());
             m_protocolModel->select();
 
             ui->cB_protocol->setModel(m_protocolModel);
             ui->cB_protocol->setModelColumn(1);
         }
+
+        // load record
+        m_recordModel->setAuthorityId(m_authorityId.toInt());
+        m_recordModel->select();
+        ui->cB_record->setModel(m_recordModel);
+        ui->cB_record->setModelColumn(1);
     }
 }
 
@@ -74,6 +84,7 @@ void DecisionBaseDialog::protocolStateChanged(bool on)
 {
     if(on) {
         if(m_authorityId.isValid()) {
+
             m_protocolModel->setAuthorityId(m_authorityId.toInt());
             m_protocolModel->select();
             ui->cB_protocol->setModel(m_protocolModel);
@@ -84,6 +95,9 @@ void DecisionBaseDialog::protocolStateChanged(bool on)
     } else {
         m_protocolModel->clear();
         ui->cB_protocol->setModel(m_protocolModel);
+
+        m_recordModel->clear();
+        ui->cB_record->setModel(m_recordModel);
     }
 }
 
@@ -92,7 +106,31 @@ void DecisionBaseDialog::accessChanged(int index)
      ui->cB_access->setStyleSheet(QString("background-color:%1;").arg(index ? "green" : "red"));
 }
 
-void DecisionBaseDialog::openExternal(QComboBox *cb, ReferenceDialog *dialog, int col)
+void DecisionBaseDialog::openDoctypeDialog()
+{
+    DoctypeDialog dialog;
+    openExternalDialog(ui->cB_doctype, &dialog);
+}
+
+void DecisionBaseDialog::openProtocolDialog()
+{
+    ProtocolDialog dialog;
+    dialog.setAuthorityId(m_authorityId.toInt());
+
+    openExternalDialog(ui->cB_protocol, &dialog);
+}
+
+
+void DecisionBaseDialog::openRecordDialog()
+{
+    RecordDialog dialog;
+    dialog.setAuthorityId(m_authorityId.toInt());
+
+    openExternalDialog(ui->cB_record, &dialog);
+}
+
+
+void DecisionBaseDialog::openExternalDialog(QComboBox *cb, ReferenceDialog *dialog)
 {
     ReferenceModel *model = dynamic_cast<ReferenceModel*>(cb->model());
 
@@ -103,11 +141,9 @@ void DecisionBaseDialog::openExternal(QComboBox *cb, ReferenceDialog *dialog, in
         model->select();
 
         if(res == RecordDialog::Accepted) {
-            setChosenId(cb, dialog->currentChoice(), col);
+            setChosenId(cb, dialog->currentChoice());
         }
     }
-
-    delete dialog;
 }
 
 bool DecisionBaseDialog::setChosenId(QComboBox *cb, int id, int column)

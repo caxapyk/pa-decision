@@ -43,6 +43,7 @@ SOURCES += \
     models/decisionreadmodel.cpp \
     models/documenttypemodel.cpp \
     models/protocolflatmodel.cpp \
+    models/recordflatmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/referencemodel.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     models/decisionreadmodel.h \
     models/documenttypemodel.h \
     models/protocolflatmodel.h \
+    models/recordflatmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/referencemodel.h \

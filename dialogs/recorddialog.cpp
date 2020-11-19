@@ -30,11 +30,6 @@ RecordDialog::RecordDialog(QWidget *parent) :
     addCommentButton();
     setCommentColumn(1);
 
-    m_headerWidget = new DialogHeader;
-    ui->hL_header->addWidget(m_headerWidget);
-
-    connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ReferenceDialog::loadByAuthorityId);
-
     m_model = new RecordModel;
 
     m_proxyModel = new RecordProxyModel;
@@ -47,7 +42,6 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setDialogModel(m_proxyModel);
-    loadByAuthorityId(m_headerWidget->id());
 }
 
 RecordDialog::~RecordDialog()
@@ -77,6 +71,22 @@ void RecordDialog::saveDialogState()
     settings->setValue("geometry", saveGeometry());
     settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();
+}
+
+int RecordDialog::exec()
+{
+    if(m_authorityId < 0) {
+        m_headerWidget = new DialogHeader;
+        ui->hL_header->addWidget(m_headerWidget);
+
+        connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ReferenceDialog::loadByAuthorityId);
+
+        loadByAuthorityId(m_headerWidget->id());
+    } else {
+        loadByAuthorityId(m_authorityId);
+    }
+
+    return ReferenceDialog::exec();
 }
 
 void RecordDialog::selected(const QItemSelection &selected, const QItemSelection &)
@@ -115,15 +125,18 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
 bool RecordDialog::choiceButtonEnabled()
 {
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()).internalPointer());
-    bool e = !isChoiceMode() || node->level == RecordModel::RecordLevel;
 
-    return e;
+    return !isChoiceMode() || (node && node->level == RecordModel::RecordLevel);
 }
 
 int RecordDialog::choice(const QItemSelection &selected) const
 {
+    if(!selected.isEmpty()) {
+        QModelIndex current = selected.indexes().at(0).siblingAtColumn(2);
+        return m_proxyModel->mapToSource(current).data().toInt();
+    }
+
     return -1;
-   // return m_proxyModel->mapToSource(current).data(Qt::UserRole).toInt();
 }
 
 void RecordDialog::details()
