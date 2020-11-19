@@ -83,6 +83,8 @@ void ReferenceDialog::clearSelection()
 {
     _selected(QItemSelection(), QItemSelection());
     selected(QItemSelection(), QItemSelection());
+
+    ui->tV_itemView->setCurrentIndex(QModelIndex());
 }
 
 void ReferenceDialog::addCommentButton()
