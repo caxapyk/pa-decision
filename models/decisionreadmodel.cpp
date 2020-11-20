@@ -82,7 +82,7 @@ int DecisionReadModel::total()
     return 0;
 }
 
-bool DecisionReadModel::primeInsert(
+bool DecisionReadModel::save(
         const QVariant &record_id,
         const QVariant &authority_id,
         const QVariant &doctype_id,
@@ -92,11 +92,16 @@ bool DecisionReadModel::primeInsert(
         const QVariant &title,
         const QVariant &access,
         const QVariant &content,
-        const QVariant &comment)
+        const QVariant &comment,
+        const QVariant &id)
 {
     QSqlQuery query;
 
-    query.prepare(("INSERT INTO pad_decision (record_id, authority_id, doctype_id, protocol_id, date, number, title, access, content, comment) VALUES(?,?,?,?,?,?,?,?,?,?)"));
+    if(id.isValid()) {
+        query.prepare(("UPDATE pad_decision SET record_id=?, authority_id=?, doctype_id=?, protocol_id=?, date=?, number=?, title=?, access=?, content=?, comment=? WHERE id=?"));
+    } else {
+        query.prepare(("INSERT INTO pad_decision (record_id, authority_id, doctype_id, protocol_id, date, number, title, access, content, comment) VALUES(?,?,?,?,?,?,?,?,?,?)"));
+    }
     query.bindValue(0, record_id);
     query.bindValue(1, authority_id);
     query.bindValue(2, doctype_id);
@@ -108,8 +113,14 @@ bool DecisionReadModel::primeInsert(
     query.bindValue(8, content);
     query.bindValue(9, comment);
 
+    if(id.isValid()) {
+        query.bindValue(10, id);
+    }
+
     if(query.exec()) {
-        m_lastInsertId = query.lastInsertId();
+        if(!id.isValid()) {
+            m_lastInsertId = query.lastInsertId();
+        }
         return true;
     }
 

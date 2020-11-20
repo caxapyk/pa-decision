@@ -10,6 +10,7 @@
 #include <QDate>
 #include <QDebug>
 #include <QMessageBox>
+#include <QSqlRelationalDelegate>
 
 DecisionBaseDialog::DecisionBaseDialog(QWidget *parent) :
     DetailsDialog(parent),
@@ -31,6 +32,8 @@ DecisionBaseDialog::~DecisionBaseDialog()
     delete m_doctypeModel;
     delete m_protocolModel;
     delete m_recordModel;
+
+    delete m_mapper;
 }
 
 void DecisionBaseDialog::restoreDialogState()
@@ -62,6 +65,42 @@ void DecisionBaseDialog::initialize()
 
     m_authorityModel = new AuthorityFlatModel;
     ui->cB_authority->setModel(m_authorityModel);
+}
+
+int DecisionBaseDialog::exec()
+{
+    if(currentIndex().isValid()) {
+        setWindowTitle(tr("Edit decision"));
+
+        m_mapper = new QDataWidgetMapper;
+        m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+        m_mapper->setModel(model());
+
+        m_mapper->addMapping(ui->cB_record, 1);
+        m_mapper->addMapping(ui->cB_authority, 12);
+        m_mapper->addMapping(ui->cB_doctype, 3);
+        m_mapper->addMapping(ui->cB_protocol, 13);
+        m_mapper->addMapping(ui->dE_date, 5);
+        m_mapper->addMapping(ui->lE_number, 6);
+        m_mapper->addMapping(ui->lE_title, 7);
+        m_mapper->addMapping(ui->cB_access, 8);
+        m_mapper->addMapping(ui->tE_content, 9);
+        m_mapper->addMapping(ui->lE_comment, 10);
+
+        m_mapper->setCurrentIndex(currentIndex().row());
+
+        if(model()->index(0, 13).data().isValid()) {
+            ui->gB_protocol->setChecked(true);
+        }
+    } else {
+        setWindowTitle(tr("New decision"));
+
+        qDebug() << model()->authorityId();
+
+        //if(setChosenId(ui->cB_authority, model()->authorityId(), 2)) {
+        //    ui->cB_authority->setDisabled(true);
+        //}
+    }
 
     connect(ui->cB_authority, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionBaseDialog::authorityChanged);
     connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionBaseDialog::accessChanged);
@@ -73,46 +112,42 @@ void DecisionBaseDialog::initialize()
     connect(ui->gB_protocol, &QGroupBox::toggled, this, &DecisionBaseDialog::protocolStateChanged);
 
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &DecisionBaseDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &DecisionBaseDialog::save);
     connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &DecisionBaseDialog::accept);
 
     m_authorityModel->select();
+
+    return DetailsDialog::exec();
 }
 
 void DecisionBaseDialog::authorityChanged(int index)
 {
-    m_authorityId = m_authorityModel->index(index, 2).data();
+    // load protocol
+    if(ui->gB_protocol->isChecked()) {
 
-    if(m_authorityId.isValid()) {
-        // load protocol
-        if(ui->gB_protocol->isChecked()) {
+        m_protocolModel->setAuthorityId(model()->authorityId());
+        m_protocolModel->select();
 
-            m_protocolModel->setAuthorityId(m_authorityId.toInt());
-            m_protocolModel->select();
-
-            ui->cB_protocol->setModel(m_protocolModel);
-            ui->cB_protocol->setModelColumn(1);
-        }
-
-        // load record
-        m_recordModel->setAuthorityId(m_authorityId.toInt());
-        m_recordModel->select();
-        ui->cB_record->setModel(m_recordModel);
-        ui->cB_record->setModelColumn(1);
+        ui->cB_protocol->setModel(m_protocolModel);
+        ui->cB_protocol->setModelColumn(1);
     }
+
+    // load record
+    m_recordModel->setAuthorityId(model()->authorityId());
+    m_recordModel->select();
+    ui->cB_record->setModel(m_recordModel);
+    ui->cB_record->setModelColumn(1);
 }
 
 void DecisionBaseDialog::protocolStateChanged(bool on)
 {
     if(on) {
-        if(m_authorityId.isValid()) {
+        m_protocolModel->setAuthorityId(model()->authorityId());
+        m_protocolModel->select();
+        ui->cB_protocol->setModel(m_protocolModel);
+        ui->cB_protocol->setModelColumn(1);
 
-            m_protocolModel->setAuthorityId(m_authorityId.toInt());
-            m_protocolModel->select();
-            ui->cB_protocol->setModel(m_protocolModel);
-            ui->cB_protocol->setModelColumn(1);
-
-            ui->cB_protocol->setEnabled(true);
-        }
+        ui->cB_protocol->setEnabled(true);
     } else {
         m_protocolModel->clear();
         ui->cB_protocol->setModel(m_protocolModel);
@@ -133,7 +168,7 @@ void DecisionBaseDialog::openDoctypeDialog()
 void DecisionBaseDialog::openProtocolDialog()
 {
     ProtocolDialog dialog;
-    dialog.setAuthorityId(m_authorityId.toInt());
+    dialog.setAuthorityId(model()->authorityId());
 
     openExternalDialog(ui->cB_protocol, &dialog);
 }
@@ -142,7 +177,7 @@ void DecisionBaseDialog::openProtocolDialog()
 void DecisionBaseDialog::openRecordDialog()
 {
     RecordDialog dialog;
-    dialog.setAuthorityId(m_authorityId.toInt());
+    dialog.setAuthorityId(model()->authorityId());
 
     openExternalDialog(ui->cB_record, &dialog);
 }
@@ -183,6 +218,44 @@ bool DecisionBaseDialog::validate()
             && ui->cB_authority->currentIndex() >= 0 && ui->cB_doctype->currentIndex() >=0;
 
     return v;
+}
+
+void DecisionBaseDialog::save()
+{
+    if(!validate()) {
+        QMessageBox::critical(this,
+                              tr("New protocol"),
+                              tr("Could save decision. Fields are incorrect."),
+                              QMessageBox::Ok);
+
+        return;
+    }
+
+    DecisionReadModel *m = dynamic_cast<DecisionReadModel*>(model());
+    if(m) {
+        bool saved = m->save(
+                    m_recordModel->index(ui->cB_record->currentIndex(), 0).data(),
+                    m_authorityModel->index(ui->cB_authority->currentIndex(), 2).data(),
+                    m_doctypeModel->index(ui->cB_doctype->currentIndex(), 0).data(),
+                    m_protocolModel->index(ui->cB_protocol->currentIndex(), 0).data(),
+                    ui->dE_date->date(),
+                    ui->lE_number->text(),
+                    ui->lE_title->text(),
+                    ui->cB_access->currentIndex(),
+                    ui->tE_content->toHtml(),
+                    ui->lE_comment->text(),
+                    currentIndex().isValid() ? currentIndex().siblingAtColumn(0).data() : QVariant()
+                    );
+        if(saved) {
+            qDebug() << "saved" << m->lastInsertId();
+            accept();
+        } else {
+            QMessageBox::critical(this,
+                                  tr("Save decision"),
+                                  tr("Could not save decision"),
+                                  QMessageBox::Ok);
+        }
+    }
 }
 
 void DecisionBaseDialog::reject()

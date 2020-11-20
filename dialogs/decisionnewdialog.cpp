@@ -28,7 +28,7 @@ void DecisionNewDialog::setAuthorityId(int id)
 
 void DecisionNewDialog::insert()
 {
-    if(!validate()) {
+    /*if(!validate()) {
         QMessageBox::critical(this,
                               tr("New protocol"),
                               tr("Could not create new protocol - check all fields are correct."),
@@ -39,7 +39,7 @@ void DecisionNewDialog::insert()
 
     DecisionReadModel *m = dynamic_cast<DecisionReadModel*>(model());
     if(m) {
-        bool insert = m->primeInsert(
+        bool insert = m->save(
                     recordModel()->index(ui->cB_record->currentIndex(), 0).data(),
                     authorityModel()->index(ui->cB_authority->currentIndex(), 2).data(),
                     documentTypeModel()->index(ui->cB_doctype->currentIndex(), 0).data(),
@@ -49,7 +49,8 @@ void DecisionNewDialog::insert()
                     ui->lE_title->text(),
                     ui->cB_access->currentIndex(),
                     ui->tE_content->toHtml(),
-                    ui->lE_comment->text()
+                    ui->lE_comment->text(),
+                    QVariant()
                     );
         if(insert) {
             qDebug() << "saved" << m->lastInsertId();
@@ -60,5 +61,5 @@ void DecisionNewDialog::insert()
                                   tr("Could not create new decision"),
                                   QMessageBox::Ok);
         }
-    }
+    }*/
 }

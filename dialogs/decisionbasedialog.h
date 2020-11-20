@@ -8,6 +8,7 @@
 #include "models/protocolflatmodel.h"
 #include "models/recordflatmodel.h"
 
+#include <QDataWidgetMapper>
 #include <QComboBox>
 #include <QDialog>
 #include <QSqlRecord>
@@ -24,15 +25,12 @@ public:
     explicit DecisionBaseDialog(QWidget *parent = nullptr);
     ~DecisionBaseDialog();
 
+    int exec() override;
+
     void restoreDialogState();
     void saveDialogState();
 
     bool setChosenId(QComboBox *cb, int id, int column = 0);
-
-    AuthorityFlatModel *authorityModel() { return m_authorityModel; };
-    DocumentTypeModel *documentTypeModel() { return m_doctypeModel; };
-    ProtocolFlatModel *protocolModel() { return m_protocolModel; };
-    RecordFlatModel *recordModel() { return m_recordModel; };
 
     bool validate();
 
@@ -48,7 +46,7 @@ private:
     ProtocolFlatModel *m_protocolModel;
     RecordFlatModel *m_recordModel;
 
-    QVariant m_authorityId;
+    QDataWidgetMapper *m_mapper = nullptr;
 
     void initialize();
 
@@ -62,6 +60,8 @@ private slots:
     void openRecordDialog();
 
     void openExternalDialog(QComboBox *cb, ReferenceDialog *dialog);
+
+    void save();
 };
 
 #endif // DECISIONBASEDIALOG_H

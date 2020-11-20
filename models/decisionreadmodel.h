@@ -14,7 +14,7 @@ public:
     ~DecisionReadModel();
 
     int total();
-    bool primeInsert(
+    bool save(
             const QVariant &record_id,
             const QVariant &authority_id,
             const QVariant &doctype_id,
@@ -24,7 +24,8 @@ public:
             const QVariant &title,
             const QVariant &access,
             const QVariant &content,
-            const QVariant &comment);
+            const QVariant &comment,
+            const QVariant &id);
 
     bool primeDelete(int id);
 

@@ -2,8 +2,7 @@
 #include "ui_decisionview.h"
 
 #include "application.h"
-#include "dialogs/decisionnewdialog.h"
-#include "dialogs/decisioneditdialog.h"
+#include "dialogs/decisionbasedialog.h"
 #include "widgets/customcontextmenu.h"
 
 #include <QDebug>
@@ -123,23 +122,31 @@ void DecisionView::setupShortcuts()
 
 void DecisionView::edit()
 {
-    DecisionEditDialog dialog;
+    DecisionBaseDialog dialog;
+    dialog.setModel(m_model);
+    dialog.setCurrentIndex(m_proxyModel->mapToSource(ui->tV_decision->currentIndex()));
+    dialog.exec();
+
+    /*DecisionEditDialog dialog;
     QModelIndexList selected = ui->tV_decision->selectionModel()->selectedRows();
 
     dialog.setModel(m_model);
     dialog.setCurrentIndex(m_proxyModel->mapToSource(ui->tV_decision->currentIndex()));
-    dialog.exec();
+    dialog.exec();*/
 }
 
 void DecisionView::insert()
 {
-    DecisionNewDialog dialog;
+    qDebug() << m_model->authorityId();
+    DecisionBaseDialog dialog;
     dialog.setModel(m_model);
-    dialog.setAuthorityId(m_model->authorityId()); // ??????
+    dialog.exec();
 
-    int res = dialog.exec();
+    //dialog.setAuthorityId(m_model->authorityId()); // ??????
 
-    if(res == DecisionNewDialog::Accepted) {
+    //int res = dialog.exec();
+
+    //if(res == DecisionNewDialog::Accepted) {
         /*QVariant id = dialog.decisionModel()->lastInsertId();
         qDebug() << id;
 
@@ -148,7 +155,7 @@ void DecisionView::insert()
             dialog.setId(id.toInt());
             dialog.exec();
         }*/
-    }
+    //}
 }
 
 void DecisionView::refresh()
