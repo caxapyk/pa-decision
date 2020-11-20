@@ -1,6 +1,7 @@
 #ifndef DECISIONBASEDIALOG_H
 #define DECISIONBASEDIALOG_H
 
+#include "dialogs/detailsdialog.h"
 #include "dialogs/referencedialog.h"
 #include "models/authorityflatmodel.h"
 #include "models/documenttypemodel.h"
@@ -9,12 +10,13 @@
 
 #include <QComboBox>
 #include <QDialog>
+#include <QSqlRecord>
 
 namespace Ui {
 class DecisionBaseDialog;
 }
 
-class DecisionBaseDialog : public QDialog
+class DecisionBaseDialog : public DetailsDialog
 {
     Q_OBJECT
 
@@ -22,20 +24,29 @@ public:
     explicit DecisionBaseDialog(QWidget *parent = nullptr);
     ~DecisionBaseDialog();
 
+    void restoreDialogState();
+    void saveDialogState();
+
     bool setChosenId(QComboBox *cb, int id, int column = 0);
+
+    AuthorityFlatModel *authorityModel() { return m_authorityModel; };
+    DocumentTypeModel *documentTypeModel() { return m_doctypeModel; };
+    ProtocolFlatModel *protocolModel() { return m_protocolModel; };
+    RecordFlatModel *recordModel() { return m_recordModel; };
+
+    bool validate();
+
+public slots:
+    void reject() override;
 
 protected:
     Ui::DecisionBaseDialog *ui;
 
 private:
-    //DecisionModel *m_decisionModel;
-
     AuthorityFlatModel *m_authorityModel;
     DocumentTypeModel *m_doctypeModel;
     ProtocolFlatModel *m_protocolModel;
     RecordFlatModel *m_recordModel;
-
-    int recordId = 0;
 
     QVariant m_authorityId;
 

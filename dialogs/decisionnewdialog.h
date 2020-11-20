@@ -13,8 +13,8 @@ public:
 
     void setAuthorityId(int id);
 
-private:
-
+private slots:
+    void insert();
 };
 
 #endif // DECISIONNEWDIALOG_H

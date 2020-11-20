@@ -35,14 +35,15 @@ void DecisionReadModel::select()
     QSqlQuery query;
     query.prepare(QString(" \
                           SELECT \
-                          pad_decision.id, \
-                          pad_decision.date, \
-                          pad_decision.number, \
-                          pad_decision.title, \
-                          pad_decision.comment, \
-                          pad_doctype.color AS color \
+                          pad_decision.*, \
+                          pad_doctype.color AS color, \
+                          pad_authority.name AS authority_name, \
+                          pad_authority.name AS authority_name, \
+                          CONCAT(\"№\", pad_protocol.number, \" from \", pad_protocol.date, \" \", pad_protocol.title) AS protocol \
                           FROM pad_decision \
                           LEFT JOIN pad_doctype ON pad_decision.doctype_id=pad_doctype.id \
+                          LEFT JOIN pad_authority ON pad_decision.authority_id=pad_authority.id \
+                          LEFT JOIN pad_protocol ON pad_decision.protocol_id=pad_protocol.id \
                           %1 ORDER BY pad_decision.id DESC"
     ).arg(filter().isEmpty() ? QString() : filter()));
 
@@ -79,6 +80,58 @@ int DecisionReadModel::total()
     }
 
     return 0;
+}
+
+bool DecisionReadModel::primeInsert(
+        const QVariant &record_id,
+        const QVariant &authority_id,
+        const QVariant &doctype_id,
+        const QVariant &protocol_id,
+        const QVariant &date,
+        const QVariant &number,
+        const QVariant &title,
+        const QVariant &access,
+        const QVariant &content,
+        const QVariant &comment)
+{
+    QSqlQuery query;
+
+    query.prepare(("INSERT INTO pad_decision (record_id, authority_id, doctype_id, protocol_id, date, number, title, access, content, comment) VALUES(?,?,?,?,?,?,?,?,?,?)"));
+    query.bindValue(0, record_id);
+    query.bindValue(1, authority_id);
+    query.bindValue(2, doctype_id);
+    query.bindValue(3, protocol_id);
+    query.bindValue(4, date);
+    query.bindValue(5, number);
+    query.bindValue(6, title);
+    query.bindValue(7, access);
+    query.bindValue(8, content);
+    query.bindValue(9, comment);
+
+    if(query.exec()) {
+        m_lastInsertId = query.lastInsertId();
+        return true;
+    }
+
+    qDebug () << query.lastError().text();
+
+    return false;
+}
+
+bool DecisionReadModel::primeDelete(int id)
+{
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM pad_decision WHERE id=?");
+    query.bindValue(0, id);
+
+    if(query.exec()) {
+        return true;
+    }
+
+    qDebug () << query.lastError().text();
+
+    return false;
 }
 
 QVariant DecisionReadModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -121,7 +174,7 @@ QVariant DecisionReadModel::data(const QModelIndex &index, int role) const
     QModelIndex internalIndex = m_internalModel->index(index.row(), index.column());
 
     if(role == Qt::BackgroundColorRole) {
-            return QColor(internalIndex.siblingAtColumn(5).data().toString());
+            return QColor(internalIndex.siblingAtColumn(11).data().toString());
     }
 
     return m_internalModel->data(internalIndex, role);

@@ -3,9 +3,13 @@
 
 #include "application.h"
 #include "dialogs/decisionnewdialog.h"
+#include "dialogs/decisioneditdialog.h"
 #include "widgets/customcontextmenu.h"
 
+#include <QDebug>
 #include <QSettings>
+#include <QMessageBox>
+#include <QSqlQuery>
 
 DecisionView::DecisionView(QWidget *parent) :
     View(parent),
@@ -119,17 +123,31 @@ void DecisionView::setupShortcuts()
 
 void DecisionView::edit()
 {
+    DecisionEditDialog dialog;
+    QModelIndexList selected = ui->tV_decision->selectionModel()->selectedRows();
 
+    dialog.setModel(m_model);
+    dialog.setCurrentIndex(m_proxyModel->mapToSource(ui->tV_decision->currentIndex()));
+    dialog.exec();
 }
 
 void DecisionView::insert()
 {
     DecisionNewDialog dialog;
-    dialog.setAuthorityId(m_model->authorityId());
+    dialog.setModel(m_model);
+    dialog.setAuthorityId(m_model->authorityId()); // ??????
+
     int res = dialog.exec();
 
     if(res == DecisionNewDialog::Accepted) {
-        refresh();
+        /*QVariant id = dialog.decisionModel()->lastInsertId();
+        qDebug() << id;
+
+        if(id.isValid()) {
+            DecisionEditDialog dialog;
+            dialog.setId(id.toInt());
+            dialog.exec();
+        }*/
     }
 }
 
@@ -144,7 +162,19 @@ void DecisionView::refresh()
 
 void DecisionView::remove()
 {
+    QModelIndexList selected = ui->tV_decision->selectionModel()->selectedRows();
 
+    for(int i = 0; i < selected.count(); ++i) {
+        if(!m_model->primeDelete(selected.at(i).siblingAtColumn(0).data().toInt())) {
+            QMessageBox::warning(this,
+                    tr("Deleting item"),
+                    tr("Could not remove the item."),
+                    QMessageBox::Ok);
+            break;
+        }
+    }
+
+    refresh();
 }
 
 void DecisionView::selected(const QItemSelection &, const QItemSelection &)

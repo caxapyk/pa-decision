@@ -14,6 +14,21 @@ public:
     ~DecisionReadModel();
 
     int total();
+    bool primeInsert(
+            const QVariant &record_id,
+            const QVariant &authority_id,
+            const QVariant &doctype_id,
+            const QVariant &protocol_id,
+            const QVariant &date,
+            const QVariant &number,
+            const QVariant &title,
+            const QVariant &access,
+            const QVariant &content,
+            const QVariant &comment);
+
+    bool primeDelete(int id);
+
+    QVariant lastInsertId() { return m_lastInsertId; };
 
     void clear() override;
     void select() override;
@@ -32,6 +47,7 @@ public:
 
 private:
     QSqlQueryModel *m_internalModel;
+    QVariant m_lastInsertId;
 };
 
 #endif // DECISIONREADMODEL_H

@@ -16,7 +16,7 @@ ProtocolDetailsDialog::ProtocolDetailsDialog(QWidget *parent) :
     ui->dE_date->setDate(QDate::currentDate());
 
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &ProtocolDetailsDialog::reject);
-    connect(ui->dE_date, &QDateEdit::dateChanged, this, [=] { _form_changed = true; });
+    connect(ui->dE_date, &QDateEdit::dateChanged, this, [=] { dateChanged = true; });
 }
 
 ProtocolDetailsDialog::~ProtocolDetailsDialog()
@@ -103,10 +103,9 @@ void ProtocolDetailsDialog::setRecord(int, QSqlRecord &record)
     record.setGenerated("title", true);
 }
 
-
 void ProtocolDetailsDialog::reject()
 {
-    bool commit = ui->lE_title->isModified() || ui->lE_number->isModified() || _form_changed;
+    bool commit = ui->lE_title->isModified() || ui->lE_number->isModified() || dateChanged;
     if(commit) {
     int res = QMessageBox::critical(this,
         tr("Close without saving"),

@@ -1,46 +1,64 @@
 #include "decisionbasedialog.h"
 #include "ui_decisionbasedialog.h"
 
+#include "application.h"
+#include "dialogs/decisioneditdialog.h"
 #include "dialogs/doctypedialog.h"
 #include "dialogs/recorddialog.h"
 #include "dialogs/protocoldialog.h"
 
 #include <QDate>
 #include <QDebug>
+#include <QMessageBox>
 
 DecisionBaseDialog::DecisionBaseDialog(QWidget *parent) :
-    QDialog(parent),
+    DetailsDialog(parent),
     ui(new Ui::DecisionBaseDialog)
 {
     ui->setupUi(this);
+    restoreDialogState();
 
-    ui->dE_date->setDate(QDate::currentDate());
     initialize();
 }
 
 DecisionBaseDialog::~DecisionBaseDialog()
 {
+    saveDialogState();
+
     delete ui;
 
-    //delete m_decisionModel;
     delete m_authorityModel;
     delete m_doctypeModel;
     delete m_protocolModel;
     delete m_recordModel;
 }
 
+void DecisionBaseDialog::restoreDialogState()
+{
+    QSettings* settings = application->applicationSettings();
+    restoreGeometry(settings->value("DecisionBaseDialog/geometry").toByteArray());
+}
+
+void DecisionBaseDialog::saveDialogState()
+{
+    QSettings* settings = application->applicationSettings();
+
+    settings->beginGroup("DecisionBaseDialog");
+    settings->setValue("geometry", saveGeometry());
+    settings->endGroup();
+}
 
 void DecisionBaseDialog::initialize()
 {
-    //m_decisionModel = new DecisionModel;
+    ui->dE_date->setDate(QDate::currentDate());
+
+    m_recordModel = new RecordFlatModel;
+    m_protocolModel = new ProtocolFlatModel;
 
     m_doctypeModel = new DocumentTypeModel;
     m_doctypeModel->select();
     ui->cB_doctype->setModel(m_doctypeModel);
     ui->cB_doctype->setModelColumn(1);
-
-    m_recordModel = new RecordFlatModel;
-    m_protocolModel = new ProtocolFlatModel;
 
     m_authorityModel = new AuthorityFlatModel;
     ui->cB_authority->setModel(m_authorityModel);
@@ -53,6 +71,9 @@ void DecisionBaseDialog::initialize()
     connect(ui->pB_record, &QPushButton::clicked, this, &DecisionBaseDialog::openRecordDialog);
 
     connect(ui->gB_protocol, &QGroupBox::toggled, this, &DecisionBaseDialog::protocolStateChanged);
+
+    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &DecisionBaseDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &DecisionBaseDialog::accept);
 
     m_authorityModel->select();
 }
@@ -95,15 +116,12 @@ void DecisionBaseDialog::protocolStateChanged(bool on)
     } else {
         m_protocolModel->clear();
         ui->cB_protocol->setModel(m_protocolModel);
-
-        m_recordModel->clear();
-        ui->cB_record->setModel(m_recordModel);
     }
 }
 
 void DecisionBaseDialog::accessChanged(int index)
 {
-     ui->cB_access->setStyleSheet(QString("background-color:%1;").arg(index ? "green" : "red"));
+    ui->cB_access->setStyleSheet(QString("background-color:%1;").arg(index ? "green" : "red"));
 }
 
 void DecisionBaseDialog::openDoctypeDialog()
@@ -150,7 +168,6 @@ bool DecisionBaseDialog::setChosenId(QComboBox *cb, int id, int column)
 {
     QAbstractItemModel *model = cb->model();
     for (int i = 0; i < model->rowCount(); ++i) {
-        qDebug() << model->index(i, column).data() << "==" << id;
         if(model->index(i, column).data().toInt() == id) {
             cb->setCurrentIndex(i);
             return true;
@@ -158,4 +175,24 @@ bool DecisionBaseDialog::setChosenId(QComboBox *cb, int id, int column)
     }
 
     return false;
+}
+
+bool DecisionBaseDialog::validate()
+{
+    bool v = !ui->lE_number->text().isEmpty() && !ui->lE_title->text().isEmpty()
+            && ui->cB_authority->currentIndex() >= 0 && ui->cB_doctype->currentIndex() >=0;
+
+    return v;
+}
+
+void DecisionBaseDialog::reject()
+{
+    int res = QMessageBox::critical(this,
+                                    tr("Close decision"),
+                                    tr("Are you shure that you want to dicard all changes?"),
+                                    QMessageBox::No | QMessageBox::Yes);
+
+    if (res == QMessageBox::Yes) {
+        QDialog::reject();
+    }
 }

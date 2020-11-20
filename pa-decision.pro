@@ -24,6 +24,7 @@ SOURCES += \
     dialogs/authoritydialog.cpp \
     dialogs/connectiondialog.cpp \
     dialogs/decisionbasedialog.cpp \
+    dialogs/decisioneditdialog.cpp \
     dialogs/decisionnewdialog.cpp \
     dialogs/detailsdialog.cpp \
     dialogs/doctypedialog.cpp \
@@ -71,6 +72,7 @@ HEADERS += \
     dialogs/authoritydialog.h \
     dialogs/connectiondialog.h \
     dialogs/decisionbasedialog.h \
+    dialogs/decisioneditdialog.h \
     dialogs/decisionnewdialog.h \
     dialogs/detailsdialog.h \
     dialogs/doctypedialog.h \

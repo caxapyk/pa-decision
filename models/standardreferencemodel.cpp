@@ -38,7 +38,12 @@ void StandardReferenceModel::select()
     if(authorityId()) {
         m_internalModel->setFilter("authority_id=" + QString::number(authorityId()));
     }
-    m_internalModel->select();
+    bool s = m_internalModel->select();
+
+    if(!s) {
+        qDebug() << m_internalModel->lastError().text();
+    }
+
     endResetModel();
 }
 

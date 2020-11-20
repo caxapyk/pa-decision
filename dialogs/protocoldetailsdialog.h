@@ -28,7 +28,7 @@ private:
     Ui::ProtocolDetailsDialog *ui;
     QDataWidgetMapper *m_mapper = nullptr;
 
-    bool _form_changed = false;
+    bool dateChanged = false;
 
 private slots:
     void insert();

@@ -158,30 +158,23 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetDefaultConstraint</enum>
+       <widget class="QLineEdit" name="lE_title">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
         </property>
-        <item>
-         <widget class="QPlainTextEdit" name="plainTextEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="placeholderText">
-           <string>Decision title</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+        <property name="maxLength">
+         <number>255</number>
+        </property>
+        <property name="placeholderText">
+         <string>Decision title</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_10">
@@ -205,6 +198,9 @@
             <width>100</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="maxLength">
+           <number>50</number>
           </property>
          </widget>
         </item>
@@ -389,33 +385,6 @@ background-color:  #666;
       <attribute name="title">
        <string>Content</string>
       </attribute>
-      <widget class="QTextEdit" name="textEdit">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>618</width>
-         <height>186</height>
-        </rect>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_5">
-      <attribute name="icon">
-       <iconset resource="../resources.qrc">
-        <normaloff>:/icons/icons/scanner-16.png</normaloff>:/icons/icons/scanner-16.png</iconset>
-      </attribute>
-      <attribute name="title">
-       <string>Files</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tab_4">
-      <attribute name="title">
-       <string>Other</string>
-      </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
         <number>0</number>
@@ -433,9 +402,39 @@ background-color:  #666;
         <number>0</number>
        </property>
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit_2">
-         <property name="placeholderText">
+        <widget class="QTextEdit" name="tE_content">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/icons/icons/scanner-16.png</normaloff>:/icons/icons/scanner-16.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Files</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Other</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
           <string>Comment</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="lE_comment">
+         <property name="maxLength">
+          <number>255</number>
          </property>
         </widget>
        </item>
@@ -474,7 +473,7 @@ background-color:  #666;
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="standardButtons">
-        <set>QDialogButtonBox::Discard|QDialogButtonBox::Save</set>
+        <set>QDialogButtonBox::Discard|QDialogButtonBox::Ok|QDialogButtonBox::Save</set>
        </property>
       </widget>
      </item>
@@ -485,38 +484,5 @@ background-color:  #666;
  <resources>
   <include location="../resources.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>DecisionBaseDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>DecisionBaseDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

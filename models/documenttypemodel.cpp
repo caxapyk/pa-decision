@@ -11,7 +11,7 @@ DocumentTypeModel::DocumentTypeModel(QObject *parent) :
 {
    setTable("pad_doctype");
 
-   setHeaderData(1, Qt::Horizontal, tr("ID"));
+   setHeaderData(0, Qt::Horizontal, tr("ID"));
    setHeaderData(1, Qt::Horizontal, tr("Name"));
    setHeaderData(2, Qt::Horizontal, tr("Color"));
 
