@@ -41,18 +41,16 @@ protected:
     Ui::DecisionBaseDialog *ui;
 
 private:
-    AuthorityFlatModel *m_authorityModel;
-    DocumentTypeModel *m_doctypeModel;
-    ProtocolFlatModel *m_protocolModel;
-    RecordFlatModel *m_recordModel;
+    AuthorityFlatModel *m_authorityModel = nullptr;
+    DocumentTypeModel *m_doctypeModel = nullptr;
+    ProtocolFlatModel *m_protocolModel = nullptr;
+    RecordFlatModel *m_recordModel = nullptr;
 
     QDataWidgetMapper *m_mapper = nullptr;
 
-    void initialize();
-
 private slots:
     void accessChanged(int index);
-    void authorityChanged(int index);
+    //void authorityChanged(int index);
     void protocolStateChanged(bool on);
 
     void openDoctypeDialog();

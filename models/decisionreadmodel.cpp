@@ -3,6 +3,7 @@
 #include <QColor>
 #include <QDebug>
 #include <QSqlError>
+#include <QSqlRecord>
 #include <QSqlQuery>
 
 DecisionReadModel::DecisionReadModel(QObject *parent)
@@ -33,13 +34,27 @@ void DecisionReadModel::select()
     }
 
     QSqlQuery query;
-    query.prepare(QString(" \
+    query.prepare(tr(" \
                           SELECT \
-                          pad_decision.*, \
-                          pad_doctype.color AS color, \
-                          pad_authority.name AS authority_name, \
-                          pad_authority.name AS authority_name, \
-                          CONCAT(\"№\", pad_protocol.number, \" from \", pad_protocol.date, \" \", pad_protocol.title) AS protocol \
+                          pad_decision.id, \
+                          pad_doctype.name AS doctype, \
+                          pad_decision.date, \
+                          pad_decision.number, \
+                          pad_decision.title, \
+                          ( \
+                               SELECT \
+                               CONCAT(\"F.\", pad_fund.number, \" Inv.\", pad_inventory.number, \" R.\", pad_record.number) \
+                               FROM pad_record \
+                               JOIN pad_inventory ON pad_record.inventory_id=pad_inventory.id \
+                               JOIN pad_fund ON pad_inventory.fund_id=pad_fund.id \
+                               WHERE pad_record.id=pad_decision.record_id \
+                               ORDER BY CAST(pad_fund.number AS UNSIGNED), CAST(pad_inventory.number AS UNSIGNED), CAST(pad_record.number AS UNSIGNED) \
+                          ) AS record, \
+                          CONCAT(\"№\", pad_protocol.number, \" from \", pad_protocol.date, \" \", pad_protocol.title) AS protocol, \
+                          pad_decision.comment, \
+                          pad_decision.content, \
+                          pad_decision.access, \
+                          pad_doctype.color AS color \
                           FROM pad_decision \
                           LEFT JOIN pad_doctype ON pad_decision.doctype_id=pad_doctype.id \
                           LEFT JOIN pad_authority ON pad_decision.authority_id=pad_authority.id \
@@ -56,11 +71,16 @@ void DecisionReadModel::select()
     endResetModel();
 
     setHeaderData(0, Qt::Horizontal, tr("ID"));
-    setHeaderData(1, Qt::Horizontal, tr("Date"));
-    setHeaderData(2, Qt::Horizontal, tr("Number"));
-    setHeaderData(3, Qt::Horizontal, tr("Title"));
-    setHeaderData(4, Qt::Horizontal, tr("Comment"));
-    setHeaderData(5, Qt::Horizontal, tr("Color"));
+    setHeaderData(1, Qt::Horizontal, tr("Document type"));
+    setHeaderData(2, Qt::Horizontal, tr("Date"));
+    setHeaderData(3, Qt::Horizontal, tr("Number"));
+    setHeaderData(4, Qt::Horizontal, tr("Title"));
+    setHeaderData(5, Qt::Horizontal, tr("Archive record"));
+    setHeaderData(6, Qt::Horizontal, tr("Protocol"));
+    setHeaderData(7, Qt::Horizontal, tr("Comment"));
+    setHeaderData(8, Qt::Horizontal, tr("Content"));
+    setHeaderData(9, Qt::Horizontal, tr("Access"));
+    setHeaderData(10, Qt::Horizontal, tr("Color"));
 }
 
 int DecisionReadModel::total()
@@ -185,7 +205,8 @@ QVariant DecisionReadModel::data(const QModelIndex &index, int role) const
     QModelIndex internalIndex = m_internalModel->index(index.row(), index.column());
 
     if(role == Qt::BackgroundColorRole) {
-            return QColor(internalIndex.siblingAtColumn(11).data().toString());
+        QVariant color = internalIndex.siblingAtColumn(m_internalModel->record().indexOf("color")).data();
+        return QColor(color.toString());
     }
 
     return m_internalModel->data(internalIndex, role);
