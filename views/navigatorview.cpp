@@ -54,8 +54,6 @@ void NavigatorView::initialize()
 void NavigatorView::restoreViewState()
 {
     QSettings* settings = application->applicationSettings();
-
-    ui->splitter_nav->restoreState(settings->value("Views/splitter_nav").toByteArray());
     ui->tV_authority->header()->restoreState(settings->value("Views/tV_authority").toByteArray());
 }
 
@@ -64,7 +62,6 @@ void NavigatorView::saveViewState()
     QSettings* settings = application->applicationSettings();
 
     settings->beginGroup("Views");
-    settings->setValue("splitter_nav", ui->splitter_nav->saveState());
     settings->setValue("tV_authority", ui->tV_authority->header()->saveState());
     settings->endGroup();
 }

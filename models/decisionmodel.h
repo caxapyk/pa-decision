@@ -5,13 +5,13 @@
 
 #include <QSqlQueryModel>
 
-class DecisionReadModel : public ReferenceModel
+class DecisionModel : public ReferenceModel
 {
     Q_OBJECT
 
 public:
-    explicit DecisionReadModel(QObject *parent = nullptr);
-    ~DecisionReadModel();
+    explicit DecisionModel(QObject *parent = nullptr);
+    ~DecisionModel();
 
     int total();
     bool save(

@@ -1,7 +1,7 @@
 #ifndef DECISIONVIEW_H
 #define DECISIONVIEW_H
 
-#include "models/decisionreadmodel.h"
+#include "models/decisionmodel.h"
 #include "models/decisionproxymodel.h"
 #include "views/view.h"
 #include "widgets/paginator.h"
@@ -24,7 +24,7 @@ public:
     void restoreViewState() override;
     void saveViewState() override;
 
-    DecisionReadModel *model() { return m_model; };
+    DecisionModel *model() { return m_model; };
 
 public slots:
     void edit();
@@ -36,7 +36,7 @@ private:
     Ui::DecisionView *ui;
     Paginator *m_paginator;
 
-    DecisionReadModel *m_model;
+    DecisionModel *m_model;
     DecisionProxyModel *m_proxyModel;
 
     QShortcut *insertShortcut;

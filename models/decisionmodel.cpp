@@ -1,4 +1,4 @@
-#include "decisionreadmodel.h"
+#include "decisionmodel.h"
 
 #include <QColor>
 #include <QDebug>
@@ -6,26 +6,26 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 
-DecisionReadModel::DecisionReadModel(QObject *parent)
+DecisionModel::DecisionModel(QObject *parent)
     : ReferenceModel(parent)
 {
     m_internalModel = new QSqlQueryModel;
 }
 
-DecisionReadModel::~DecisionReadModel()
+DecisionModel::~DecisionModel()
 {
     clear();
     delete m_internalModel;
 }
 
-void DecisionReadModel::clear()
+void DecisionModel::clear()
 {
     beginResetModel();
     m_internalModel->clear();
     endResetModel();
 }
 
-void DecisionReadModel::select()
+void DecisionModel::select()
 {
     beginResetModel();
 
@@ -83,7 +83,7 @@ void DecisionReadModel::select()
     setHeaderData(10, Qt::Horizontal, tr("Color"));
 }
 
-int DecisionReadModel::total()
+int DecisionModel::total()
 {
     if(authorityId()) {
         where("authority_id=" + QString::number(authorityId()));
@@ -102,7 +102,7 @@ int DecisionReadModel::total()
     return 0;
 }
 
-bool DecisionReadModel::save(
+bool DecisionModel::save(
         const QVariant &record_id,
         const QVariant &authority_id,
         const QVariant &doctype_id,
@@ -149,7 +149,7 @@ bool DecisionReadModel::save(
     return false;
 }
 
-bool DecisionReadModel::primeDelete(int id)
+bool DecisionModel::primeDelete(int id)
 {
     QSqlQuery query;
 
@@ -165,12 +165,12 @@ bool DecisionReadModel::primeDelete(int id)
     return false;
 }
 
-QVariant DecisionReadModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant DecisionModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     return m_internalModel->headerData(section, orientation, role);
 }
 
-QModelIndex DecisionReadModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex DecisionModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent)) {
         return QModelIndex();
@@ -183,24 +183,24 @@ QModelIndex DecisionReadModel::index(int row, int column, const QModelIndex &par
     return QModelIndex();
 }
 
-QModelIndex DecisionReadModel::parent(const QModelIndex &) const
+QModelIndex DecisionModel::parent(const QModelIndex &) const
 {
     return QModelIndex();
 }
 
-int DecisionReadModel::rowCount(const QModelIndex &parent) const
+int DecisionModel::rowCount(const QModelIndex &parent) const
 {
     QModelIndex internalParent = m_internalModel->index(parent.row(), parent.column());
     return m_internalModel->rowCount(internalParent);
 }
 
-int DecisionReadModel::columnCount(const QModelIndex &parent) const
+int DecisionModel::columnCount(const QModelIndex &parent) const
 {
     QModelIndex internalIndex = m_internalModel->index(parent.row(), parent.column());
     return m_internalModel->columnCount(internalIndex);
 }
 
-QVariant DecisionReadModel::data(const QModelIndex &index, int role) const
+QVariant DecisionModel::data(const QModelIndex &index, int role) const
 {
     QModelIndex internalIndex = m_internalModel->index(index.row(), index.column());
 
@@ -212,7 +212,7 @@ QVariant DecisionReadModel::data(const QModelIndex &index, int role) const
     return m_internalModel->data(internalIndex, role);
 }
 
-bool DecisionReadModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+bool DecisionModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
 {
     return m_internalModel->setHeaderData(section, orientation, value, role);
 }

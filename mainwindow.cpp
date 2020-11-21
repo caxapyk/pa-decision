@@ -31,7 +31,7 @@ MainWindow::~MainWindow()
     delete m_navigatorView;
     delete m_explorerView;
     delete m_statusBarPanel;
-    delete m_searchPanel;
+    //delete m_searchPanel;
 
     delete action_edit;
     delete action_new;
@@ -40,7 +40,7 @@ MainWindow::~MainWindow()
     delete action_refresh;
     delete action_tree;
 
-    delete m_searchShortcut;
+    //delete m_searchShortcut;
 }
 
 void MainWindow::initialize()
@@ -70,10 +70,10 @@ void MainWindow::restoreAppState()
 
 void MainWindow::setupShortcuts()
 {
-    m_searchShortcut = new QShortcut(QKeySequence::Find, this);
-    connect(m_searchShortcut, &QShortcut::activated, this, [=] {
+    //m_searchShortcut = new QShortcut(QKeySequence::Find, this);
+    /*connect(m_searchShortcut, &QShortcut::activated, this, [=] {
         m_searchPanel->setFocus();
-    });
+    });*/
 }
 
 void MainWindow::setupStatusBar()
@@ -87,14 +87,13 @@ void MainWindow::setupStatusBar()
 void MainWindow::setupToolBar()
 {
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
-    connect(action_new, &QAction::triggered, this, [=] { openDialog(new DecisionNewDialog); });
+    action_new->setDisabled(true);
 
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
     action_print->setDisabled(true);
 
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
     action_edit->setDisabled(true);
-    //connect(action_edit, &QAction::triggered, m_decisionView, &DecisionView::edit);
 
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
@@ -126,8 +125,8 @@ void MainWindow::setupToolBar()
     connect(m_referenceButton->actionSubject(), &QAction::triggered, this, [=] { openDialog(new SubjectDialog); });
     ui->toolBar->addWidget(m_referenceButton);
 
-    m_searchPanel = new SearchPanel;
-    ui->toolBar->addWidget(m_searchPanel);
+    //m_searchPanel = new SearchPanel;
+    //ui->toolBar->addWidget(m_searchPanel);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

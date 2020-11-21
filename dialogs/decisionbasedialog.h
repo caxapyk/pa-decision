@@ -34,7 +34,10 @@ public:
 
     bool validate();
 
+    QVariant id() const { return m_id; };
+
 public slots:
+    void accept() override;
     void reject() override;
 
 protected:
@@ -47,6 +50,8 @@ private:
     RecordFlatModel *m_recordModel = nullptr;
 
     QDataWidgetMapper *m_mapper = nullptr;
+
+    QVariant m_id;
 
 private slots:
     void accessChanged(int index);

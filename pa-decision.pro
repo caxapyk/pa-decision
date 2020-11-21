@@ -40,8 +40,8 @@ SOURCES += \
     models/authoritymodel.cpp \
     models/authorityproxymodel.cpp \
     models/colorpickeritemdelegate.cpp \
+    models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
-    models/decisionreadmodel.cpp \
     models/documenttypemodel.cpp \
     models/protocolflatmodel.cpp \
     models/recordflatmodel.cpp \
@@ -87,8 +87,8 @@ HEADERS += \
     models/authoritymodel.h \
     models/authorityproxymodel.h \
     models/colorpickeritemdelegate.h \
+    models/decisionmodel.h \
     models/decisionproxymodel.h \
-    models/decisionreadmodel.h \
     models/documenttypemodel.h \
     models/protocolflatmodel.h \
     models/recordflatmodel.h \

@@ -43,9 +43,9 @@ private:
 
     ReferenceButton *m_referenceButton;
     StatusBarPanel *m_statusBarPanel;
-    SearchPanel *m_searchPanel;
+    //SearchPanel *m_searchPanel;
 
-    QShortcut *m_searchShortcut;
+    //QShortcut *m_searchShortcut;
 
     void initialize();
     void restoreAppState();

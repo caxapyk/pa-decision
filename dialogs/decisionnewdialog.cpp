@@ -1,7 +1,7 @@
 #include "decisionnewdialog.h"
 #include "ui_decisionbasedialog.h"
 
-#include "models/decisionreadmodel.h"
+#include "models/decisionmodel.h"
 
 #include <QDebug>
 #include <QMessageBox>
@@ -37,7 +37,7 @@ void DecisionNewDialog::insert()
         return;
     }
 
-    DecisionReadModel *m = dynamic_cast<DecisionReadModel*>(model());
+    DecisionModel *m = dynamic_cast<DecisionModel*>(model());
     if(m) {
         bool insert = m->save(
                     recordModel()->index(ui->cB_record->currentIndex(), 0).data(),

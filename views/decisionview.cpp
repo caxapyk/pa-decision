@@ -42,7 +42,7 @@ DecisionView::~DecisionView()
 
 void DecisionView::initialize()
 {
-    m_model = new DecisionReadModel;
+    m_model = new DecisionModel;
 
     m_proxyModel = new DecisionProxyModel;
     m_proxyModel->setSourceModel(m_model);
@@ -126,36 +126,13 @@ void DecisionView::edit()
     dialog.setModel(m_model);
     dialog.setCurrentIndex(m_proxyModel->mapToSource(ui->tV_decision->currentIndex()));
     dialog.exec();
-
-    /*DecisionEditDialog dialog;
-    QModelIndexList selected = ui->tV_decision->selectionModel()->selectedRows();
-
-    dialog.setModel(m_model);
-    dialog.setCurrentIndex(m_proxyModel->mapToSource(ui->tV_decision->currentIndex()));
-    dialog.exec();*/
 }
 
 void DecisionView::insert()
 {
-    qDebug() << m_model->authorityId();
     DecisionBaseDialog dialog;
     dialog.setModel(m_model);
     dialog.exec();
-
-    //dialog.setAuthorityId(m_model->authorityId()); // ??????
-
-    //int res = dialog.exec();
-
-    //if(res == DecisionNewDialog::Accepted) {
-        /*QVariant id = dialog.decisionModel()->lastInsertId();
-        qDebug() << id;
-
-        if(id.isValid()) {
-            DecisionEditDialog dialog;
-            dialog.setId(id.toInt());
-            dialog.exec();
-        }*/
-    //}
 }
 
 void DecisionView::refresh()

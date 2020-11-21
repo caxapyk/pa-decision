@@ -82,6 +82,8 @@ int DecisionBaseDialog::exec()
     if(currentIndex().isValid()) {
         setWindowTitle(tr("Edit decision"));
 
+        m_id = currentIndex().siblingAtColumn(0).data();
+
         m_mapper = new QDataWidgetMapper;
         m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
         m_mapper->setModel(model());
@@ -97,7 +99,7 @@ int DecisionBaseDialog::exec()
 
         m_mapper->setCurrentIndex(currentIndex().row());
 
-        if(model()->index(0, 6).data().isValid()) {
+        if(!model()->index(currentIndex().row(), 6).data().toString().isEmpty()) {
             m_protocolModel->select();
 
             ui->cB_protocol->setModel(m_protocolModel);
@@ -230,15 +232,16 @@ void DecisionBaseDialog::save()
 {
     if(!validate()) {
         QMessageBox::critical(this,
-                              tr("New protocol"),
+                              tr("New decision"),
                               tr("Could save decision. Fields are incorrect."),
                               QMessageBox::Ok);
 
         return;
     }
 
-    DecisionReadModel *m = dynamic_cast<DecisionReadModel*>(model());
+    DecisionModel *m = dynamic_cast<DecisionModel*>(model());
     if(m) {
+        qDebug() << id();
         bool saved = m->save(
                     m_recordModel->index(ui->cB_record->currentIndex(), 0).data(),
                     m_authorityModel->index(ui->cB_authority->currentIndex(), 2).data(),
@@ -250,11 +253,13 @@ void DecisionBaseDialog::save()
                     ui->cB_access->currentIndex(),
                     ui->tE_content->toHtml(),
                     ui->lE_comment->text(),
-                    currentIndex().isValid() ? currentIndex().siblingAtColumn(0).data() : QVariant()
+                    id().isValid() ? id() : QVariant()
                     );
         if(saved) {
-            qDebug() << "saved" << m->lastInsertId();
-            accept();
+            if(!id().isValid()) {
+                m_id = m->lastInsertId();
+            }
+            setWindowTitle(tr("Edit decision"));
         } else {
             QMessageBox::critical(this,
                                   tr("Save decision"),
@@ -262,6 +267,12 @@ void DecisionBaseDialog::save()
                                   QMessageBox::Ok);
         }
     }
+}
+
+void DecisionBaseDialog::accept()
+{
+    save();
+    DetailsDialog::accept();
 }
 
 void DecisionBaseDialog::reject()
