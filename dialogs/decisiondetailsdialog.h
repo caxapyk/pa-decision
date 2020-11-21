@@ -14,16 +14,16 @@
 #include <QSqlRecord>
 
 namespace Ui {
-class DecisionBaseDialog;
+class DecisionDetailsDialog;
 }
 
-class DecisionBaseDialog : public DetailsDialog
+class DecisionDetailsDialog : public DetailsDialog
 {
     Q_OBJECT
 
 public:
-    explicit DecisionBaseDialog(QWidget *parent = nullptr);
-    ~DecisionBaseDialog();
+    explicit DecisionDetailsDialog(QVariant id = QVariant(), QWidget *parent = nullptr);
+    ~DecisionDetailsDialog();
 
     int exec() override;
 
@@ -41,21 +41,24 @@ public slots:
     void reject() override;
 
 protected:
-    Ui::DecisionBaseDialog *ui;
+    Ui::DecisionDetailsDialog *ui;
 
 private:
-    AuthorityFlatModel *m_authorityModel = nullptr;
-    DocumentTypeModel *m_doctypeModel = nullptr;
-    ProtocolFlatModel *m_protocolModel = nullptr;
-    RecordFlatModel *m_recordModel = nullptr;
+    QSqlRelationalTableModel *m_model;
+    AuthorityFlatModel *m_authorityModel;
+    DocumentTypeModel *m_doctypeModel;
+    ProtocolFlatModel *m_protocolModel;
+    RecordFlatModel *m_recordModel;
 
     QDataWidgetMapper *m_mapper = nullptr;
 
     QVariant m_id;
 
+    void initialize();
+
 private slots:
+    void authorityChanged(int index);
     void accessChanged(int index);
-    //void authorityChanged(int index);
     void protocolStateChanged(bool on);
 
     void openDoctypeDialog();

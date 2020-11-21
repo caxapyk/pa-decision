@@ -185,7 +185,7 @@ void ReferenceDialog::_selected(const QItemSelection &selected, const QItemSelec
 
 void ReferenceDialog::selected(const QItemSelection &selected, const QItemSelection &)
 {
-    insertShortcut->setEnabled(selected.isEmpty());
+    insertShortcut->setEnabled(true);
     editShortcut->setEnabled(!selected.isEmpty());
     removeShortcut->setEnabled(!selected.isEmpty());
     refreshShortcut->setEnabled(true);

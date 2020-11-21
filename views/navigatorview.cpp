@@ -36,11 +36,14 @@ void NavigatorView::initialize()
 
     m_authorityProxyModel = new AuthorityProxyModel;
     m_authorityProxyModel->setSourceModel(m_authorityModel);
+    m_authorityProxyModel->setDynamicSortFilter(false);
     ui->tV_authority->setModel(m_authorityProxyModel);
 
     ui->tV_authority->hideColumn(1);
     ui->tV_authority->hideColumn(2);
     ui->tV_authority->expandAll();
+
+    m_authorityProxyModel->sort(0, Qt::AscendingOrder);
 
     ui->tV_authority->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tV_authority, &QMenu::customContextMenuRequested, this, &NavigatorView::contextMenu);
@@ -48,28 +51,17 @@ void NavigatorView::initialize()
     connect(ui->tV_authority, &QTreeView::doubleClicked, this, &NavigatorView::openInNewTab);
 
     m_refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(m_refreshShortcut, &QShortcut::activated, this, [=] { m_authorityModel->select(); });
+    connect(m_refreshShortcut, &QShortcut::activated, this, &NavigatorView::refresh);
 }
 
 void NavigatorView::restoreViewState()
 {
-    QSettings* settings = application->applicationSettings();
-    ui->tV_authority->header()->restoreState(settings->value("Views/tV_authority").toByteArray());
+
 }
 
 void NavigatorView::saveViewState()
 {
-    QSettings* settings = application->applicationSettings();
 
-    settings->beginGroup("Views");
-    settings->setValue("tV_authority", ui->tV_authority->header()->saveState());
-    settings->endGroup();
-}
-
-void NavigatorView::setExplorer(ExplorerView *exp)
-{
-    _explorer = exp;
-    openIndexTab();
 }
 
 void NavigatorView::contextMenu(const QPoint &)
@@ -87,9 +79,7 @@ void NavigatorView::contextMenu(const QPoint &)
 
     QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
-    connect(refreshAction, &QAction::triggered, this, [=] {
-        m_authorityModel->select();
-    });
+    connect(refreshAction, &QAction::triggered, this, &NavigatorView::refresh);
 
     menu.exec(QCursor().pos());
 }
@@ -105,6 +95,18 @@ void NavigatorView::openInNewTab(const QModelIndex &index)
 
         explorer()->createTab(tab, index.data().toString(), icon);
     }
+}
+
+DecisionView* NavigatorView::currentDecisionView()
+{
+    DecisionTab *tab = dynamic_cast<DecisionTab*>(explorer()->currentTab());
+    return tab->view();
+}
+
+void NavigatorView::refresh()
+{
+    m_authorityModel->select();
+    ui->tV_authority->expandAll();
 }
 
 void NavigatorView::openIndexTab() {

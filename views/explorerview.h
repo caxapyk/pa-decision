@@ -22,6 +22,7 @@ public:
 
     void createTab(Tab *tab, const QString &title, QIcon icon = QIcon());
     void closeTab(int index);
+    Tab *currentTab();
 
 private:
     Ui::ExplorerView *ui;

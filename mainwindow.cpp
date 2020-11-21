@@ -88,17 +88,30 @@ void MainWindow::setupToolBar()
 {
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
     action_new->setDisabled(true);
+    connect(action_new, &QAction::triggered, this, [=] {
+        m_navigatorView->currentDecisionView()->insert();
+    });
 
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
     action_print->setDisabled(true);
 
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
     action_edit->setDisabled(true);
+    connect(action_edit, &QAction::triggered, this, [=] {
+        m_navigatorView->currentDecisionView()->edit();
+    });
 
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
+    connect(action_remove, &QAction::triggered, this, [=] {
+        m_navigatorView->currentDecisionView()->remove();
+    });
 
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
+    action_refresh->setDisabled(true);
+    connect(action_refresh, &QAction::triggered, this, [=] {
+        m_navigatorView->currentDecisionView()->refresh();
+    });
 
     action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Left panel"));
     action_tree->setCheckable(true);

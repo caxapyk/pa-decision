@@ -6,6 +6,7 @@
 #include "models/referencemodel.h"
 #include "views/view.h"
 #include "views/explorerview.h"
+#include "views/decisionview.h"
 
 #include <QShortcut>
 #include <QSortFilterProxyModel>
@@ -30,9 +31,10 @@ public:
     void saveViewState() override;
 
     void openIndexTab();
+    DecisionView *currentDecisionView();
 
     ExplorerView *explorer() { return _explorer; };
-    void setExplorer(ExplorerView *exp);
+    void setExplorer(ExplorerView *exp) { _explorer = exp; };
 
 private:
     Ui::NavigatorView *ui;
@@ -46,6 +48,7 @@ private:
 private slots:
     void contextMenu(const QPoint &pos);
     void openInNewTab(const QModelIndex &index);
+    void refresh();
 };
 
 #endif // NAVIGATORVIEW_H

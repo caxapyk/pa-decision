@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DecisionBaseDialog</class>
- <widget class="QDialog" name="DecisionBaseDialog">
+ <class>DecisionDetailsDialog</class>
+ <widget class="QDialog" name="DecisionDetailsDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -48,7 +48,7 @@
         <item>
          <widget class="QComboBox" name="cB_authority">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">

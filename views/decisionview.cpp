@@ -2,7 +2,7 @@
 #include "ui_decisionview.h"
 
 #include "application.h"
-#include "dialogs/decisionbasedialog.h"
+#include "dialogs/decisiondetailsdialog.h"
 #include "widgets/customcontextmenu.h"
 
 #include <QDebug>
@@ -122,17 +122,28 @@ void DecisionView::setupShortcuts()
 
 void DecisionView::edit()
 {
-    DecisionBaseDialog dialog;
-    dialog.setModel(m_model);
-    dialog.setCurrentIndex(m_proxyModel->mapToSource(ui->tV_decision->currentIndex()));
-    dialog.exec();
+    QVariant id = ui->tV_decision->currentIndex().siblingAtColumn(0).data();
+    qDebug() << "id passed: " << id;
+
+    DecisionDetailsDialog dialog(id);
+    //dialog.setModel(m_model);
+    //dialog.setCurrentIndex(m_proxyModel->mapToSource(ui->tV_decision->currentIndex()));
+    int res = dialog.exec();
+
+    if(res == DecisionDetailsDialog::Accepted) {
+        refresh();
+    }
 }
 
 void DecisionView::insert()
 {
-    DecisionBaseDialog dialog;
+    DecisionDetailsDialog dialog;
     dialog.setModel(m_model);
-    dialog.exec();
+    int res = dialog.exec();
+
+    if(res == DecisionDetailsDialog::Accepted) {
+        refresh();
+    }
 }
 
 void DecisionView::refresh()
@@ -148,13 +159,20 @@ void DecisionView::remove()
 {
     QModelIndexList selected = ui->tV_decision->selectionModel()->selectedRows();
 
-    for(int i = 0; i < selected.count(); ++i) {
-        if(!m_model->primeDelete(selected.at(i).siblingAtColumn(0).data().toInt())) {
-            QMessageBox::warning(this,
-                    tr("Deleting item"),
-                    tr("Could not remove the item."),
-                    QMessageBox::Ok);
-            break;
+    int res = QMessageBox::critical(this,
+                                    tr("Deleting items"),
+                                    tr("Are you shure that you want to delete %1 item(s)?").arg(selected.size()),
+                                    QMessageBox::No | QMessageBox::Yes);
+
+    if (res == QMessageBox::Yes) {
+        for(int i = 0; i < selected.count(); ++i) {
+            if(!m_model->primeDelete(selected.at(i).siblingAtColumn(0).data().toInt())) {
+                QMessageBox::warning(this,
+                                     tr("Deleting item"),
+                                     tr("Could not remove the item."),
+                                     QMessageBox::Ok);
+                break;
+            }
         }
     }
 
