@@ -19,7 +19,9 @@ AuthorityDetailsDialog::AuthorityDetailsDialog(QVariant id, QWidget *parent) :
     m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     m_mapper->setModel(m_model);
     m_mapper->addMapping(ui->lE_name, 1);
-    m_mapper->addMapping(ui->pTE_geo, 2);
+    m_mapper->addMapping(ui->lE_shortName, 2);
+    m_mapper->addMapping(ui->pTE_geo, 3);
+    m_mapper->addMapping(ui->lE_comment, 4);
     m_mapper->toFirst();
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {

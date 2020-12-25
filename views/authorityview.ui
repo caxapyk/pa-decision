@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>NavigatorView</class>
- <widget class="QWidget" name="NavigatorView">
+ <class>AuthorityView</class>
+ <widget class="QWidget" name="AuthorityView">
   <property name="geometry">
    <rect>
     <x>0</x>

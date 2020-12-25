@@ -12,18 +12,18 @@
 #include <QSortFilterProxyModel>
 
 namespace Ui {
-class NavigatorView;
+class AuthorityView;
 }
 
-class NavigatorView : public View
+class AuthorityView : public View
 {
     Q_OBJECT
 
 public:
     enum Tabs {TabGroup, TabSearch};
 
-    explicit NavigatorView(QWidget *parent = nullptr);
-    ~NavigatorView();
+    explicit AuthorityView(QWidget *parent = nullptr);
+    ~AuthorityView();
 
     void initialize() override;
 
@@ -37,18 +37,28 @@ public:
     void setExplorer(ExplorerView *exp) { _explorer = exp; };
 
 private:
-    Ui::NavigatorView *ui;
-    QShortcut *m_refreshShortcut;
+    Ui::AuthorityView *ui;
+    QShortcut *insertShortcut = nullptr;
+    QShortcut *editShortcut = nullptr;
+    QShortcut *removeShortcut = nullptr;
+    QShortcut *refreshShortcut = nullptr;
 
     AuthorityModel *m_authorityModel;
     AuthorityProxyModel *m_authorityProxyModel;
 
     ExplorerView *_explorer;
 
+    void setupShortcuts();
+
 private slots:
     void contextMenu(const QPoint &pos);
+    void selected(const QItemSelection &selected, const QItemSelection &deselected);
     void openInNewTab(const QModelIndex &index);
+    void insert();
+    void edit();
+    void remove();
     void refresh();
+    void details();
 };
 
 #endif // NAVIGATORVIEW_H

@@ -49,9 +49,9 @@ SOURCES += \
     models/standardreferencemodel.cpp \
     models/subjectmodel.cpp \
     utils/stringsort.cpp \
+    views/authorityview.cpp \
     views/decisionview.cpp \
     views/explorerview.cpp \
-    views/navigatorview.cpp \
     views/view.cpp \
     widgets/colorrect.cpp \
     widgets/customcontextmenu.cpp \
@@ -94,9 +94,9 @@ HEADERS += \
     models/standardreferencemodel.h \
     models/subjectmodel.h \
     utils/stringsort.h \
+    views/authorityview.h \
     views/decisionview.h \
     views/explorerview.h \
-    views/navigatorview.h \
     views/view.h \
     widgets/colorrect.h \
     widgets/customcontextmenu.h \
@@ -116,9 +116,9 @@ FORMS += \
     dialogs/recorddetailsdialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \
+    views/authorityview.ui \
     views/decisionview.ui \
     views/explorerview.ui \
-    views/navigatorview.ui \
     widgets/dialogheader.ui \
     widgets/paginator.ui \
     widgets/referencebutton.ui \

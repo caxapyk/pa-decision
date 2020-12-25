@@ -16,7 +16,6 @@ public:
     explicit ReferenceButton(QWidget *parent = nullptr);
     ~ReferenceButton();
 
-    QAction *actionAuthority() { return m_actionAuthority; };
     QAction *actionProtocol() { return m_actionProtocol; };
     QAction *actionRecord() { return m_actionRecord; };
     QAction *actionDoctype() { return m_actionDoctype; };
@@ -26,7 +25,6 @@ private:
     Ui::ReferenceButton *ui;
 
     QMenu *m_menu;
-    QAction *m_actionAuthority;
     QAction *m_actionProtocol;
     QAction *m_actionRecord;
     QAction *m_actionDoctype;

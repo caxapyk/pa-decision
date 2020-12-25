@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include "views/view.h"
-#include "views/navigatorview.h"
+#include "views/authorityview.h"
 #include "views/explorerview.h"
 #include "widgets/referencebutton.h"
 #include "widgets/statusbarpanel.h"
@@ -38,7 +38,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
-    NavigatorView *m_navigatorView;
+    AuthorityView *m_authorityView;
     ExplorerView *m_explorerView;
 
     ReferenceButton *m_referenceButton;

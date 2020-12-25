@@ -3,7 +3,7 @@
 
 #include "application.h"
 #include "dialogs/authoritydialog.h"
-#include "dialogs/decisionnewdialog.h"
+//#include "dialogs/decisionnewdialog.h"
 #include "dialogs/doctypedialog.h"
 #include "dialogs/connectiondialog.h"
 #include "dialogs/protocoldialog.h"
@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete m_navigatorView;
+    delete m_authorityView;
     delete m_explorerView;
     delete m_statusBarPanel;
     //delete m_searchPanel;
@@ -45,9 +45,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
-    m_navigatorView = new NavigatorView(ui->splitter_layout);
+    m_authorityView = new AuthorityView(ui->splitter_layout);
     m_explorerView = new ExplorerView(ui->splitter_layout);
-    m_navigatorView->setExplorer(m_explorerView);
+    m_authorityView->setExplorer(m_explorerView);
 
     ui->splitter_layout->setCollapsible(0, false);
 
@@ -89,7 +89,7 @@ void MainWindow::setupToolBar()
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
     action_new->setDisabled(true);
     connect(action_new, &QAction::triggered, this, [=] {
-        m_navigatorView->currentDecisionView()->insert();
+        m_authorityView->currentDecisionView()->insert();
     });
 
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
@@ -98,19 +98,19 @@ void MainWindow::setupToolBar()
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
     action_edit->setDisabled(true);
     connect(action_edit, &QAction::triggered, this, [=] {
-        m_navigatorView->currentDecisionView()->edit();
+        m_authorityView->currentDecisionView()->edit();
     });
 
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
     connect(action_remove, &QAction::triggered, this, [=] {
-        m_navigatorView->currentDecisionView()->remove();
+        m_authorityView->currentDecisionView()->remove();
     });
 
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
     action_refresh->setDisabled(true);
     connect(action_refresh, &QAction::triggered, this, [=] {
-        m_navigatorView->currentDecisionView()->refresh();
+        m_authorityView->currentDecisionView()->refresh();
     });
 
     action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Left panel"));
@@ -131,7 +131,6 @@ void MainWindow::setupToolBar()
     ui->toolBar->addSeparator();
 
     m_referenceButton = new ReferenceButton;
-    connect(m_referenceButton->actionAuthority(), &QAction::triggered, this, [=] { openDialog(new AuthorityDialog); });
     connect(m_referenceButton->actionProtocol(), &QAction::triggered, this, [=] { openDialog(new ProtocolDialog); });
     connect(m_referenceButton->actionRecord(), &QAction::triggered, this, [=] { openDialog(new RecordDialog); });
     connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, [=] { openDialog(new DoctypeDialog); });
