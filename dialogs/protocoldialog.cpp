@@ -10,7 +10,7 @@
 #include <QMenu>
 #include <QMessageBox>
 
-ProtocolDialog::ProtocolDialog(QWidget *parent) :
+ProtocolDialog::ProtocolDialog(QWidget *parent, const QVariant &recordId) :
     ReferenceDialog(parent)
 {
     restoreDialogState();
@@ -25,22 +25,20 @@ ProtocolDialog::ProtocolDialog(QWidget *parent) :
     connect(pB_details, &QPushButton::clicked, this, &ProtocolDialog::details);
 
     addCommentButton();
-    setCommentColumn(5);
+    setCommentColumn(6);
 
-    m_model = new StandardReferenceModel;
-    m_model->setTable("pad_protocol");
+    m_model = new ProtocolModel;
+    if(recordId.isValid()) {
+        m_model->setRecordId(recordId);
+    }
+    m_model->select();
 
     m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
     ui->tV_itemView->setModel(m_proxyModel);
     ui->tV_itemView->hideColumn(0);
-    ui->tV_itemView->hideColumn(1);
-    ui->tV_itemView->hideColumn(5);
-
-    m_model->setHeaderData(2, Qt::Horizontal, tr("Number"));
-    m_model->setHeaderData(3, Qt::Horizontal, tr("Date"));
-    m_model->setHeaderData(4, Qt::Horizontal, tr("Title"));
+    ui->tV_itemView->hideColumn(6);
 
     setDialogModel(m_proxyModel);
 }
@@ -75,15 +73,13 @@ void ProtocolDialog::saveDialogState()
 
 int ProtocolDialog::exec()
 {
-    if(m_authorityId < 0) {
-        m_headerWidget = new DialogHeader;
-        ui->hL_header->addWidget(m_headerWidget);
+    if(m_authorityId.isValid()) {
+        clearInfoText();
 
-        connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ReferenceDialog::loadByAuthorityId);
+        m_model->setAuthorityId(m_authorityId.toInt());
+        m_model->select();
 
-        loadByAuthorityId(m_headerWidget->id());
-    } else {
-        loadByAuthorityId(m_authorityId);
+        clearSelection();
     }
 
     return ReferenceDialog::exec();

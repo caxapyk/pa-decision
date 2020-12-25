@@ -4,6 +4,7 @@
 #include "application.h"
 #include "dialogs/recorddetailsdialog.h"
 #include "dialogs/referencedialog.h"
+#include "dialogs/protocoldialog.h"
 #include "widgets/customcontextmenu.h"
 
 #include <QDebug>
@@ -19,6 +20,7 @@ RecordDialog::RecordDialog(QWidget *parent) :
     restoreDialogState();
 
     setWindowTitle(tr("Archive records"));
+    setWindowIcon(QIcon(":/icons/icons/record-16.png"));
 
     pB_details = new QPushButton(tr("Details"));
     pB_details->setDisabled(true);
@@ -26,6 +28,13 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->vL_buttonGroup->addWidget(pB_details);
 
     connect(pB_details, &QPushButton::clicked, this, &RecordDialog::details);
+
+    pB_protocol = new QPushButton(tr("Protocols"));
+    pB_protocol->setDisabled(true);
+
+    ui->vL_buttonGroup->addWidget(pB_protocol);
+
+    connect(pB_protocol, &QPushButton::clicked, this, &RecordDialog::protocols);
 
     addCommentButton();
     setCommentColumn(1);
@@ -48,8 +57,8 @@ RecordDialog::~RecordDialog()
 {
     saveDialogState();
 
-    delete m_headerWidget;
     delete pB_details;
+    delete pB_protocol;
 
     delete m_model;
     delete m_proxyModel;
@@ -75,15 +84,13 @@ void RecordDialog::saveDialogState()
 
 int RecordDialog::exec()
 {
-    if(m_authorityId < 0) {
-        m_headerWidget = new DialogHeader;
-        ui->hL_header->addWidget(m_headerWidget);
+    if(m_authorityId.isValid()) {
+        clearInfoText();
 
-        connect(m_headerWidget, &DialogHeader::authorityChanged, this, &ReferenceDialog::loadByAuthorityId);
+        m_model->setAuthorityId(m_authorityId.toInt());
+        m_model->select();
 
-        loadByAuthorityId(m_headerWidget->id());
-    } else {
-        loadByAuthorityId(m_authorityId);
+        clearSelection();
     }
 
     return ReferenceDialog::exec();
@@ -100,6 +107,7 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
     refreshShortcut->setEnabled(true);
 
     pB_details->setEnabled(!selected.isEmpty());
+    pB_protocol->setEnabled(!selected.isEmpty() && node->level == RecordModel::RecordLevel);
     commentButton()->setEnabled(!selected.isEmpty());
 
     if(!selected.isEmpty()) {
@@ -164,6 +172,16 @@ void RecordDialog::details()
          m_proxyModel->setData(index.siblingAtColumn(3), n);
          setInfoText(n);
     }
+}
+
+void RecordDialog::protocols()
+{
+    QModelIndex index = ui->tV_itemView->currentIndex();
+    QVariant recordId = index.data(Qt::UserRole);
+
+    ProtocolDialog dialog(nullptr, recordId);
+
+    dialog.exec();
 }
 
 void RecordDialog::insert()

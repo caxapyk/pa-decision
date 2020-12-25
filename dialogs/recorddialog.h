@@ -24,7 +24,7 @@ public:
 
     int exec() override;
 
-    void setAuthorityId(int id) { m_authorityId = id; };
+    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
 
 public slots:
     void insert() override;
@@ -35,9 +35,8 @@ private:
     RecordProxyModel *m_proxyModel;
 
     QPushButton *pB_details;
-    DialogHeader *m_headerWidget = nullptr;
-
-    int m_authorityId = -1;
+    QPushButton *pB_protocol;
+    QVariant m_authorityId;
 
 protected:
     bool choiceButtonEnabled() override;
@@ -48,6 +47,7 @@ protected slots:
 
 private slots:
     void details();
+    void protocols();
 };
 
 #endif // RECORDDIALOG_H

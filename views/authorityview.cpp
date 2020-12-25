@@ -137,6 +137,11 @@ void AuthorityView::selected(const QItemSelection &selected, const QItemSelectio
     insertShortcut->setEnabled(selected.isEmpty() || current == root);
     editShortcut->setEnabled(!selected.isEmpty() && current !=root);
     removeShortcut->setEnabled(!selected.isEmpty() && current != root);
+
+    application->mainWindow()->action_record->setEnabled(!selected.isEmpty() && current != root);
+
+    // set authority id
+    m_authorityId = current.siblingAtColumn(0).data(Qt::UserRole);
 }
 
 void AuthorityView::openInNewTab(const QModelIndex &index)
@@ -230,6 +235,7 @@ void AuthorityView::refresh()
 {
     m_authorityModel->select();
     ui->tV_authority->expandAll();
+    selected(QItemSelection(), QItemSelection());
 }
 
 void AuthorityView::openIndexTab() {

@@ -2,6 +2,7 @@
 #include "ui_protocoldetailsdialog.h"
 
 #include "models/standardreferencemodel.h"
+#include "models/protocolmodel.h"
 
 #include <QDebug>
 #include <QDate>
@@ -35,10 +36,11 @@ int ProtocolDetailsDialog::exec()
             m_mapper->setModel(model());
             m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
-            m_mapper->addMapping(ui->lE_title, 4);
             m_mapper->addMapping(ui->lE_number, 2);
-            m_mapper->addMapping(ui->dE_date, 3);
-
+            m_mapper->addMapping(ui->sB_pages, 3);
+            m_mapper->addMapping(ui->lE_title, 4);
+            m_mapper->addMapping(ui->dE_date, 5);
+            m_mapper->addMapping(ui->lE_comment, 6);
             m_mapper->setCurrentIndex(currentIndex().row());
 
             connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
@@ -90,17 +92,25 @@ void ProtocolDetailsDialog::insert()
 
 void ProtocolDetailsDialog::setRecord(int, QSqlRecord &record)
 {
-    record.setValue("authority_id", model()->authorityId());
-    record.setGenerated("authority_id", true);
+    ProtocolModel *m = dynamic_cast<ProtocolModel*>(model());
+
+    record.setValue("record_id", m->recordId());
+    record.setGenerated("record_id", true);
 
     record.setValue("number", ui->lE_number->text());
     record.setGenerated("number", true);
 
+    record.setValue("pages", ui->sB_pages->value());
+    record.setGenerated("pages", true);
+
+    record.setValue("name", ui->lE_title->text());
+    record.setGenerated("name", true);
+
     record.setValue("date", ui->dE_date->date());
     record.setGenerated("date", true);
 
-    record.setValue("title",  ui->lE_title->text());
-    record.setGenerated("title", true);
+    record.setValue("comment", ui->lE_comment->text());
+    record.setGenerated("comment", true);
 }
 
 void ProtocolDetailsDialog::reject()

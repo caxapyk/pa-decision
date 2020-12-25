@@ -2,13 +2,12 @@
 #include "ui_mainwindow.h"
 
 #include "application.h"
-#include "dialogs/authoritydialog.h"
 //#include "dialogs/decisionnewdialog.h"
 #include "dialogs/doctypedialog.h"
 #include "dialogs/connectiondialog.h"
 #include "dialogs/protocoldialog.h"
 #include "dialogs/recorddialog.h"
-#include "dialogs/subjectdialog.h"
+#include "dialogs/subjtypedialog.h"
 
 #include <QDebug>
 
@@ -39,6 +38,7 @@ MainWindow::~MainWindow()
     delete action_remove;
     delete action_refresh;
     delete action_tree;
+    delete action_record;
 
     //delete m_searchShortcut;
 }
@@ -120,6 +120,14 @@ void MainWindow::setupToolBar()
          ui->splitter_layout->widget(0)->setHidden(!action_tree->isChecked());
     });
 
+    action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
+    action_record->setDisabled(true);
+    connect(action_record, &QAction::triggered, this, [=] {
+        RecordDialog *dialog = new RecordDialog;
+        dialog->setAuthorityId(m_authorityView->id());
+        openDialog(dialog);
+    });
+
     ui->toolBar->addAction(action_new);
     ui->toolBar->addAction(action_edit);
     ui->toolBar->addAction(action_remove);
@@ -130,11 +138,11 @@ void MainWindow::setupToolBar()
     ui->toolBar->addAction(action_tree);
     ui->toolBar->addSeparator();
 
+    ui->toolBar->addAction(action_record);
+
     m_referenceButton = new ReferenceButton;
-    connect(m_referenceButton->actionProtocol(), &QAction::triggered, this, [=] { openDialog(new ProtocolDialog); });
-    connect(m_referenceButton->actionRecord(), &QAction::triggered, this, [=] { openDialog(new RecordDialog); });
     connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, [=] { openDialog(new DoctypeDialog); });
-    connect(m_referenceButton->actionSubject(), &QAction::triggered, this, [=] { openDialog(new SubjectDialog); });
+    connect(m_referenceButton->actionSubjtype(), &QAction::triggered, this, [=] { openDialog(new SubjtypeDialog); });
     ui->toolBar->addWidget(m_referenceButton);
 
     //m_searchPanel = new SearchPanel;

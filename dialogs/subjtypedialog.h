@@ -2,25 +2,24 @@
 #define SUBJECTDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/subjectmodel.h"
-
+#include "models/subjtypemodel.h"
 #include <QDialog>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 
-class SubjectDialog : public ReferenceDialog
+class SubjtypeDialog : public ReferenceDialog
 {
     Q_OBJECT
 
 public:
-    explicit SubjectDialog(QWidget *parent = nullptr);
-    ~SubjectDialog();
+    explicit SubjtypeDialog(QWidget *parent = nullptr);
+    ~SubjtypeDialog();
 
     void restoreDialogState() override;
     void saveDialogState() override;
 
 private:
-    SubjectModel *m_model;
+    SubjtypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
 protected slots:

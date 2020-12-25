@@ -51,8 +51,6 @@ public slots:
     virtual void refresh();
     virtual void remove();
 
-    void loadByAuthorityId(int id);
-
 protected:
     Ui::ReferenceDialog *ui;
 

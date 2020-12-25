@@ -31,6 +31,7 @@ public:
     QAction *action_remove;
     QAction *action_refresh;
     QAction *action_tree;
+    QAction *action_record;
 
 public slots:
     void openDialog(QDialog *dialog);

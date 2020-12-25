@@ -1,4 +1,4 @@
-#include "subjectdialog.h"
+#include "subjtypedialog.h"
 #include "ui_referencedialog.h"
 
 #include "application.h"
@@ -8,17 +8,18 @@
 #include <QMenu>
 
 
-SubjectDialog::SubjectDialog(QWidget *parent) :
+SubjtypeDialog::SubjtypeDialog(QWidget *parent) :
     ReferenceDialog(parent)
 {
     restoreDialogState();
 
     setWindowTitle(tr("Subjects"));
+    setWindowIcon(QIcon(":/icons/icons/subject-16.png"));
 
     ui->label_infoIcon->setVisible(true);
     setInfoText(tr("Use subjects for grouping desicions!"));
 
-    m_model = new SubjectModel;
+    m_model = new SubjtypeModel;
     m_model->select();
 
     m_proxyModel = new QSortFilterProxyModel;
@@ -30,7 +31,7 @@ SubjectDialog::SubjectDialog(QWidget *parent) :
     setDialogModel(m_proxyModel);
 }
 
-SubjectDialog::~SubjectDialog()
+SubjtypeDialog::~SubjtypeDialog()
 {
     saveDialogState();
 
@@ -38,18 +39,18 @@ SubjectDialog::~SubjectDialog()
     delete m_proxyModel;
 }
 
-void SubjectDialog::restoreDialogState()
+void SubjtypeDialog::restoreDialogState()
 {
     QSettings* settings = application->applicationSettings();
-    restoreGeometry(settings->value("SubjectDialog/geometry").toByteArray());
+    restoreGeometry(settings->value("SubjtypeDialog/geometry").toByteArray());
     ui->tV_itemView->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
 }
 
-void SubjectDialog::saveDialogState()
+void SubjtypeDialog::saveDialogState()
 {
     QSettings* settings = application->applicationSettings();
 
-    settings->beginGroup("SubjectDialog");
+    settings->beginGroup("SubjtypeDialog");
     settings->setValue("geometry", saveGeometry());
     settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
     settings->endGroup();

@@ -25,12 +25,13 @@ SOURCES += \
     dialogs/decisiondetailsdialog.cpp \
     dialogs/detailsdialog.cpp \
     dialogs/doctypedialog.cpp \
+    dialogs/funddetailsdialog.cpp \
     dialogs/protocoldetailsdialog.cpp \
     dialogs/protocoldialog.cpp \
     dialogs/recorddetailsdialog.cpp \
     dialogs/recorddialog.cpp \
     dialogs/referencedialog.cpp \
-    dialogs/subjectdialog.cpp \
+    dialogs/subjtypedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     models/authorityflatmodel.cpp \
@@ -41,12 +42,13 @@ SOURCES += \
     models/decisionproxymodel.cpp \
     models/documenttypemodel.cpp \
     models/protocolflatmodel.cpp \
+    models/protocolmodel.cpp \
     models/recordflatmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/referencemodel.cpp \
     models/standardreferencemodel.cpp \
-    models/subjectmodel.cpp \
+    models/subjtypemodel.cpp \
     utils/stringsort.cpp \
     views/authorityview.cpp \
     views/decisionview.cpp \
@@ -70,12 +72,13 @@ HEADERS += \
     dialogs/decisiondetailsdialog.h \
     dialogs/detailsdialog.h \
     dialogs/doctypedialog.h \
+    dialogs/funddetailsdialog.h \
     dialogs/protocoldetailsdialog.h \
     dialogs/protocoldialog.h \
     dialogs/recorddetailsdialog.h \
     dialogs/recorddialog.h \
     dialogs/referencedialog.h \
-    dialogs/subjectdialog.h \
+    dialogs/subjtypedialog.h \
     mainwindow.h \
     models/authorityflatmodel.h \
     models/authoritymodel.h \
@@ -85,12 +88,13 @@ HEADERS += \
     models/decisionproxymodel.h \
     models/documenttypemodel.h \
     models/protocolflatmodel.h \
+    models/protocolmodel.h \
     models/recordflatmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/referencemodel.h \
     models/standardreferencemodel.h \
-    models/subjectmodel.h \
+    models/subjtypemodel.h \
     utils/stringsort.h \
     views/authorityview.h \
     views/decisionview.h \
@@ -110,6 +114,7 @@ FORMS += \
     dialogs/authoritydetailsdialog.ui \
     dialogs/connectiondialog.ui \
     dialogs/decisiondetailsdialog.ui \
+    dialogs/funddetailsdialog.ui \
     dialogs/protocoldetailsdialog.ui \
     dialogs/recorddetailsdialog.ui \
     dialogs/referencedialog.ui \

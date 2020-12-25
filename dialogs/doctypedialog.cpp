@@ -14,6 +14,8 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     restoreDialogState();
 
     setWindowTitle(tr("Document types"));
+    setWindowIcon(QIcon(":/icons/icons/doctype-16.png"));
+
     setInfoIconVisible();
     setInfoText(tr("Use color to highlight documents!"));
 

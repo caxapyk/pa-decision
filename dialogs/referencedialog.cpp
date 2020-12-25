@@ -114,20 +114,6 @@ QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label
     return QVariant(inputDialog.textValue());
 }
 
-void ReferenceDialog::loadByAuthorityId(int id)
-{
-    ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
-
-    if(model) {
-        clearInfoText();
-
-        model->setAuthorityId(id);
-        model->select();
-
-        clearSelection();
-    }
-}
-
 void ReferenceDialog::clearComment()
 {
     ui->label_comment->clear();

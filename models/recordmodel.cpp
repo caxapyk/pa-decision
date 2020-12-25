@@ -212,19 +212,22 @@ bool RecordModel::insertRows(int row, int count, const QModelIndex &parent)
             return false;
         }
         name = tr("New fund");
-        query.prepare("INSERT INTO pad_fund(authority_id, number) VALUES (?,?)");
-        query.bindValue(0, authorityId());
+        query.prepare("INSERT INTO pad_fund(number, name, authority_id) VALUES (?,?,?)");
+        query.bindValue(0, name);
         query.bindValue(1, name);
+        query.bindValue(2, authorityId());
     } else if(parentNode->level == RecordModel::FundLevel) {
         name = tr("New inventory");
-        query.prepare("INSERT INTO pad_inventory(number, fund_id) VALUES (?,?)");
+        query.prepare("INSERT INTO pad_inventory(number, name, fund_id) VALUES (?,?,?)");
         query.bindValue(0, name);
-        query.bindValue(1, parentNode->id);
+        query.bindValue(1, name);
+        query.bindValue(2, parentNode->id);
     } else if(parentNode->level == RecordModel::InventoryLevel) {
         name = tr("New record");
-        query.prepare("INSERT INTO pad_record(number, inventory_id) VALUES (?,?)");
+        query.prepare("INSERT INTO pad_record(number, name, inventory_id) VALUES (?,?,?)");
         query.bindValue(0, name);
-        query.bindValue(1, parentNode->id);
+        query.bindValue(1, name);
+        query.bindValue(2, parentNode->id);
     }
 
     query.exec();

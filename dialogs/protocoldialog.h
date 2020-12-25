@@ -2,10 +2,8 @@
 #define PROTOCOLDIALOG_H
 
 #include "dialogs/referencedialog.h"
-#include "models/standardreferencemodel.h"
-#include "widgets/dialogheader.h"
+#include "models/protocolmodel.h"
 
-#include <QDialog>
 #include <QDataWidgetMapper>
 #include <QPushButton>
 #include <QSortFilterProxyModel>
@@ -15,7 +13,7 @@ class ProtocolDialog : public ReferenceDialog
     Q_OBJECT
 
 public:
-    explicit ProtocolDialog(QWidget *parent = nullptr);
+    explicit ProtocolDialog(QWidget *parent = nullptr, const QVariant &recordId = QVariant());
     ~ProtocolDialog();
 
     void restoreDialogState() override;
@@ -23,19 +21,18 @@ public:
 
     int exec() override;
 
-    void setAuthorityId(int id) { m_authorityId = id; };
+    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
 
 public slots:
     void insert() override;
 
 private:
-    StandardReferenceModel *m_model;
+    ProtocolModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
     QPushButton *pB_details;
-    DialogHeader *m_headerWidget = nullptr;
 
-    int m_authorityId = -1;
+    QVariant m_authorityId;
 
 private slots:
     void details();

@@ -33,6 +33,8 @@ public:
     void openIndexTab();
     DecisionView *currentDecisionView();
 
+    QVariant id() const { return m_authorityId; };
+
     ExplorerView *explorer() { return _explorer; };
     void setExplorer(ExplorerView *exp) { _explorer = exp; };
 
@@ -47,6 +49,8 @@ private:
     AuthorityProxyModel *m_authorityProxyModel;
 
     ExplorerView *_explorer;
+
+    QVariant m_authorityId;
 
     void setupShortcuts();
 

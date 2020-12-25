@@ -13,16 +13,16 @@ DocumentTypeModel::DocumentTypeModel(QObject *parent) :
 
    setHeaderData(0, Qt::Horizontal, tr("ID"));
    setHeaderData(1, Qt::Horizontal, tr("Name"));
-   setHeaderData(2, Qt::Horizontal, tr("Color"));
+   //setHeaderData(2, Qt::Horizontal, tr("Color"));
 
    connect(sourceModel(), &QSqlTableModel::primeInsert, this, &DocumentTypeModel::setDefaults);
 }
 
 QVariant DocumentTypeModel::data(const QModelIndex &index, int role) const
 {
-    if(role == Qt::DecorationRole && index.column() == 1){
+    /*if(role == Qt::DecorationRole && index.column() == 1){
         return ColorRect::pixmap(QColor(index.siblingAtColumn(2).data().toString()), 16);
-    }
+    }*/
 
     return StandardReferenceModel::data(index, role);
 }
