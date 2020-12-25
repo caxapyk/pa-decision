@@ -21,7 +21,6 @@ SOURCES += \
     application.cpp \
     connection.cpp \
     dialogs/authoritydetailsdialog.cpp \
-    dialogs/authoritydialog.cpp \
     dialogs/connectiondialog.cpp \
     dialogs/decisiondetailsdialog.cpp \
     dialogs/detailsdialog.cpp \
@@ -67,7 +66,6 @@ HEADERS += \
     application.h \
     connection.h \
     dialogs/authoritydetailsdialog.h \
-    dialogs/authoritydialog.h \
     dialogs/connectiondialog.h \
     dialogs/decisiondetailsdialog.h \
     dialogs/detailsdialog.h \
