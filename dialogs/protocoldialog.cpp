@@ -11,8 +11,6 @@
 #include <QMenu>
 #include <QMessageBox>
 
-
-#include <QSqlError>
 ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
     TreeDialog(parent)
 {
@@ -76,7 +74,7 @@ int ProtocolDialog::exec()
     if(m_authorityId.isValid()) {
         clearInfoText();
 
-        m_model->setAuthorityId(m_authorityId.toInt());
+        //m_model->setAuthorityId(m_authorityId.toInt());
         m_model->select();
 
         clearSelection();
@@ -130,23 +128,19 @@ void ProtocolDialog::insert()
     int res = dialog.exec();
 
     if(res == ProtocolDetailsDialog::Accepted) {
-        QSqlRecord record = m_model->sourceModel()->record();
+        QSqlRecord record = m_model->record();
 
+        record.remove(0);
         record.setValue("record_id", m_model->recordId());
         record.setGenerated("record_id", true);
-
         record.setValue("number", dialog.getNumber());
         record.setGenerated("number", true);
-
         record.setValue("pages", dialog.getPages());
         record.setGenerated("pages", true);
-
         record.setValue("name", dialog.getName());
         record.setGenerated("name", true);
-
         record.setValue("date", dialog.getDate());
         record.setGenerated("date", true);
-
         record.setValue("comment", dialog.getComment());
         record.setGenerated("comment", true);
 
@@ -160,7 +154,6 @@ void ProtocolDialog::insert()
             ui->tV_itemView->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
             ui->tV_itemView->scrollTo(topLeft);
         } else {
-            qDebug() << m_model->sourceModel()->lastError().text();
             QMessageBox::critical(this,
                     tr("New protocol"),
                     tr("Could not create new protocol"),

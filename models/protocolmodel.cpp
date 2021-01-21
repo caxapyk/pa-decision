@@ -4,9 +4,10 @@
 #include <QSqlRecord>
 
 ProtocolModel::ProtocolModel(QObject *parent) :
-    StandardReferenceModel(parent)
+    QSqlTableModel(parent)
 {
     setTable("pad_protocol");
+    setEditStrategy(QSqlTableModel::OnRowChange);
 
     setHeaderData(0, Qt::Horizontal, tr("ID"));
     setHeaderData(1, Qt::Horizontal, tr("Record"));
@@ -20,5 +21,5 @@ ProtocolModel::ProtocolModel(QObject *parent) :
 void ProtocolModel::setRecordId(const QVariant &id)
 {
     m_recordId = id;
-    sourceModel()->setFilter("record_id=" +id.toString());
+    setFilter("record_id=" +id.toString());
 };

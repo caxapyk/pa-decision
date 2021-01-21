@@ -1,9 +1,9 @@
 #ifndef PROTOCOLMODEL_H
 #define PROTOCOLMODEL_H
 
-#include "models/standardreferencemodel.h"
+#include <QSqlTableModel>
 
-class ProtocolModel: public StandardReferenceModel
+class ProtocolModel: public QSqlTableModel
 {
     Q_OBJECT
 public:
