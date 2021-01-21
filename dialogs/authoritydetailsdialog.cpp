@@ -29,25 +29,27 @@ int AuthorityDetailsDialog::exec()
     model.setFilter("id=" + m_id.toString());
     model.select();
 
-    m_mapper = new QDataWidgetMapper;
-    m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    m_mapper->setModel(&model);
-    m_mapper->addMapping(ui->lE_name, 1);
-    m_mapper->addMapping(ui->lE_shortName, 2);
-    m_mapper->addMapping(ui->pTE_geo, 3);
-    m_mapper->addMapping(ui->lE_comment, 4);
-    m_mapper->toFirst();
+    if(model.rowCount() > 0) {
+        m_mapper = new QDataWidgetMapper;
+        m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+        m_mapper->setModel(&model);
+        m_mapper->addMapping(ui->lE_name, 1);
+        m_mapper->addMapping(ui->lE_shortName, 2);
+        m_mapper->addMapping(ui->pTE_geo, 3);
+        m_mapper->addMapping(ui->lE_comment, 4);
+        m_mapper->toFirst();
 
-    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
-        if(ui->lE_name->text().length() > 0 && m_mapper->submit()) {
-            accept();
-        } else {
-            QMessageBox::warning(this,
-                                 tr("Authority details"),
-                                 tr("Could not save data."),
-                                 QMessageBox::Ok);
-        }
-    });
+        connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
+            if(ui->lE_name->text().length() > 0 && m_mapper->submit()) {
+                accept();
+            } else {
+                QMessageBox::warning(this,
+                                     tr("Authority details"),
+                                     tr("Could not save data."),
+                                     QMessageBox::Ok);
+            }
+        });
+    }
 
     return QDialog::exec();
 }

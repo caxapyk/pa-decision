@@ -23,7 +23,6 @@ SOURCES += \
     dialogs/authoritydetailsdialog.cpp \
     dialogs/connectiondialog.cpp \
     dialogs/decisiondetailsdialog.cpp \
-    dialogs/detailsdialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/funddetailsdialog.cpp \
     dialogs/inventorydetailsdialog.cpp \
@@ -48,7 +47,6 @@ SOURCES += \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/sqlbasemodel.cpp \
-    models/standardreferencemodel.cpp \
     models/subjtypemodel.cpp \
     utils/itemcounter.cpp \
     utils/stringsort.cpp \
@@ -72,7 +70,6 @@ HEADERS += \
     dialogs/authoritydetailsdialog.h \
     dialogs/connectiondialog.h \
     dialogs/decisiondetailsdialog.h \
-    dialogs/detailsdialog.h \
     dialogs/doctypedialog.h \
     dialogs/funddetailsdialog.h \
     dialogs/inventorydetailsdialog.h \
@@ -96,7 +93,6 @@ HEADERS += \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/sqlbasemodel.h \
-    models/standardreferencemodel.h \
     models/subjtypemodel.h \
     utils/itemcounter.h \
     utils/stringsort.h \

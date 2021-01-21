@@ -99,11 +99,12 @@ void ProtocolDialog::details()
     int res = dialog.exec();
 
     if(res == ProtocolDetailsDialog::Accepted) {
-        m_model->setData(index.siblingAtColumn(2), dialog.getNumber());
-        m_model->setData(index.siblingAtColumn(3), dialog.getPages());
-        m_model->setData(index.siblingAtColumn(4), dialog.getName());
-        m_model->setData(index.siblingAtColumn(5), dialog.getDate());
-        m_model->setData(index.siblingAtColumn(6), dialog.getComment());
+        qDebug() << index.siblingAtColumn(2).data() << dialog.getNumber();
+        m_proxyModel->setData(index.siblingAtColumn(2), dialog.getNumber());
+        m_proxyModel->setData(index.siblingAtColumn(3), dialog.getPages());
+        m_proxyModel->setData(index.siblingAtColumn(4), dialog.getName());
+        m_proxyModel->setData(index.siblingAtColumn(5), dialog.getDate());
+        m_proxyModel->setData(index.siblingAtColumn(6), dialog.getComment());
     }
 }
 

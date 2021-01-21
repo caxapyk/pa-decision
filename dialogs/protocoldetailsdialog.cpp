@@ -1,7 +1,6 @@
 #include "protocoldetailsdialog.h"
 #include "ui_protocoldetailsdialog.h"
 
-#include "models/standardreferencemodel.h"
 #include "models/protocolmodel.h"
 
 #include <QDebug>
@@ -17,8 +16,7 @@ ProtocolDetailsDialog::ProtocolDetailsDialog(const QVariant &id, QWidget *parent
     ui->setupUi(this);
 
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &ProtocolDetailsDialog::reject);
-            connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ProtocolDetailsDialog::accept);
-    connect(ui->dE_date, &QDateEdit::dateChanged, this, [=] { dateChanged = true; });
+    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ProtocolDetailsDialog::accept);
 }
 
 ProtocolDetailsDialog::~ProtocolDetailsDialog()
@@ -31,12 +29,10 @@ int ProtocolDetailsDialog::exec()
 {
     if(m_id.isValid()) {
         ProtocolModel model;
-        model.setRecordId(m_id);
+        model.setFilter("id=" + m_id.toString());
         model.select();
 
-        QModelIndex index = model.index(0, 0);
-
-        if (index.isValid()) {
+        if (model.rowCount() > 0) {
             setWindowTitle(tr("Edit protocol"));
 
             m_mapper = new QDataWidgetMapper;
@@ -48,23 +44,16 @@ int ProtocolDetailsDialog::exec()
             m_mapper->addMapping(ui->lE_title, 4);
             m_mapper->addMapping(ui->dE_date, 5);
             m_mapper->addMapping(ui->lE_comment, 6);
-            m_mapper->setCurrentIndex(index.row());
+            m_mapper->setCurrentIndex(0);
 
-            connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
-                if(m_mapper->submit()) {
-                    accept();
-                } else {
-                    QMessageBox::critical(this,
-                                          tr("Protocol"),
-                                          tr("Could not save protocol"),
-                                          QMessageBox::Ok);
-                }
-            });
+            connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ProtocolDetailsDialog::accept);
         }
     } else {
         setWindowTitle(tr("New protocol"));
         ui->dE_date->setDate(QDate::currentDate());
     }
+
+    connect(ui->dE_date, &QDateEdit::dateChanged, this, [=] { dateChanged = true; });
 
     return QDialog::exec();
 }

@@ -29,9 +29,7 @@ int InventoryDetailsDialog::exec()
     model.setFilter("id=" + m_id.toString());
     model.select();
 
-    QModelIndex index = model.index(0, 0);
-
-    if (index.isValid()) {
+    if (model.rowCount() > 0) {
         setWindowTitle(tr("Edit inventory"));
 
         m_mapper = new QDataWidgetMapper;
@@ -42,7 +40,7 @@ int InventoryDetailsDialog::exec()
         m_mapper->addMapping(ui->lE_volume, 3);
         m_mapper->addMapping(ui->lE_title, 4);
         m_mapper->addMapping(ui->lE_comment, 5);
-        m_mapper->setCurrentIndex(index.row());
+        m_mapper->setCurrentIndex(0);
 
         connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
             if(m_mapper->submit()) {

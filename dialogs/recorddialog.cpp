@@ -109,20 +109,8 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
     pB_protocol->setEnabled(!selected.isEmpty() && node->level == RecordModel::RecordLevel);
 
     if(!selected.isEmpty()) {
-        QModelIndex fundIndex;
-        switch (node->level) {
-        case RecordModel::FundLevel:
-            fundIndex = ui->tV_itemView->currentIndex();
-            break;
-        case RecordModel::InventoryLevel:
-            fundIndex = ui->tV_itemView->currentIndex().parent();
-            break;
-        case RecordModel::RecordLevel:
-            fundIndex = ui->tV_itemView->currentIndex().parent().parent();
-            break;
-        }
-
-        setInfoText(fundIndex.siblingAtColumn(3).data().toString());
+        QModelIndex index = ui->tV_itemView->currentIndex();
+        setInfoText(index.siblingAtColumn(3).data().toString());
     } else {
         clearInfoText();
     }

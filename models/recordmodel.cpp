@@ -12,7 +12,7 @@ RecordModel::RecordModel(QObject *parent) : SqlBaseModel(parent)
     setHeaderData(0, Qt::Horizontal, tr("Archive records"));
     setHeaderData(1, Qt::Horizontal, tr("Comment"));
     setHeaderData(2, Qt::Horizontal, tr("ID"));
-    setHeaderData(3, Qt::Horizontal, tr("Fund name"));
+    setHeaderData(3, Qt::Horizontal, tr("Name"));
 }
 
 RecordModel::~RecordModel()
@@ -74,11 +74,11 @@ void RecordModel::setupModelData(const QModelIndex &index)
         query.prepare(QString("SELECT number, comment, id, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter()));
         break;
     case RecordModel::InventoryLevel:
-        query.prepare("SELECT number, comment, id FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
+        query.prepare("SELECT number, comment, id, name FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     case RecordModel::RecordLevel:
-        query.prepare("SELECT number, comment, id FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
+        query.prepare("SELECT number, comment, id, name FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
         break;
     }
@@ -92,8 +92,7 @@ void RecordModel::setupModelData(const QModelIndex &index)
             node->id = query.record().value(2);
             node->number.setValue(query.record().value(0));
             node->comment.setValue(query.record().value(1).toString());
-            if(level == FundLevel)
-                node->name.setValue(query.record().value(3).toString());
+            node->name.setValue(query.record().value(3).toString());
 
             node->level = level;
             node->row = query.at();

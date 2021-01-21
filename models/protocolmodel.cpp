@@ -7,7 +7,6 @@ ProtocolModel::ProtocolModel(QObject *parent) :
     QSqlTableModel(parent)
 {
     setTable("pad_protocol");
-    setEditStrategy(QSqlTableModel::OnRowChange);
 
     setHeaderData(0, Qt::Horizontal, tr("ID"));
     setHeaderData(1, Qt::Horizontal, tr("Record"));

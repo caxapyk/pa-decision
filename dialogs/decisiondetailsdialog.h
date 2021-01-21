@@ -1,7 +1,6 @@
 #ifndef DECISIONBASEDIALOG_H
 #define DECISIONBASEDIALOG_H
 
-#include "dialogs/detailsdialog.h"
 #include "dialogs/treedialog.h"
 #include "models/authorityflatmodel.h"
 #include "models/documenttypemodel.h"
@@ -18,7 +17,7 @@ namespace Ui {
 class DecisionDetailsDialog;
 }
 
-class DecisionDetailsDialog : public DetailsDialog
+class DecisionDetailsDialog : public QDialog
 {
     Q_OBJECT
 

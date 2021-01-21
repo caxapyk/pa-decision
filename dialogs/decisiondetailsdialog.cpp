@@ -15,7 +15,7 @@
 #include <QSqlError>
 
 DecisionDetailsDialog::DecisionDetailsDialog(QVariant id, QWidget *parent) :
-    DetailsDialog(parent),
+    QDialog(parent),
     ui(new Ui::DecisionDetailsDialog)
 {
     ui->setupUi(this);
@@ -227,7 +227,7 @@ int DecisionDetailsDialog::exec()
 
     connect(ui->gB_protocol, &QGroupBox::toggled, this, &DecisionDetailsDialog::protocolStateChanged);
 */
-    return DetailsDialog::exec();
+    return QDialog::exec();
 }
 
 void DecisionDetailsDialog::openDoctypeDialog()
@@ -239,7 +239,7 @@ void DecisionDetailsDialog::openDoctypeDialog()
 void DecisionDetailsDialog::openProtocolDialog()
 {
     ProtocolDialog dialog;
-    dialog.setAuthorityId(model()->authorityId());
+    //dialog.setAuthorityId(model()->authorityId());
 
     openExternalDialog(ui->cB_protocol, &dialog);
 }
@@ -247,7 +247,7 @@ void DecisionDetailsDialog::openProtocolDialog()
 void DecisionDetailsDialog::openRecordDialog()
 {
     RecordDialog dialog;
-    dialog.setAuthorityId(model()->authorityId());
+    //dialog.setAuthorityId(model()->authorityId());
 
     openExternalDialog(ui->cB_record, &dialog);
 }
@@ -341,7 +341,7 @@ void DecisionDetailsDialog::save()
 void DecisionDetailsDialog::accept()
 {
     save();
-    DetailsDialog::accept();
+    QDialog::accept();
 }
 
 void DecisionDetailsDialog::reject()

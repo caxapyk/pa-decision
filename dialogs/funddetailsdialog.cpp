@@ -29,9 +29,7 @@ int FundDetailsDialog::exec()
     model.setFilter("id=" + m_id.toString());
     model.select();
 
-    QModelIndex index = model.index(0, 0);
-
-    if (index.isValid()) {
+    if (model.rowCount() > 0) {
         setWindowTitle(tr("Edit fund"));
 
         m_mapper = new QDataWidgetMapper;
@@ -41,7 +39,7 @@ int FundDetailsDialog::exec()
         m_mapper->addMapping(ui->lE_number, 2);
         m_mapper->addMapping(ui->lE_title, 3);
         m_mapper->addMapping(ui->lE_comment, 4);
-        m_mapper->setCurrentIndex(index.row());
+        m_mapper->setCurrentIndex(0);
 
         connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
             if(m_mapper->submit()) {

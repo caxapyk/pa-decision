@@ -138,7 +138,7 @@ void DecisionView::edit()
 void DecisionView::insert()
 {
     DecisionDetailsDialog dialog;
-    dialog.setModel(m_model);
+    //dialog.setModel(m_model);
     int res = dialog.exec();
 
     if(res == DecisionDetailsDialog::Accepted) {
