@@ -7,6 +7,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSqlTableModel>
 
 TreeDialog::TreeDialog(QWidget *parent) :
     QDialog(parent),
@@ -107,7 +108,7 @@ void TreeDialog::clearInfoText()
     ui->label_info->clear();
 }
 
-void TreeDialog::setDialogModel(QSortFilterProxyModel *model)
+void TreeDialog::setProxyModel(QSortFilterProxyModel *model)
 {
     m_dialogProxyModel = model;
 
@@ -151,9 +152,11 @@ void TreeDialog::edit()
 
 void TreeDialog::insert()
 {
+    //QSqlTableModel *qsqltablemodel = dynamic_cast<QSqlTableModel*>(m_dialogProxyModel->sourceModel());
     bool insert = m_dialogProxyModel->sourceModel()->insertRow(0);
 
     if(insert) {
+        m_dialogProxyModel->submit();
         for (int i = 0; i < m_dialogProxyModel->columnCount(); ++i) {
             ui->tV_itemView->resizeColumnToContents(i);
         }
@@ -180,14 +183,16 @@ void TreeDialog::refresh()
         m_dialogProxyModel->invalidate();
         ui->tV_itemView->sortByColumn(-1, Qt::AscendingOrder);
 
-        ReferenceModel *model = dynamic_cast<ReferenceModel*>(m_dialogProxyModel->sourceModel());
+        SqlBaseModel *sqlbasemodel = dynamic_cast<SqlBaseModel*>(m_dialogProxyModel->sourceModel());
+        QSqlTableModel *qsqltablemodel = dynamic_cast<QSqlTableModel*>(m_dialogProxyModel->sourceModel());
 
-        if(model) {
-            ui->tV_itemView->selectionModel()->clearCurrentIndex();
-            model->select();
-
-            clearSelection();
+        if(sqlbasemodel) {
+            sqlbasemodel->select();
+        } else if(qsqltablemodel) {
+            qsqltablemodel->select();
         }
+        ui->tV_itemView->selectionModel()->clearCurrentIndex();
+        clearSelection();
     }
 }
 
@@ -205,7 +210,7 @@ void TreeDialog::remove()
         if (res == QMessageBox::Yes) {
             bool remove = m_dialogProxyModel->removeRow(index.row(), parent);
             if (remove) {
-                clearSelection();
+                refresh();
             } else {
                 QMessageBox::warning(this,
                         tr("Deleting item"),

@@ -1,21 +1,28 @@
 #include "subjtypemodel.h"
 
+#include "utils/itemcounter.h"
+
 #include <QDebug>
 #include <QSqlRecord>
 
 SubjtypeModel::SubjtypeModel(QObject *parent) :
-    StandardReferenceModel(parent)
+    QSqlTableModel(parent)
 {
     setTable("pad_subjtype");
+    setEditStrategy(QSqlTableModel::OnRowChange);
 
     setHeaderData(1, Qt::Horizontal, tr("ID"));
     setHeaderData(1, Qt::Horizontal, tr("Name"));
 
-    connect(sourceModel(), &QSqlTableModel::primeInsert, this, &SubjtypeModel::setDefaults);
+    connect(this, &QSqlTableModel::primeInsert, this, &SubjtypeModel::setDefaults);
 }
 
 void SubjtypeModel::setDefaults(int, QSqlRecord &record)
 {
-    record.setValue("name", tr("Subject type %1").arg(itemMaxNum(1, QRegExp("\\D+\\s\\D+\\d+"))));
+    ItemCounter counter(this);
+
+    record.setValue("name", tr("Subject type %1").arg(counter.next(1, QRegExp("\\D+\\s\\D+\\d+"))));
     record.setGenerated("name", true);
 }
+
+

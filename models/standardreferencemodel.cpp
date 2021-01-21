@@ -7,7 +7,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-StandardReferenceModel::StandardReferenceModel(QObject *parent) : ReferenceModel(parent)
+StandardReferenceModel::StandardReferenceModel(QObject *parent) : SqlBaseModel(parent)
 {
     m_internalModel = new QSqlRelationalTableModel;
     m_internalModel->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
@@ -65,7 +65,7 @@ Qt::ItemFlags StandardReferenceModel::flags(const QModelIndex &index) const
         return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
     }
 
-    return ReferenceModel::flags(index);
+    return SqlBaseModel::flags(index);
 }
 
 QModelIndex StandardReferenceModel::index(int row, int column, const QModelIndex &parent) const

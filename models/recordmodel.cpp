@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-RecordModel::RecordModel(QObject *parent) : ReferenceModel(parent)
+RecordModel::RecordModel(QObject *parent) : SqlBaseModel(parent)
 {
     rootNode = new RecordNode;
     setHeaderData(0, Qt::Horizontal, tr("Archive records"));

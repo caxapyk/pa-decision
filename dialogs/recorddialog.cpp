@@ -49,7 +49,7 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->tV_itemView->hideColumn(3);
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    setDialogModel(m_proxyModel);
+    setProxyModel(m_proxyModel);
 }
 
 RecordDialog::~RecordDialog()

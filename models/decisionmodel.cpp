@@ -7,7 +7,7 @@
 #include <QSqlQuery>
 
 DecisionModel::DecisionModel(QObject *parent)
-    : ReferenceModel(parent)
+    : SqlBaseModel(parent)
 {
     m_internalModel = new QSqlQueryModel;
 }

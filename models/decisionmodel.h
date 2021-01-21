@@ -1,11 +1,11 @@
 #ifndef DECISIONREADMODEL_H
 #define DECISIONREADMODEL_H
 
-#include "models/referencemodel.h"
+#include "models/sqlbasemodel.h"
 
 #include <QSqlQueryModel>
 
-class DecisionModel : public ReferenceModel
+class DecisionModel : public SqlBaseModel
 {
     Q_OBJECT
 

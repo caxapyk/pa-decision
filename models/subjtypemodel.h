@@ -1,9 +1,9 @@
 #ifndef SUBJTYPEMODEL_H
 #define SUBJTYPEMODEL_H
 
-#include "models/standardreferencemodel.h"
+#include <QSqlTableModel>
 
-class SubjtypeModel : public StandardReferenceModel
+class SubjtypeModel : public QSqlTableModel
 {
     Q_OBJECT
 public:

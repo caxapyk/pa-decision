@@ -1,13 +1,14 @@
 #include "documenttypemodel.h"
 
-#include "widgets/colorrect.h"
+#include "utils/itemcounter.h"
+//#include "widgets/colorrect.h"
 
 #include <QDebug>
 #include <QColor>
 #include <QSqlRecord>
 
 DocumentTypeModel::DocumentTypeModel(QObject *parent) :
-    StandardReferenceModel(parent)
+    QSqlTableModel(parent)
 {
    setTable("pad_doctype");
 
@@ -15,7 +16,7 @@ DocumentTypeModel::DocumentTypeModel(QObject *parent) :
    setHeaderData(1, Qt::Horizontal, tr("Name"));
    //setHeaderData(2, Qt::Horizontal, tr("Color"));
 
-   connect(sourceModel(), &QSqlTableModel::primeInsert, this, &DocumentTypeModel::setDefaults);
+   connect(this, &QSqlTableModel::primeInsert, this, &DocumentTypeModel::setDefaults);
 }
 
 QVariant DocumentTypeModel::data(const QModelIndex &index, int role) const
@@ -24,11 +25,13 @@ QVariant DocumentTypeModel::data(const QModelIndex &index, int role) const
         return ColorRect::pixmap(QColor(index.siblingAtColumn(2).data().toString()), 16);
     }*/
 
-    return StandardReferenceModel::data(index, role);
+    return QSqlTableModel::data(index, role);
 }
 
 void DocumentTypeModel::setDefaults(int, QSqlRecord &record)
 {
-    record.setValue("name", tr("Document type %1").arg(itemMaxNum(1, QRegExp("\\D+\\s\\D+\\d+"))));
+    ItemCounter counter(this);
+
+    record.setValue("name", tr("Document type %1").arg(counter.next(1, QRegExp("\\D+\\s\\D+\\d+"))));
     record.setGenerated("name", true);
 }

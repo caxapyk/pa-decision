@@ -3,12 +3,12 @@
 
 #include <QAbstractItemModel>
 
-class ReferenceModel : public QAbstractItemModel
+class SqlBaseModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    explicit ReferenceModel(QObject *parent = nullptr);
+    explicit SqlBaseModel(QObject *parent = nullptr);
 
     virtual void clear() = 0;
     virtual void select() = 0;

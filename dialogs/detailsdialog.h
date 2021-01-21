@@ -1,7 +1,7 @@
 #ifndef DETAILSDIALOG_H
 #define DETAILSDIALOG_H
 
-#include "models/referencemodel.h"
+#include "models/sqlbasemodel.h"
 
 #include <QDialog>
 #include <QDataWidgetMapper>
@@ -15,12 +15,12 @@ public:
 
     int id();
     QModelIndex currentIndex() const { return _index; };
-    ReferenceModel *model() { return _model;}
+    SqlBaseModel *model() { return _model;}
     void setCurrentIndex(const QModelIndex &index) { _index = index; }
-    void setModel(ReferenceModel *model) { _model = model; }
+    void setModel(SqlBaseModel *model) { _model = model; }
 
 private:
-    ReferenceModel *_model = nullptr;
+    SqlBaseModel *_model = nullptr;
     QModelIndex _index;
 };
 

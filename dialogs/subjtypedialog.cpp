@@ -28,7 +28,7 @@ SubjtypeDialog::SubjtypeDialog(QWidget *parent) :
     ui->tV_itemView->setModel(m_proxyModel);
     ui->tV_itemView->hideColumn(0);
 
-    setDialogModel(m_proxyModel);
+    setProxyModel(m_proxyModel);
 }
 
 SubjtypeDialog::~SubjtypeDialog()

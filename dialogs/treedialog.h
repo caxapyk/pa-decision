@@ -1,7 +1,7 @@
 #ifndef REFERENCEDIALOG_H
 #define REFERENCEDIALOG_H
 
-#include "models/referencemodel.h"
+#include "models/sqlbasemodel.h"
 
 #include <QDialog>
 #include <QShortcut>
@@ -51,7 +51,7 @@ protected:
     QShortcut *removeShortcut = nullptr;
     QShortcut *refreshShortcut = nullptr;
 
-    void setDialogModel(QSortFilterProxyModel *model);
+    void setProxyModel(QSortFilterProxyModel *model);
 
 protected slots:
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);

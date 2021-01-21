@@ -20,7 +20,7 @@ public:
     void saveDialogState() override;
 
 private:
-    StandardReferenceModel *m_model;
+    DocumentTypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
 protected:

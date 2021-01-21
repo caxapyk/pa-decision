@@ -1,11 +1,11 @@
 #ifndef RECORDTREEMODEL_H
 #define RECORDTREEMODEL_H
 
-#include "models/referencemodel.h"
+#include "models/sqlbasemodel.h"
 
 #include <QAbstractItemModel>
 
-class RecordModel : public ReferenceModel
+class RecordModel : public SqlBaseModel
 {
     Q_OBJECT
 

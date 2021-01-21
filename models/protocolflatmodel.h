@@ -1,11 +1,11 @@
 #ifndef PROTOCOLFLATMODEL_H
 #define PROTOCOLFLATMODEL_H
 
-#include "models/referencemodel.h"
+#include "models/sqlbasemodel.h"
 
 #include <QSqlQueryModel>
 
-class ProtocolFlatModel : public ReferenceModel
+class ProtocolFlatModel : public SqlBaseModel
 {
     Q_OBJECT
 

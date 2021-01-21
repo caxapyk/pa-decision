@@ -47,9 +47,10 @@ SOURCES += \
     models/recordflatmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
-    models/referencemodel.cpp \
+    models/sqlbasemodel.cpp \
     models/standardreferencemodel.cpp \
     models/subjtypemodel.cpp \
+    utils/itemcounter.cpp \
     utils/stringsort.cpp \
     views/authorityview.cpp \
     views/decisionview.cpp \
@@ -94,9 +95,10 @@ HEADERS += \
     models/recordflatmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
-    models/referencemodel.h \
+    models/sqlbasemodel.h \
     models/standardreferencemodel.h \
     models/subjtypemodel.h \
+    utils/itemcounter.h \
     utils/stringsort.h \
     views/authorityview.h \
     views/decisionview.h \

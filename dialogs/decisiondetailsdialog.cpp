@@ -255,7 +255,7 @@ void DecisionDetailsDialog::openRecordDialog()
 
 void DecisionDetailsDialog::openExternalDialog(QComboBox *cb, TreeDialog *dialog)
 {
-    ReferenceModel *model = dynamic_cast<ReferenceModel*>(cb->model());
+    SqlBaseModel *model = dynamic_cast<SqlBaseModel*>(cb->model());
 
     if(model) {
         dialog->setChoiceMode();

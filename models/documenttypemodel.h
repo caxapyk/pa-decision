@@ -1,9 +1,9 @@
 #ifndef DOCUMENTTYPEMODEL_H
 #define DOCUMENTTYPEMODEL_H
 
-#include "models/standardreferencemodel.h"
+#include <QSqlTableModel>
 
-class DocumentTypeModel : public StandardReferenceModel
+class DocumentTypeModel : public QSqlTableModel
 {
 
     Q_OBJECT

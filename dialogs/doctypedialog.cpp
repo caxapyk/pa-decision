@@ -31,7 +31,7 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     ui->tV_itemView->resizeColumnToContents(1);
     ui->tV_itemView->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
 
-    setDialogModel(m_proxyModel);
+    setProxyModel(m_proxyModel);
 }
 
 DoctypeDialog::~DoctypeDialog()

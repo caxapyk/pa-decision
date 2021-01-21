@@ -1,11 +1,11 @@
 #ifndef RECORDFLATMODEL_H
 #define RECORDFLATMODEL_H
 
-#include "models/referencemodel.h"
+#include "models/sqlbasemodel.h"
 
 #include <QSqlQueryModel>
 
-class RecordFlatModel : public ReferenceModel
+class RecordFlatModel : public SqlBaseModel
 {
     Q_OBJECT
 

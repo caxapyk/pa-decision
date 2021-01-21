@@ -40,7 +40,7 @@ ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
     ui->tV_itemView->hideColumn(0);
     ui->tV_itemView->hideColumn(6);
 
-    setDialogModel(m_proxyModel);
+    setProxyModel(m_proxyModel);
 }
 
 ProtocolDialog::~ProtocolDialog()

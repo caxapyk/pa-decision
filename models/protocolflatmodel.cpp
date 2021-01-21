@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 
 ProtocolFlatModel::ProtocolFlatModel(QObject *parent)
-    : ReferenceModel(parent)
+    : SqlBaseModel(parent)
 {
     m_internalModel = new QSqlQueryModel;
 }

@@ -1,7 +1,7 @@
 #ifndef AUTHORITYMODEL_H
 #define AUTHORITYMODEL_H
 
-#include "models/referencemodel.h"
+#include "models/sqlbasemodel.h"
 
 #include <QAbstractItemModel>
 #include <QMap>
@@ -9,7 +9,7 @@
 #include <QVariant>
 #include <QVector>
 
-class AuthorityModel : public ReferenceModel
+class AuthorityModel : public SqlBaseModel
 {
     Q_OBJECT
 

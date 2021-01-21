@@ -1,12 +1,12 @@
 #ifndef STANDARDREFERENCEMODEL_H
 #define STANDARDREFERENCEMODEL_H
 
-#include "referencemodel.h"
+#include "sqlbasemodel.h"
 
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
 
-class StandardReferenceModel : public ReferenceModel
+class StandardReferenceModel : public SqlBaseModel
 {
     Q_OBJECT
 public:

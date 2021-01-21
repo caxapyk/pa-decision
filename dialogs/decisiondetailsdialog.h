@@ -12,6 +12,7 @@
 #include <QDataWidgetMapper>
 #include <QComboBox>
 #include <QSqlRecord>
+#include <QSqlRelationalTableModel>
 
 namespace Ui {
 class DecisionDetailsDialog;
