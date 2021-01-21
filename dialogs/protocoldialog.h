@@ -13,7 +13,7 @@ class ProtocolDialog : public ReferenceDialog
     Q_OBJECT
 
 public:
-    explicit ProtocolDialog(QWidget *parent = nullptr, const QVariant &recordId = QVariant());
+    explicit ProtocolDialog(const QVariant &recordId = QVariant(), QWidget *parent = nullptr);
     ~ProtocolDialog();
 
     void restoreDialogState() override;

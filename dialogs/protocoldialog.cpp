@@ -5,12 +5,15 @@
 #include "dialogs/protocoldetailsdialog.h"
 
 #include <QDebug>
+#include <QDate>
 #include <QInputDialog>
 #include <QItemSelection>
 #include <QMenu>
 #include <QMessageBox>
 
-ProtocolDialog::ProtocolDialog(QWidget *parent, const QVariant &recordId) :
+
+#include <QSqlError>
+ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
     ReferenceDialog(parent)
 {
     restoreDialogState();
@@ -92,12 +95,18 @@ void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelecti
 void ProtocolDialog::details()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
+    QVariant id = index.siblingAtColumn(0).data();
 
-    ProtocolDetailsDialog dialog;
+    ProtocolDetailsDialog dialog(id);
+    int res = dialog.exec();
 
-    dialog.setModel(m_model);
-    dialog.setCurrentIndex(m_proxyModel->mapToSource(index));
-    dialog.exec();
+    if(res == ProtocolDetailsDialog::Accepted) {
+        m_model->setData(index.siblingAtColumn(2), dialog.getNumber());
+        m_model->setData(index.siblingAtColumn(3), dialog.getPages());
+        m_model->setData(index.siblingAtColumn(4), dialog.getName());
+        m_model->setData(index.siblingAtColumn(5), dialog.getDate());
+        m_model->setData(index.siblingAtColumn(6), dialog.getComment());
+    }
 }
 
 bool ProtocolDialog::choiceButtonEnabled()
@@ -118,18 +127,44 @@ int ProtocolDialog::choice(const QItemSelection &selected) const
 void ProtocolDialog::insert()
 {
     ProtocolDetailsDialog dialog;
-
-    dialog.setModel(m_model);
     int res = dialog.exec();
 
     if(res == ProtocolDetailsDialog::Accepted) {
-        QModelIndex topLeft = m_proxyModel->mapFromSource(
-                    m_proxyModel->sourceModel()->index(0, 0));
-        QModelIndex bottomRight = m_proxyModel->mapFromSource(
-                    m_proxyModel->sourceModel()->index(0, m_proxyModel->columnCount() - 1));
+        QSqlRecord record = m_model->sourceModel()->record();
 
-        QItemSelection selection(topLeft, bottomRight);
-        ui->tV_itemView->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
-        ui->tV_itemView->scrollTo(topLeft);
+        record.setValue("record_id", m_model->recordId());
+        record.setGenerated("record_id", true);
+
+        record.setValue("number", dialog.getNumber());
+        record.setGenerated("number", true);
+
+        record.setValue("pages", dialog.getPages());
+        record.setGenerated("pages", true);
+
+        record.setValue("name", dialog.getName());
+        record.setGenerated("name", true);
+
+        record.setValue("date", dialog.getDate());
+        record.setGenerated("date", true);
+
+        record.setValue("comment", dialog.getComment());
+        record.setGenerated("comment", true);
+
+        if(m_model->insertRecord(0, record)) {
+            QModelIndex topLeft = m_proxyModel->mapFromSource(
+                        m_proxyModel->sourceModel()->index(0, 0));
+            QModelIndex bottomRight = m_proxyModel->mapFromSource(
+                        m_proxyModel->sourceModel()->index(0, m_proxyModel->columnCount() - 1));
+
+            QItemSelection selection(topLeft, bottomRight);
+            ui->tV_itemView->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+            ui->tV_itemView->scrollTo(topLeft);
+        } else {
+            qDebug() << m_model->sourceModel()->lastError().text();
+            QMessageBox::critical(this,
+                    tr("New protocol"),
+                    tr("Could not create new protocol"),
+                    QMessageBox::Ok);
+        }
     }
 }

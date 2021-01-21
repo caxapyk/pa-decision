@@ -163,3 +163,15 @@ bool StandardReferenceModel::setHeaderData(int section, Qt::Orientation orientat
 {
     return m_internalModel->setHeaderData(section, orientation, value, role);
 }
+
+/// FIX IT
+bool StandardReferenceModel::insertRecord(int row, const QSqlRecord &record)
+{
+    bool b = m_internalModel->insertRecord(row, record);
+    if (b) {
+        beginInsertRows(QModelIndex(), row, row);
+        endInsertRows();
+        emit dataChanged(index(0,0), index(0, columnCount() -1));
+    }
+    return b;
+}

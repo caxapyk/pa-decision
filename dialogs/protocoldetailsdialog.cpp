@@ -9,14 +9,15 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-ProtocolDetailsDialog::ProtocolDetailsDialog(QWidget *parent) :
-    DetailsDialog(parent),
+ProtocolDetailsDialog::ProtocolDetailsDialog(const QVariant &id, QWidget *parent) :
+    QDialog(parent),
     ui(new Ui::ProtocolDetailsDialog)
 {
+    m_id = id;
     ui->setupUi(this);
-    ui->dE_date->setDate(QDate::currentDate());
 
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &ProtocolDetailsDialog::reject);
+            connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ProtocolDetailsDialog::accept);
     connect(ui->dE_date, &QDateEdit::dateChanged, this, [=] { dateChanged = true; });
 }
 
@@ -28,12 +29,18 @@ ProtocolDetailsDialog::~ProtocolDetailsDialog()
 
 int ProtocolDetailsDialog::exec()
 {
-    if (model()) {
-        if(currentIndex().isValid()) {
+    if(m_id.isValid()) {
+        ProtocolModel model;
+        model.setRecordId(m_id);
+        model.select();
+
+        QModelIndex index = model.index(0, 0);
+
+        if (index.isValid()) {
             setWindowTitle(tr("Edit protocol"));
 
             m_mapper = new QDataWidgetMapper;
-            m_mapper->setModel(model());
+            m_mapper->setModel(&model);
             m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
             m_mapper->addMapping(ui->lE_number, 2);
@@ -41,30 +48,28 @@ int ProtocolDetailsDialog::exec()
             m_mapper->addMapping(ui->lE_title, 4);
             m_mapper->addMapping(ui->dE_date, 5);
             m_mapper->addMapping(ui->lE_comment, 6);
-            m_mapper->setCurrentIndex(currentIndex().row());
+            m_mapper->setCurrentIndex(index.row());
 
             connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
                 if(m_mapper->submit()) {
                     accept();
                 } else {
                     QMessageBox::critical(this,
-                            tr("Protocol"),
-                            tr("Could not save protocol"),
-                            QMessageBox::Ok);
+                                          tr("Protocol"),
+                                          tr("Could not save protocol"),
+                                          QMessageBox::Ok);
                 }
             });
-        } else {
-            setWindowTitle(tr("New protocol"));
-            connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ProtocolDetailsDialog::insert);
         }
-
-        return DetailsDialog::exec();
+    } else {
+        setWindowTitle(tr("New protocol"));
+        ui->dE_date->setDate(QDate::currentDate());
     }
 
-    return 1;
+    return QDialog::exec();
 }
 
-void ProtocolDetailsDialog::insert()
+void ProtocolDetailsDialog::accept()
 {
     bool invalid = ui->lE_title->text().isEmpty() || ui->lE_number->text().isEmpty();
     if(invalid) {
@@ -76,41 +81,7 @@ void ProtocolDetailsDialog::insert()
         return;
     }
 
-    StandardReferenceModel *m = dynamic_cast<StandardReferenceModel*>(model());
-    connect(m->sourceModel(), &QSqlRelationalTableModel::primeInsert, this, &ProtocolDetailsDialog::setRecord);
-
-    if(!m->insertRow(0)) {
-        QMessageBox::critical(this,
-                tr("New protocol"),
-                tr("Could not create new protocol"),
-                QMessageBox::Ok);
-    }
-
-    accept();
-
-}
-
-void ProtocolDetailsDialog::setRecord(int, QSqlRecord &record)
-{
-    ProtocolModel *m = dynamic_cast<ProtocolModel*>(model());
-
-    record.setValue("record_id", m->recordId());
-    record.setGenerated("record_id", true);
-
-    record.setValue("number", ui->lE_number->text());
-    record.setGenerated("number", true);
-
-    record.setValue("pages", ui->sB_pages->value());
-    record.setGenerated("pages", true);
-
-    record.setValue("name", ui->lE_title->text());
-    record.setGenerated("name", true);
-
-    record.setValue("date", ui->dE_date->date());
-    record.setGenerated("date", true);
-
-    record.setValue("comment", ui->lE_comment->text());
-    record.setGenerated("comment", true);
+    QDialog::accept();
 }
 
 void ProtocolDetailsDialog::reject()
@@ -129,3 +100,28 @@ void ProtocolDetailsDialog::reject()
         QDialog::reject();
     }
 }
+
+QString ProtocolDetailsDialog::getNumber() const
+{
+    return ui->lE_number->text();
+}
+
+QDate ProtocolDetailsDialog::getDate() const
+{
+    return ui->dE_date->date();
+}
+
+int ProtocolDetailsDialog::getPages() const
+{
+    return ui->sB_pages->value();
+}
+QString ProtocolDetailsDialog::getName() const
+
+{
+    return ui->lE_title->text();
+}
+QString ProtocolDetailsDialog::getComment() const
+{
+    return  ui->lE_comment->text();
+}
+

@@ -1,46 +1,47 @@
-#include "funddetailsdialog.h"
-#include "ui_funddetailsdialog.h"
+#include "inventorydetailsdialog.h"
+#include "ui_inventorydetailsdialog.h"
 
 #include <QDebug>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QSqlTableModel>
 
-FundDetailsDialog::FundDetailsDialog(const QVariant &id, QWidget *parent) :
+InventoryDetailsDialog::InventoryDetailsDialog(const QVariant &id, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::FundDetailsDialog)
+    ui(new Ui::InventoryDetailsDialog)
 {
     m_id = id;
     ui->setupUi(this);
 
-    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &FundDetailsDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &InventoryDetailsDialog::reject);
 }
 
-FundDetailsDialog::~FundDetailsDialog()
+InventoryDetailsDialog::~InventoryDetailsDialog()
 {
     delete ui;
     delete m_mapper;
 }
 
-int FundDetailsDialog::exec()
+int InventoryDetailsDialog::exec()
 {
     QSqlTableModel model;
-    model.setTable("pad_fund");
+    model.setTable("pad_inventory");
     model.setFilter("id=" + m_id.toString());
     model.select();
 
     QModelIndex index = model.index(0, 0);
 
     if (index.isValid()) {
-        setWindowTitle(tr("Edit fund"));
+        setWindowTitle(tr("Edit inventory"));
 
         m_mapper = new QDataWidgetMapper;
         m_mapper->setModel(&model);
         m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
         m_mapper->addMapping(ui->lE_number, 2);
-        m_mapper->addMapping(ui->lE_title, 3);
-        m_mapper->addMapping(ui->lE_comment, 4);
+        m_mapper->addMapping(ui->lE_volume, 3);
+        m_mapper->addMapping(ui->lE_title, 4);
+        m_mapper->addMapping(ui->lE_comment, 5);
         m_mapper->setCurrentIndex(index.row());
 
         connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
@@ -49,7 +50,7 @@ int FundDetailsDialog::exec()
             } else {
                 QMessageBox::critical(this,
                                       tr("Fund"),
-                                      tr("Could not save fund"),
+                                      tr("Could not save inventory"),
                                       QMessageBox::Ok);
             }
         });
@@ -59,19 +60,19 @@ int FundDetailsDialog::exec()
     return QDialog::exec();
 }
 
-QString FundDetailsDialog::getNumber() const
+QString InventoryDetailsDialog::getNumber() const
 {
     return ui->lE_number->text();
 }
 
-QString FundDetailsDialog::getName() const
+QString InventoryDetailsDialog::getName() const
 {
     return ui->lE_title->text();
 }
 
-void FundDetailsDialog::reject()
+void InventoryDetailsDialog::reject()
 {
-    bool commit = ui->lE_title->isModified() || ui->lE_number->isModified() || ui->lE_comment->isModified();
+    bool commit = ui->lE_title->isModified() || ui->lE_number->isModified() || ui->lE_volume->isModified() || ui->lE_comment->isModified();
     if(commit) {
     int res = QMessageBox::critical(this,
         tr("Close without saving"),
@@ -85,3 +86,4 @@ void FundDetailsDialog::reject()
         QDialog::reject();
     }
 }
+

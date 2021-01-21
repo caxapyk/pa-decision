@@ -4,6 +4,7 @@
 #include "referencemodel.h"
 
 #include <QSqlRelationalTableModel>
+#include <QSqlRecord>
 
 class StandardReferenceModel : public ReferenceModel
 {
@@ -20,6 +21,7 @@ public:
     QSqlRelationalTableModel *sourceModel() { return m_internalModel; };
     void setTable(const QString &table);
 
+
     int columnCount(const QModelIndex &parent=QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -31,6 +33,8 @@ public:
     int rowCount(const QModelIndex &parent=QModelIndex()) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
+
+    bool insertRecord(int row, const QSqlRecord &record);
 
 private:
     QSqlRelationalTableModel *m_internalModel;

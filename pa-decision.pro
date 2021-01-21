@@ -26,8 +26,10 @@ SOURCES += \
     dialogs/detailsdialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/funddetailsdialog.cpp \
+    dialogs/inventorydetailsdialog.cpp \
     dialogs/protocoldetailsdialog.cpp \
     dialogs/protocoldialog.cpp \
+    dialogs/recorddetailsdialog.cpp \
     dialogs/recorddialog.cpp \
     dialogs/referencedialog.cpp \
     dialogs/subjtypedialog.cpp \
@@ -72,8 +74,10 @@ HEADERS += \
     dialogs/detailsdialog.h \
     dialogs/doctypedialog.h \
     dialogs/funddetailsdialog.h \
+    dialogs/inventorydetailsdialog.h \
     dialogs/protocoldetailsdialog.h \
     dialogs/protocoldialog.h \
+    dialogs/recorddetailsdialog.h \
     dialogs/recorddialog.h \
     dialogs/referencedialog.h \
     dialogs/subjtypedialog.h \
@@ -113,7 +117,9 @@ FORMS += \
     dialogs/connectiondialog.ui \
     dialogs/decisiondetailsdialog.ui \
     dialogs/funddetailsdialog.ui \
+    dialogs/inventorydetailsdialog.ui \
     dialogs/protocoldetailsdialog.ui \
+    dialogs/recorddetailsdialog.ui \
     dialogs/referencedialog.ui \
     mainwindow.ui \
     views/authorityview.ui \

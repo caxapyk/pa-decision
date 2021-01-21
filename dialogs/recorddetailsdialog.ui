@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ProtocolDetailsDialog</class>
- <widget class="QDialog" name="ProtocolDetailsDialog">
+ <class>RecordDetailsDialog</class>
+ <widget class="QDialog" name="RecordDetailsDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
-    <height>220</height>
+    <width>400</width>
+    <height>199</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>480</width>
-    <height>220</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>480</width>
-    <height>220</height>
-   </size>
-  </property>
   <property name="windowTitle">
-   <string>Edit protocol</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="../resources.qrc">
-    <normaloff>:/icons/icons/protocol-16.png</normaloff>:/icons/icons/protocol-16.png</iconset>
+   <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -38,7 +22,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -52,53 +36,44 @@
          <widget class="QLineEdit" name="lE_number"/>
         </item>
         <item>
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Date</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDateEdit" name="dE_date">
-          <property name="displayFormat">
-           <string>dd.MM.yyyy</string>
-          </property>
-          <property name="calendarPopup">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_2">
           <property name="text">
            <string>Pages</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="sB_pages">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>999</number>
+         <widget class="QLineEdit" name="lE_pages">
+          <property name="maxLength">
+           <number>3</number>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Title</string>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Title</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lE_title"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lE_title"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="label">
         <property name="text">
          <string>Comment</string>
         </property>
@@ -135,8 +110,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

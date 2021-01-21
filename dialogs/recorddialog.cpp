@@ -3,6 +3,8 @@
 
 #include "application.h"
 #include "dialogs/funddetailsdialog.h"
+#include "dialogs/inventorydetailsdialog.h"
+#include "dialogs/recorddetailsdialog.h"
 #include "dialogs/referencedialog.h"
 #include "dialogs/protocoldialog.h"
 #include "widgets/customcontextmenu.h"
@@ -146,28 +148,47 @@ int RecordDialog::choice(const QItemSelection &selected) const
 void RecordDialog::details()
 {
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()).internalPointer());
-    QModelIndex index;
+    QModelIndex index = ui->tV_itemView->currentIndex();
 
     switch (node->level) {
     case RecordModel::FundLevel:
     {
-        index = ui->tV_itemView->currentIndex();
         QVariant id = index.siblingAtColumn(2).data(); //id
 
         FundDetailsDialog dialog(id);
         int res = dialog.exec();
 
         if(res == FundDetailsDialog::Accepted) {
-             m_proxyModel->setData(index.siblingAtColumn(0), dialog.getNumber());
-             setInfoText(dialog.getName());
+            m_proxyModel->setData(index.siblingAtColumn(0), dialog.getNumber());
+            setInfoText(dialog.getName());
         }
     }
-    break;
+        break;
     case RecordModel::InventoryLevel:
-        index = ui->tV_itemView->currentIndex().parent();
+    {
+        QVariant id = index.siblingAtColumn(2).data(); //id
+
+        InventoryDetailsDialog dialog(id);
+        int res = dialog.exec();
+
+        if(res == InventoryDetailsDialog::Accepted) {
+            m_proxyModel->setData(index.siblingAtColumn(0), dialog.getNumber());
+            setInfoText(dialog.getName());
+        }
+    }
         break;
     case RecordModel::RecordLevel:
-        index = ui->tV_itemView->currentIndex().parent().parent();
+    {
+        QVariant id = index.siblingAtColumn(2).data(); //id
+
+        RecordDetailsDialog dialog(id);
+        int res = dialog.exec();
+
+        if(res == RecordDetailsDialog::Accepted) {
+            m_proxyModel->setData(index.siblingAtColumn(0), dialog.getNumber());
+            setInfoText(dialog.getName());
+        }
+    }
         break;
     }
 }
@@ -175,9 +196,9 @@ void RecordDialog::details()
 void RecordDialog::protocols()
 {
     QModelIndex index = ui->tV_itemView->currentIndex();
-    QVariant recordId = index.data(Qt::UserRole);
+    QVariant id = index.data(Qt::UserRole); //id
 
-    ProtocolDialog dialog(nullptr, recordId);
+    ProtocolDialog dialog(id);
 
     dialog.exec();
 }
