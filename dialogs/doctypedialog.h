@@ -1,14 +1,14 @@
 #ifndef DOCTYPEDIALOG_H
 #define DOCTYPEDIALOG_H
 
-#include "dialogs/referencedialog.h"
+#include "dialogs/treedialog.h"
 #include "models/documenttypemodel.h"
 
 #include <QDialog>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 
-class DoctypeDialog : public ReferenceDialog
+class DoctypeDialog : public TreeDialog
 {
     Q_OBJECT
 

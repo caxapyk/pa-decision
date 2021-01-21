@@ -1,5 +1,5 @@
 #include "subjtypedialog.h"
-#include "ui_referencedialog.h"
+#include "ui_treedialog.h"
 
 #include "application.h"
 
@@ -9,7 +9,7 @@
 
 
 SubjtypeDialog::SubjtypeDialog(QWidget *parent) :
-    ReferenceDialog(parent)
+    TreeDialog(parent)
 {
     restoreDialogState();
 

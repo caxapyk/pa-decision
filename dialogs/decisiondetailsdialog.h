@@ -2,15 +2,15 @@
 #define DECISIONBASEDIALOG_H
 
 #include "dialogs/detailsdialog.h"
-#include "dialogs/referencedialog.h"
+#include "dialogs/treedialog.h"
 #include "models/authorityflatmodel.h"
 #include "models/documenttypemodel.h"
 #include "models/protocolflatmodel.h"
 #include "models/recordflatmodel.h"
 
+#include <QDialog>
 #include <QDataWidgetMapper>
 #include <QComboBox>
-#include <QDialog>
 #include <QSqlRecord>
 
 namespace Ui {
@@ -65,7 +65,7 @@ private slots:
     void openProtocolDialog();
     void openRecordDialog();
 
-    void openExternalDialog(QComboBox *cb, ReferenceDialog *dialog);
+    void openExternalDialog(QComboBox *cb, TreeDialog *dialog);
 
     void save();
 };

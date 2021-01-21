@@ -1,11 +1,11 @@
 #include "recorddialog.h"
-#include "ui_referencedialog.h"
+#include "ui_treedialog.h"
 
 #include "application.h"
 #include "dialogs/funddetailsdialog.h"
 #include "dialogs/inventorydetailsdialog.h"
 #include "dialogs/recorddetailsdialog.h"
-#include "dialogs/referencedialog.h"
+#include "dialogs/treedialog.h"
 #include "dialogs/protocoldialog.h"
 #include "widgets/customcontextmenu.h"
 
@@ -17,7 +17,7 @@
 #include <QMessageBox>
 
 RecordDialog::RecordDialog(QWidget *parent) :
-     ReferenceDialog(parent)
+     TreeDialog(parent)
 {
     restoreDialogState();
 
@@ -92,7 +92,7 @@ int RecordDialog::exec()
         clearSelection();
     }
 
-    return ReferenceDialog::exec();
+    return TreeDialog::exec();
 }
 
 void RecordDialog::selected(const QItemSelection &selected, const QItemSelection &)
@@ -233,5 +233,5 @@ void RecordDialog::insert()
 void RecordDialog::remove()
 {
     clearInfoText();
-    ReferenceDialog::remove();
+    TreeDialog::remove();
 }

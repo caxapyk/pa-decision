@@ -1,7 +1,7 @@
 #ifndef RECORDDIALOG_H
 #define RECORDDIALOG_H
 
-#include "dialogs/referencedialog.h"
+#include "dialogs/treedialog.h"
 #include "models/authorityflatmodel.h"
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
@@ -11,7 +11,7 @@
 #include <QPushButton>
 #include <QLabel>
 
-class RecordDialog : public ReferenceDialog
+class RecordDialog : public TreeDialog
 {
     Q_OBJECT
 

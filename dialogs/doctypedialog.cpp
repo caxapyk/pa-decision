@@ -1,5 +1,5 @@
 #include "doctypedialog.h"
-#include "ui_referencedialog.h"
+#include "ui_treedialog.h"
 
 #include "application.h"
 #include "models/colorpickeritemdelegate.h"
@@ -9,7 +9,7 @@
 #include <QMenu>
 
 DoctypeDialog::DoctypeDialog(QWidget *parent) :
-    ReferenceDialog(parent)
+    TreeDialog(parent)
 {
     restoreDialogState();
 

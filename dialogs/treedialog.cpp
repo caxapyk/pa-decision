@@ -1,5 +1,5 @@
-#include "referencedialog.h"
-#include "ui_referencedialog.h"
+#include "treedialog.h"
+#include "ui_treedialog.h"
 
 #include "widgets/customcontextmenu.h"
 
@@ -8,9 +8,9 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-ReferenceDialog::ReferenceDialog(QWidget *parent) :
+TreeDialog::TreeDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ReferenceDialog)
+    ui(new Ui::TreeDialog)
 {
     ui->setupUi(this);
 
@@ -19,11 +19,11 @@ ReferenceDialog::ReferenceDialog(QWidget *parent) :
 
     setupShortcuts();
 
-    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ReferenceDialog::accept);
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ReferenceDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &TreeDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &TreeDialog::reject);
 }
 
-ReferenceDialog::~ReferenceDialog()
+TreeDialog::~TreeDialog()
 {
     delete ui;
 
@@ -33,22 +33,22 @@ ReferenceDialog::~ReferenceDialog()
     delete refreshShortcut;
 }
 
-void ReferenceDialog::setupShortcuts()
+void TreeDialog::setupShortcuts()
 {
     insertShortcut = new QShortcut(QKeySequence::New, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(insertShortcut, &QShortcut::activated, this, &ReferenceDialog::insert);
+    connect(insertShortcut, &QShortcut::activated, this, &TreeDialog::insert);
 
     editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(editShortcut, &QShortcut::activated, this, &ReferenceDialog::edit);
+    connect(editShortcut, &QShortcut::activated, this, &TreeDialog::edit);
 
     removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(removeShortcut, &QShortcut::activated, this, &ReferenceDialog::remove);
+    connect(removeShortcut, &QShortcut::activated, this, &TreeDialog::remove);
 
     refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_itemView, nullptr, nullptr, Qt::WidgetShortcut);
-    connect(refreshShortcut, &QShortcut::activated, this, &ReferenceDialog::refresh);
+    connect(refreshShortcut, &QShortcut::activated, this, &TreeDialog::refresh);
 }
 
-void ReferenceDialog::contextMenu(const QPoint &)
+void TreeDialog::contextMenu(const QPoint &)
 {
     QModelIndex currentIndex = ui->tV_itemView->indexAt(ui->tV_itemView->viewport()->mapFromGlobal(QCursor().pos()));
     ui->tV_itemView->setCurrentIndex(currentIndex);
@@ -58,26 +58,26 @@ void ReferenceDialog::contextMenu(const QPoint &)
     QAction *insertAction = menu.action(CustomContextMenu::Insert);
     insertAction->setShortcut(insertShortcut->key());
     insertAction->setEnabled(insertShortcut->isEnabled());
-    connect(insertAction, &QAction::triggered, this, &ReferenceDialog::insert);
+    connect(insertAction, &QAction::triggered, this, &TreeDialog::insert);
 
     QAction *editAction = menu.action(CustomContextMenu::Edit);
     editAction->setShortcut(editShortcut->key());
     editAction->setEnabled(editShortcut->isEnabled());
-    connect(editAction, &QAction::triggered, this,  &ReferenceDialog::edit);
+    connect(editAction, &QAction::triggered, this,  &TreeDialog::edit);
 
     QAction *removeAction = menu.action(CustomContextMenu::Remove);
     removeAction->setShortcut(removeShortcut->key());
     removeAction->setEnabled(removeShortcut->isEnabled());
-    connect(removeAction, &QAction::triggered, this,  &ReferenceDialog::remove);
+    connect(removeAction, &QAction::triggered, this,  &TreeDialog::remove);
 
     QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
     refreshAction->setShortcut(refreshShortcut->key());
-    connect(refreshAction, &QAction::triggered, this, &ReferenceDialog::refresh);
+    connect(refreshAction, &QAction::triggered, this, &TreeDialog::refresh);
 
     menu.exec(QCursor().pos());
 }
 
-void ReferenceDialog::clearSelection()
+void TreeDialog::clearSelection()
 {
     _selected(QItemSelection(), QItemSelection());
     selected(QItemSelection(), QItemSelection());
@@ -86,7 +86,7 @@ void ReferenceDialog::clearSelection()
 }
 
 
-QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label, const QVariant &value)
+QVariant TreeDialog::inputDialog(const QString &title, const QString &label, const QVariant &value)
 {
     QInputDialog inputDialog;
     inputDialog.setWindowTitle(title);
@@ -102,41 +102,41 @@ QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label
     return QVariant(inputDialog.textValue());
 }
 
-void ReferenceDialog::clearInfoText()
+void TreeDialog::clearInfoText()
 {
     ui->label_info->clear();
 }
 
-void ReferenceDialog::setDialogModel(QSortFilterProxyModel *model)
+void TreeDialog::setDialogModel(QSortFilterProxyModel *model)
 {
     m_dialogProxyModel = model;
 
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ReferenceDialog::_selected);
-    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ReferenceDialog::selected);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TreeDialog::_selected);
+    connect(ui->tV_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TreeDialog::selected);
 
     ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &ReferenceDialog::contextMenu);
+    connect(ui->tV_itemView, &QMenu::customContextMenuRequested, this, &TreeDialog::contextMenu);
 
     clearSelection();
 }
 
-void ReferenceDialog::setInfoText(const QString &text)
+void TreeDialog::setInfoText(const QString &text)
 {
     ui->label_info->setText(text);
 }
 
-void ReferenceDialog::setInfoIconVisible(bool ok)
+void TreeDialog::setInfoIconVisible(bool ok)
 {
     ui->label_infoIcon->setVisible(ok);
 }
 
-void ReferenceDialog::_selected(const QItemSelection &selected, const QItemSelection &)
+void TreeDialog::_selected(const QItemSelection &selected, const QItemSelection &)
 {
     m_choice = choice(selected);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
 
-void ReferenceDialog::selected(const QItemSelection &selected, const QItemSelection &)
+void TreeDialog::selected(const QItemSelection &selected, const QItemSelection &)
 {
     insertShortcut->setEnabled(true);
     editShortcut->setEnabled(!selected.isEmpty());
@@ -144,12 +144,12 @@ void ReferenceDialog::selected(const QItemSelection &selected, const QItemSelect
     refreshShortcut->setEnabled(true);
 }
 
-void ReferenceDialog::edit()
+void TreeDialog::edit()
 {
     ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
 }
 
-void ReferenceDialog::insert()
+void TreeDialog::insert()
 {
     bool insert = m_dialogProxyModel->sourceModel()->insertRow(0);
 
@@ -174,7 +174,7 @@ void ReferenceDialog::insert()
     }
 }
 
-void ReferenceDialog::refresh()
+void TreeDialog::refresh()
 {
     if(m_dialogProxyModel != nullptr) {
         m_dialogProxyModel->invalidate();
@@ -191,7 +191,7 @@ void ReferenceDialog::refresh()
     }
 }
 
-void ReferenceDialog::remove()
+void TreeDialog::remove()
 {
     if(m_dialogProxyModel != nullptr) {
         QModelIndex index = ui->tV_itemView->currentIndex();
@@ -216,19 +216,19 @@ void ReferenceDialog::remove()
     }
 }
 
-void ReferenceDialog::accept()
+void TreeDialog::accept()
 {
     saveDialogState();
     QDialog::accept();
 }
 
-void ReferenceDialog::reject()
+void TreeDialog::reject()
 {
     saveDialogState();
     QDialog::reject();
 }
 
-void ReferenceDialog::closeEvent(QCloseEvent *event)
+void TreeDialog::closeEvent(QCloseEvent *event)
 {
    saveDialogState();
    QDialog::closeEvent(event);

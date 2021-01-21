@@ -9,16 +9,16 @@
 #include <QSortFilterProxyModel>
 
 namespace Ui {
-class ReferenceDialog;
+class TreeDialog;
 }
 
-class ReferenceDialog : public QDialog
+class TreeDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ReferenceDialog(QWidget *parent = nullptr);
-    ~ReferenceDialog();
+    explicit TreeDialog(QWidget *parent = nullptr);
+    ~TreeDialog();
 
     virtual void restoreDialogState() {};
     virtual void saveDialogState() {};
@@ -44,7 +44,7 @@ public slots:
     virtual void remove();
 
 protected:
-    Ui::ReferenceDialog *ui;
+    Ui::TreeDialog *ui;
 
     QShortcut *insertShortcut = nullptr;
     QShortcut *editShortcut = nullptr;

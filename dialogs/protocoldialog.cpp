@@ -1,5 +1,5 @@
 #include "protocoldialog.h"
-#include "ui_referencedialog.h"
+#include "ui_treedialog.h"
 
 #include "application.h"
 #include "dialogs/protocoldetailsdialog.h"
@@ -14,7 +14,7 @@
 
 #include <QSqlError>
 ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
-    ReferenceDialog(parent)
+    TreeDialog(parent)
 {
     restoreDialogState();
 
@@ -82,14 +82,14 @@ int ProtocolDialog::exec()
         clearSelection();
     }
 
-    return ReferenceDialog::exec();
+    return TreeDialog::exec();
 }
 
 void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
     pB_details->setEnabled(!selected.isEmpty());
 
-    ReferenceDialog::selected(selected, deselected);
+    TreeDialog::selected(selected, deselected);
 }
 
 void ProtocolDialog::details()

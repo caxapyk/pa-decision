@@ -1,13 +1,13 @@
 #ifndef SUBJECTDIALOG_H
 #define SUBJECTDIALOG_H
 
-#include "dialogs/referencedialog.h"
+#include "dialogs/treedialog.h"
 #include "models/subjtypemodel.h"
 #include <QDialog>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 
-class SubjtypeDialog : public ReferenceDialog
+class SubjtypeDialog : public TreeDialog
 {
     Q_OBJECT
 

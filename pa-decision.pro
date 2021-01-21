@@ -31,8 +31,8 @@ SOURCES += \
     dialogs/protocoldialog.cpp \
     dialogs/recorddetailsdialog.cpp \
     dialogs/recorddialog.cpp \
-    dialogs/referencedialog.cpp \
     dialogs/subjtypedialog.cpp \
+    dialogs/treedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     models/authorityflatmodel.cpp \
@@ -79,8 +79,8 @@ HEADERS += \
     dialogs/protocoldialog.h \
     dialogs/recorddetailsdialog.h \
     dialogs/recorddialog.h \
-    dialogs/referencedialog.h \
     dialogs/subjtypedialog.h \
+    dialogs/treedialog.h \
     mainwindow.h \
     models/authorityflatmodel.h \
     models/authoritymodel.h \
@@ -120,7 +120,7 @@ FORMS += \
     dialogs/inventorydetailsdialog.ui \
     dialogs/protocoldetailsdialog.ui \
     dialogs/recorddetailsdialog.ui \
-    dialogs/referencedialog.ui \
+    dialogs/treedialog.ui \
     mainwindow.ui \
     views/authorityview.ui \
     views/decisionview.ui \

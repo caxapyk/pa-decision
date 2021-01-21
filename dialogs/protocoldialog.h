@@ -1,14 +1,14 @@
 #ifndef PROTOCOLDIALOG_H
 #define PROTOCOLDIALOG_H
 
-#include "dialogs/referencedialog.h"
+#include "dialogs/treedialog.h"
 #include "models/protocolmodel.h"
 
 #include <QDataWidgetMapper>
 #include <QPushButton>
 #include <QSortFilterProxyModel>
 
-class ProtocolDialog : public ReferenceDialog
+class ProtocolDialog : public TreeDialog
 {
     Q_OBJECT
 

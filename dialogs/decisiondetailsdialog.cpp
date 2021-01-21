@@ -253,7 +253,7 @@ void DecisionDetailsDialog::openRecordDialog()
 }
 
 
-void DecisionDetailsDialog::openExternalDialog(QComboBox *cb, ReferenceDialog *dialog)
+void DecisionDetailsDialog::openExternalDialog(QComboBox *cb, TreeDialog *dialog)
 {
     ReferenceModel *model = dynamic_cast<ReferenceModel*>(cb->model());
 
