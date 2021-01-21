@@ -1,23 +1,23 @@
 #ifndef AUTHORITYDETAILSDIALOG_H
 #define AUTHORITYDETAILSDIALOG_H
 
-#include "dialogs/detailsdialog.h"
-
 #include <QDialog>
-#include <QSqlTableModel>
 #include <QDataWidgetMapper>
+#include <QVariant>
 
 namespace Ui {
 class AuthorityDetailsDialog;
 }
 
-class AuthorityDetailsDialog : public DetailsDialog
+class AuthorityDetailsDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit AuthorityDetailsDialog(QVariant id, QWidget *parent = nullptr);
+    explicit AuthorityDetailsDialog(const QVariant &id, QWidget *parent = nullptr);
     ~AuthorityDetailsDialog();
+
+    int exec() override;
 
     QString getName() const;
 
@@ -26,9 +26,9 @@ public slots:
 
 private:
     Ui::AuthorityDetailsDialog *ui;
-
-    QSqlTableModel *m_model;
     QDataWidgetMapper *m_mapper;
+
+    QVariant m_id;
 };
 
 #endif // AUTHORITYDETAILSDIALOG_H

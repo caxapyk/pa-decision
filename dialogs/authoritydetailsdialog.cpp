@@ -4,20 +4,34 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSqlTableModel>
 
-AuthorityDetailsDialog::AuthorityDetailsDialog(QVariant id, QWidget *parent) :
-    DetailsDialog(parent),
+AuthorityDetailsDialog::AuthorityDetailsDialog(const QVariant &id, QWidget *parent) :
+    QDialog(parent),
     ui(new Ui::AuthorityDetailsDialog)
 {
+    m_id = id;
     ui->setupUi(this);
-    m_model = new QSqlTableModel;
-    m_model->setTable("pad_authority");
-    m_model->setFilter("id=" + id.toString());
-    m_model->select();
+
+    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &AuthorityDetailsDialog::reject);
+}
+
+AuthorityDetailsDialog::~AuthorityDetailsDialog()
+{
+    delete ui;
+    delete m_mapper;
+}
+
+int AuthorityDetailsDialog::exec()
+{
+    QSqlTableModel model;
+    model.setTable("pad_authority");
+    model.setFilter("id=" + m_id.toString());
+    model.select();
 
     m_mapper = new QDataWidgetMapper;
     m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-    m_mapper->setModel(m_model);
+    m_mapper->setModel(&model);
     m_mapper->addMapping(ui->lE_name, 1);
     m_mapper->addMapping(ui->lE_shortName, 2);
     m_mapper->addMapping(ui->pTE_geo, 3);
@@ -34,14 +48,8 @@ AuthorityDetailsDialog::AuthorityDetailsDialog(QVariant id, QWidget *parent) :
                                  QMessageBox::Ok);
         }
     });
-    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &AuthorityDetailsDialog::reject);
-}
 
-AuthorityDetailsDialog::~AuthorityDetailsDialog()
-{
-    delete ui;
-    delete m_model;
-    delete m_mapper;
+    return QDialog::exec();
 }
 
 QString AuthorityDetailsDialog::getName() const

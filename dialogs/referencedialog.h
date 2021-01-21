@@ -24,14 +24,8 @@ public:
     virtual void saveDialogState() {};
     virtual bool choiceButtonEnabled() { return true; };
 
-    virtual void editComment();
-
     void contextMenu(const QPoint &pos);
 
-    void addCommentButton();
-    QPushButton *commentButton() { return pB_comment; };
-
-    void clearComment();
     void clearInfoText();
     void clearSelection();
 
@@ -41,8 +35,6 @@ public:
 
     void setChoiceMode() { choice_mode = true; };
     void setInfoText(const QString &text);
-    void setComment(const QString &text);
-    void setCommentColumn(int column) { m_commentColumn = column; };
     void setInfoIconVisible(bool ok = true);
 
 public slots:
@@ -70,9 +62,6 @@ private:
 
     bool choice_mode = false;
     int m_choice = -1;
-    int m_commentColumn = -1;
-
-    QPushButton *pB_comment = nullptr;
 
     QSortFilterProxyModel *m_dialogProxyModel = nullptr;
 

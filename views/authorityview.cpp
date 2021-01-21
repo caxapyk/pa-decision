@@ -199,8 +199,9 @@ void AuthorityView::edit()
 void AuthorityView::details()
 {
     QModelIndex index = ui->tV_authority->currentIndex();
+    QVariant id = index.siblingAtColumn(2).data(); //id
 
-    AuthorityDetailsDialog dialog(index.data(Qt::UserRole));
+    AuthorityDetailsDialog dialog(id);
     int res = dialog.exec();
 
     if(res == AuthorityDetailsDialog::Accepted) {

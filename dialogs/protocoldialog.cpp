@@ -24,9 +24,6 @@ ProtocolDialog::ProtocolDialog(QWidget *parent, const QVariant &recordId) :
 
     connect(pB_details, &QPushButton::clicked, this, &ProtocolDialog::details);
 
-    addCommentButton();
-    setCommentColumn(6);
-
     m_model = new ProtocolModel;
     if(recordId.isValid()) {
         m_model->setRecordId(recordId);
@@ -88,7 +85,6 @@ int ProtocolDialog::exec()
 void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
     pB_details->setEnabled(!selected.isEmpty());
-    commentButton()->setEnabled(!selected.isEmpty());
 
     ReferenceDialog::selected(selected, deselected);
 }

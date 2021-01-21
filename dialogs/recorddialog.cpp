@@ -2,7 +2,7 @@
 #include "ui_referencedialog.h"
 
 #include "application.h"
-#include "dialogs/recorddetailsdialog.h"
+#include "dialogs/funddetailsdialog.h"
 #include "dialogs/referencedialog.h"
 #include "dialogs/protocoldialog.h"
 #include "widgets/customcontextmenu.h"
@@ -35,9 +35,6 @@ RecordDialog::RecordDialog(QWidget *parent) :
     ui->vL_buttonGroup->addWidget(pB_protocol);
 
     connect(pB_protocol, &QPushButton::clicked, this, &RecordDialog::protocols);
-
-    addCommentButton();
-    setCommentColumn(1);
 
     m_model = new RecordModel;
 
@@ -108,7 +105,6 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
 
     pB_details->setEnabled(!selected.isEmpty());
     pB_protocol->setEnabled(!selected.isEmpty() && node->level == RecordModel::RecordLevel);
-    commentButton()->setEnabled(!selected.isEmpty());
 
     if(!selected.isEmpty()) {
         QModelIndex fundIndex;
@@ -154,23 +150,25 @@ void RecordDialog::details()
 
     switch (node->level) {
     case RecordModel::FundLevel:
+    {
         index = ui->tV_itemView->currentIndex();
-        break;
+        QVariant id = index.siblingAtColumn(2).data(); //id
+
+        FundDetailsDialog dialog(id);
+        int res = dialog.exec();
+
+        if(res == FundDetailsDialog::Accepted) {
+             m_proxyModel->setData(index.siblingAtColumn(0), dialog.getNumber());
+             setInfoText(dialog.getName());
+        }
+    }
+    break;
     case RecordModel::InventoryLevel:
         index = ui->tV_itemView->currentIndex().parent();
         break;
     case RecordModel::RecordLevel:
         index = ui->tV_itemView->currentIndex().parent().parent();
         break;
-    }
-
-    RecordDetailsDialog dialog(index.data(Qt::UserRole));
-    int res = dialog.exec();
-
-    if(res == RecordDetailsDialog::Accepted) {
-         QString n = dialog.getFundName();
-         m_proxyModel->setData(index.siblingAtColumn(3), n);
-         setInfoText(n);
     }
 }
 

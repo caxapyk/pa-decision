@@ -31,8 +31,6 @@ ReferenceDialog::~ReferenceDialog()
     delete editShortcut;
     delete removeShortcut;
     delete refreshShortcut;
-
-    delete pB_comment;
 }
 
 void ReferenceDialog::setupShortcuts()
@@ -87,16 +85,6 @@ void ReferenceDialog::clearSelection()
     ui->tV_itemView->setCurrentIndex(QModelIndex());
 }
 
-void ReferenceDialog::addCommentButton()
-{
-    pB_comment = new QPushButton(tr("Comment"));
-    pB_comment->setIcon(QIcon(":/icons/icons/comment-16.png"));
-    pB_comment->setDisabled(true);
-
-    ui->vL_buttonGroup->addWidget(pB_comment);
-
-    connect(pB_comment, &QPushButton::clicked, this, &ReferenceDialog::editComment);
-}
 
 QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label, const QVariant &value)
 {
@@ -112,12 +100,6 @@ QVariant ReferenceDialog::inputDialog(const QString &title, const QString &label
     inputDialog.exec();
 
     return QVariant(inputDialog.textValue());
-}
-
-void ReferenceDialog::clearComment()
-{
-    ui->label_comment->clear();
-    ui->label_commentIcon->setVisible(false);
 }
 
 void ReferenceDialog::clearInfoText()
@@ -138,12 +120,6 @@ void ReferenceDialog::setDialogModel(QSortFilterProxyModel *model)
     clearSelection();
 }
 
-void ReferenceDialog::setComment(const QString &text)
-{
-    ui->label_commentIcon->setVisible(!text.isEmpty());
-    ui->label_comment->setText(text);
-}
-
 void ReferenceDialog::setInfoText(const QString &text)
 {
     ui->label_info->setText(text);
@@ -156,15 +132,6 @@ void ReferenceDialog::setInfoIconVisible(bool ok)
 
 void ReferenceDialog::_selected(const QItemSelection &selected, const QItemSelection &)
 {
-    if(!selected.isEmpty()) {
-        if(m_commentColumn >= 0) {
-            QModelIndex index = selected.indexes().at(m_commentColumn);
-            setComment(index.data().toString());
-        }
-    } else {
-        clearComment();
-    }
-
     m_choice = choice(selected);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
@@ -180,28 +147,6 @@ void ReferenceDialog::selected(const QItemSelection &selected, const QItemSelect
 void ReferenceDialog::edit()
 {
     ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
-}
-
-void ReferenceDialog::editComment()
-{
-    if(m_commentColumn >= 0) {
-        QModelIndex index = ui->tV_itemView->currentIndex().siblingAtColumn(m_commentColumn);
-        QString title = tr("Comment");
-
-        QVariant value = inputDialog(title, tr("Enter comment"), index.data());
-
-        if (value.isValid() && value != index.data()) {
-            bool set = m_dialogProxyModel->sourceModel()->setData(m_dialogProxyModel->mapToSource(index), value);
-            if(set) {
-                setComment(value.toString());
-            } else {
-                QMessageBox::warning(this,
-                                     title,
-                                     tr("Could not set data.") + (value.toString().length() >= 255 ? tr(" Too long.") : ""),
-                                     QMessageBox::Ok);
-            }
-        }
-    }
 }
 
 void ReferenceDialog::insert()
