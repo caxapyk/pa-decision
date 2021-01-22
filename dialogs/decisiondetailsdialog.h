@@ -2,10 +2,7 @@
 #define DECISIONBASEDIALOG_H
 
 #include "dialogs/treedialog.h"
-#include "models/authorityflatmodel.h"
 #include "models/documenttypemodel.h"
-#include "models/protocolflatmodel.h"
-#include "models/recordflatmodel.h"
 
 #include <QDialog>
 #include <QDataWidgetMapper>
@@ -45,10 +42,10 @@ protected:
 
 private:
     QSqlRelationalTableModel *m_model;
-    AuthorityFlatModel *m_authorityModel;
+    //AuthorityListModel *m_authorityModel;
     DocumentTypeModel *m_doctypeModel;
-    ProtocolFlatModel *m_protocolModel;
-    RecordFlatModel *m_recordModel;
+    //ProtocolFlatModel *m_protocolModel;
+    //RecordFlatModel *m_recordModel;
 
     QDataWidgetMapper *m_mapper = nullptr;
 

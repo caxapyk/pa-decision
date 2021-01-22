@@ -2,7 +2,6 @@
 #define RECORDDIALOG_H
 
 #include "dialogs/treedialog.h"
-#include "models/authorityflatmodel.h"
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
 #include "widgets/dialogheader.h"

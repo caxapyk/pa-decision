@@ -34,7 +34,6 @@ SOURCES += \
     dialogs/treedialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    models/authorityflatmodel.cpp \
     models/authoritymodel.cpp \
     models/authorityproxymodel.cpp \
     models/colorpickeritemdelegate.cpp \
@@ -43,7 +42,6 @@ SOURCES += \
     models/documenttypemodel.cpp \
     models/protocolflatmodel.cpp \
     models/protocolmodel.cpp \
-    models/recordflatmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/sqlbasemodel.cpp \
@@ -81,7 +79,6 @@ HEADERS += \
     dialogs/subjtypedialog.h \
     dialogs/treedialog.h \
     mainwindow.h \
-    models/authorityflatmodel.h \
     models/authoritymodel.h \
     models/authorityproxymodel.h \
     models/colorpickeritemdelegate.h \
@@ -90,7 +87,6 @@ HEADERS += \
     models/documenttypemodel.h \
     models/protocolflatmodel.h \
     models/protocolmodel.h \
-    models/recordflatmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/sqlbasemodel.h \
