@@ -3,7 +3,6 @@
 
 #include "application.h"
 #include "dialogs/authoritydetailsdialog.h"
-#include "utils/customcontextmenu.h"
 #include "widgets/decisiontab.h"
 
 #include <QDebug>
@@ -16,8 +15,11 @@ AuthorityView::AuthorityView(QWidget *parent) :
     ui(new Ui::AuthorityView)
 {
     ui->setupUi(this);
-    initialize();
 
+    m_tree = new CustomTreeView;
+    ui->tab_authorities->layout()->addWidget(m_tree);
+
+    initialize();
     restoreViewState();
 }
 
@@ -26,6 +28,7 @@ AuthorityView::~AuthorityView()
     saveViewState();
 
     delete ui;
+    delete m_tree;
 
     delete m_authorityModel;
     delete m_authorityProxyModel;
@@ -38,22 +41,21 @@ void AuthorityView::initialize()
 
     m_authorityProxyModel = new AuthorityProxyModel;
     m_authorityProxyModel->setSourceModel(m_authorityModel);
-    m_authorityProxyModel->setDynamicSortFilter(false);
-    ui->tV_authority->setModel(m_authorityProxyModel);
+    m_authorityProxyModel->setDynamicSortFilter(true);
+    m_tree->setModel(m_authorityProxyModel);
 
-    ui->tV_authority->hideColumn(1);
-    ui->tV_authority->hideColumn(2);
-    ui->tV_authority->expandAll();
+    m_tree->hideColumn(1);
+    m_tree->hideColumn(2);
+    m_tree->expandAll();
 
-    m_authorityProxyModel->sort(0, Qt::AscendingOrder);
+    connect(m_tree, &CustomTreeView::onContextMenuRequested, this, &AuthorityView::contextMenu);
+    connect(m_tree, &QTreeView::doubleClicked, this, &AuthorityView::openInNewTab);
+    connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AuthorityView::selected);
 
-    ui->tV_authority->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tV_authority, &QMenu::customContextMenuRequested, this, &AuthorityView::contextMenu);
-
-    connect(ui->tV_authority, &QTreeView::doubleClicked, this, &AuthorityView::openInNewTab);
-    connect(ui->tV_authority->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AuthorityView::selected);
-
-    setupShortcuts();
+    connect(m_tree, &CustomTreeView::onInsert, this, &AuthorityView::insert);
+    connect(m_tree, &CustomTreeView::onEdit, this,  &AuthorityView::edit);
+    connect(m_tree, &CustomTreeView::onRemove, this,  &AuthorityView::remove);
+    connect(m_tree, &CustomTreeView::onRefresh, this, &AuthorityView::refresh);
 }
 
 void AuthorityView::restoreViewState()
@@ -66,59 +68,17 @@ void AuthorityView::saveViewState()
 
 }
 
-void AuthorityView::setupShortcuts()
+void AuthorityView::contextMenu(CustomContextMenu &menu)
 {
-    insertShortcut = new QShortcut(QKeySequence::New, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    insertShortcut->setEnabled(true);
-    connect(insertShortcut, &QShortcut::activated, this, &AuthorityView::insert);
-
-    editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    editShortcut->setEnabled(false);
-    connect(editShortcut, &QShortcut::activated, this, &AuthorityView::edit);
-
-    removeShortcut = new QShortcut(QKeySequence::Delete, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    removeShortcut->setEnabled(false);
-    connect(removeShortcut, &QShortcut::activated, this, &AuthorityView::remove);
-
-    refreshShortcut = new QShortcut(QKeySequence::Refresh, ui->tV_authority, nullptr, nullptr, Qt::WidgetShortcut);
-    refreshShortcut->setEnabled(true);
-    connect(refreshShortcut, &QShortcut::activated, this, &AuthorityView::refresh);
-}
-
-void AuthorityView::contextMenu(const QPoint &)
-{
-    QModelIndex currentIndex = ui->tV_authority->indexAt(ui->tV_authority->viewport()->mapFromGlobal(QCursor().pos()));
-    ui->tV_authority->setCurrentIndex(currentIndex);
-
-    CustomContextMenu menu(CustomContextMenu::Insert | CustomContextMenu::Edit | CustomContextMenu::Remove | CustomContextMenu::Refresh);
+    QModelIndex currentIndex = m_tree->indexAt(m_tree->viewport()->mapFromGlobal(QCursor().pos()));
+    m_tree->setCurrentIndex(currentIndex);
 
     QAction openInNTAction(tr("Open in new tab"));
-    connect(&openInNTAction, &QAction::triggered, this, [=] {
-        openInNewTab(currentIndex);
-    });
+    connect(&openInNTAction, &QAction::triggered, this, [=] { openInNewTab(currentIndex); });
     openInNTAction.setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
     menu.insertAction(menu.action(CustomContextMenu::Insert), &openInNTAction);
 
     menu.insertSeparator(menu.action(CustomContextMenu::Insert));
-
-    QAction *insertAction = menu.action(CustomContextMenu::Insert);
-    insertAction->setShortcut(insertShortcut->key());
-    insertAction->setEnabled(insertShortcut->isEnabled());
-    connect(insertAction, &QAction::triggered, this, &AuthorityView::insert);
-
-    QAction *editAction = menu.action(CustomContextMenu::Edit);
-    editAction->setShortcut(editShortcut->key());
-    editAction->setEnabled(editShortcut->isEnabled());
-    connect(editAction, &QAction::triggered, this,  &AuthorityView::edit);
-
-    QAction *removeAction = menu.action(CustomContextMenu::Remove);
-    removeAction->setShortcut(removeShortcut->key());
-    removeAction->setEnabled(removeShortcut->isEnabled());
-    connect(removeAction, &QAction::triggered, this,  &AuthorityView::remove);
-
-    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
-    refreshAction->setShortcut(refreshShortcut->key());
-    connect(refreshAction, &QAction::triggered, this, &AuthorityView::refresh);
 
     QAction detailsAction(tr("Details"));
     connect(&detailsAction, &QAction::triggered, this,  &AuthorityView::details);
@@ -133,10 +93,10 @@ void AuthorityView::selected(const QItemSelection &selected, const QItemSelectio
     QModelIndex current = !selected.isEmpty() ? selected.indexes().at(0) : QModelIndex();
     QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
 
-    refreshShortcut->setEnabled(true);
-    insertShortcut->setEnabled(selected.isEmpty() || current == root);
-    editShortcut->setEnabled(!selected.isEmpty() && current !=root);
-    removeShortcut->setEnabled(!selected.isEmpty() && current != root);
+    m_tree->setInsertEnabled(selected.isEmpty() || current == root);
+    m_tree->setEditEnabled(!selected.isEmpty() && current !=root);
+    m_tree->setRemoveEnabled(!selected.isEmpty() && current != root);
+    m_tree->setRefreshEnabled(true);
 
     application->mainWindow()->action_record->setEnabled(!selected.isEmpty() && current != root);
 
@@ -168,8 +128,8 @@ void AuthorityView::insert()
     QModelIndex sourceRoot = m_authorityModel->rootItem();
     QModelIndex proxyRoot = m_authorityProxyModel->mapFromSource(sourceRoot);
 
-    if(!ui->tV_authority->isExpanded(proxyRoot)) {
-        ui->tV_authority->expand(proxyRoot);
+    if(!m_tree->isExpanded(proxyRoot)) {
+        m_tree->expand(proxyRoot);
     }
 
     int v = m_authorityProxyModel->sourceModel()->rowCount(sourceRoot) - 1;
@@ -180,9 +140,9 @@ void AuthorityView::insert()
         v += 1;
         QModelIndex currentIndex = m_authorityProxyModel->mapFromSource(m_authorityProxyModel->sourceModel()->index(v, 0, sourceRoot));
 
-        ui->tV_authority->setCurrentIndex(currentIndex);
-        ui->tV_authority->scrollTo(currentIndex);
-        ui->tV_authority->edit(currentIndex);
+        m_tree->setCurrentIndex(currentIndex);
+        m_tree->scrollTo(currentIndex);
+        m_tree->edit(currentIndex);
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),
@@ -193,12 +153,12 @@ void AuthorityView::insert()
 
 void AuthorityView::edit()
 {
-    ui->tV_authority->edit(ui->tV_authority->currentIndex());
+    m_tree->edit(m_tree->currentIndex());
 }
 
 void AuthorityView::details()
 {
-    QModelIndex index = ui->tV_authority->currentIndex();
+    QModelIndex index = m_tree->currentIndex();
     QVariant id = index.siblingAtColumn(2).data(); //id
 
     AuthorityDetailsDialog dialog(id);
@@ -211,7 +171,7 @@ void AuthorityView::details()
 
 void AuthorityView::remove()
 {
-    QModelIndex index = ui->tV_authority->currentIndex();
+    QModelIndex index = m_tree->currentIndex();
     QModelIndex parent = m_authorityProxyModel->parent(index);
 
     int res = QMessageBox::critical(this,
@@ -222,7 +182,7 @@ void AuthorityView::remove()
     if (res == QMessageBox::Yes) {
         bool remove = m_authorityProxyModel->removeRow(index.row(), parent);
         if (remove) {
-            ui->tV_authority->setCurrentIndex(QModelIndex());
+            m_tree->setCurrentIndex(QModelIndex());
         } else {
             QMessageBox::warning(this,
                     tr("Deleting item"),
@@ -235,7 +195,7 @@ void AuthorityView::remove()
 void AuthorityView::refresh()
 {
     m_authorityModel->select();
-    ui->tV_authority->expandAll();
+    m_tree->expandAll();
     selected(QItemSelection(), QItemSelection());
 }
 

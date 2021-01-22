@@ -1,5 +1,4 @@
 #include "protocoldialog.h"
-#include "ui_treedialog.h"
 
 #include "application.h"
 #include "dialogs/protocoldetailsdialog.h"
@@ -10,6 +9,7 @@
 #include <QItemSelection>
 #include <QMenu>
 #include <QMessageBox>
+#include <QHeaderView>
 
 ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
     TreeDialog(parent)
@@ -21,11 +21,12 @@ ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
     pB_details = new QPushButton(tr("Details"));
     pB_details->setDisabled(true);
 
-    ui->vL_buttonGroup->addWidget(pB_details);
+    buttonLayout()->addWidget(pB_details);
 
     connect(pB_details, &QPushButton::clicked, this, &ProtocolDialog::details);
 
     m_model = new ProtocolModel;
+    m_model->setEditStrategy(ProtocolModel::OnFieldChange);
     if(recordId.isValid()) {
         m_model->setRecordId(recordId);
     }
@@ -34,9 +35,9 @@ ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
     m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
-    ui->tV_itemView->setModel(m_proxyModel);
-    ui->tV_itemView->hideColumn(0);
-    ui->tV_itemView->hideColumn(6);
+    m_tree->setModel(m_proxyModel);
+    m_tree->hideColumn(0);
+    m_tree->hideColumn(6);
 
     setProxyModel(m_proxyModel);
 }
@@ -56,7 +57,7 @@ void ProtocolDialog::restoreDialogState()
     QSettings* settings = application->applicationSettings();
 
     restoreGeometry(settings->value("ProtocolDialog/geometry").toByteArray());
-    ui->tV_itemView->header()->restoreState(settings->value("ProtocolDialog/tV_itemView").toByteArray());
+    m_tree->header()->restoreState(settings->value("ProtocolDialog/tV_itemView").toByteArray());
 }
 
 void ProtocolDialog::saveDialogState()
@@ -65,7 +66,7 @@ void ProtocolDialog::saveDialogState()
 
     settings->beginGroup("ProtocolDialog");
     settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
+    settings->setValue("tV_itemView", m_tree->header()->saveState());
     settings->endGroup();
 }
 
@@ -73,10 +74,7 @@ int ProtocolDialog::exec()
 {
     if(m_authorityId.isValid()) {
         clearInfoText();
-
-        //m_model->setAuthorityId(m_authorityId.toInt());
         m_model->select();
-
         clearSelection();
     }
 
@@ -86,20 +84,18 @@ int ProtocolDialog::exec()
 void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
     pB_details->setEnabled(!selected.isEmpty());
-
     TreeDialog::selected(selected, deselected);
 }
 
 void ProtocolDialog::details()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
+    QModelIndex index = m_tree->currentIndex();
     QVariant id = index.siblingAtColumn(0).data();
 
     ProtocolDetailsDialog dialog(id);
     int res = dialog.exec();
 
     if(res == ProtocolDetailsDialog::Accepted) {
-        qDebug() << index.siblingAtColumn(2).data() << dialog.getNumber();
         m_proxyModel->setData(index.siblingAtColumn(2), dialog.getNumber());
         m_proxyModel->setData(index.siblingAtColumn(3), dialog.getPages());
         m_proxyModel->setData(index.siblingAtColumn(4), dialog.getName());
@@ -110,7 +106,7 @@ void ProtocolDialog::details()
 
 bool ProtocolDialog::choiceButtonEnabled()
 {
-    return !isChoiceMode() || !ui->tV_itemView->selectionModel()->selection().isEmpty();
+    return !isChoiceMode() || !m_tree->selectionModel()->selection().isEmpty();
 }
 
 int ProtocolDialog::choice(const QItemSelection &selected) const
@@ -152,8 +148,8 @@ void ProtocolDialog::insert()
                         m_proxyModel->sourceModel()->index(0, m_proxyModel->columnCount() - 1));
 
             QItemSelection selection(topLeft, bottomRight);
-            ui->tV_itemView->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
-            ui->tV_itemView->scrollTo(topLeft);
+            m_tree->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+            m_tree->scrollTo(topLeft);
         } else {
             QMessageBox::critical(this,
                     tr("New protocol"),

@@ -1,5 +1,4 @@
 #include "recorddialog.h"
-#include "ui_treedialog.h"
 
 #include "application.h"
 #include "dialogs/funddetailsdialog.h"
@@ -11,9 +10,8 @@
 
 #include <QDebug>
 #include <QIcon>
-#include <QInputDialog>
 #include <QItemSelection>
-#include <QMenu>
+#include <QHeaderView>
 #include <QMessageBox>
 
 RecordDialog::RecordDialog(QWidget *parent) :
@@ -27,14 +25,14 @@ RecordDialog::RecordDialog(QWidget *parent) :
     pB_details = new QPushButton(tr("Details"));
     pB_details->setDisabled(true);
 
-    ui->vL_buttonGroup->addWidget(pB_details);
+    buttonLayout()->addWidget(pB_details);
 
     connect(pB_details, &QPushButton::clicked, this, &RecordDialog::details);
 
     pB_protocol = new QPushButton(tr("Protocols"));
     pB_protocol->setDisabled(true);
 
-    ui->vL_buttonGroup->addWidget(pB_protocol);
+    buttonLayout()->addWidget(pB_protocol);
 
     connect(pB_protocol, &QPushButton::clicked, this, &RecordDialog::protocols);
 
@@ -43,11 +41,11 @@ RecordDialog::RecordDialog(QWidget *parent) :
     m_proxyModel = new RecordProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
-    ui->tV_itemView->setModel(m_proxyModel);
-    ui->tV_itemView->hideColumn(1);
-    ui->tV_itemView->hideColumn(2);
-    ui->tV_itemView->hideColumn(3);
-    ui->tV_itemView->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_tree->setModel(m_proxyModel);
+    m_tree->hideColumn(1);
+    m_tree->hideColumn(2);
+    m_tree->hideColumn(3);
+    m_tree->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setProxyModel(m_proxyModel);
 }
@@ -68,7 +66,7 @@ void RecordDialog::restoreDialogState()
     QSettings* settings = application->applicationSettings();
 
     restoreGeometry(settings->value("RecordDialog/geometry").toByteArray());
-    ui->tV_itemView->header()->restoreState(settings->value("RecordDialog/tV_itemView").toByteArray());
+    m_tree->header()->restoreState(settings->value("RecordDialog/tV_itemView").toByteArray());
 }
 
 void RecordDialog::saveDialogState()
@@ -77,7 +75,7 @@ void RecordDialog::saveDialogState()
 
     settings->beginGroup("RecordDialog");
     settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
+    settings->setValue("tV_itemView", m_tree->header()->saveState());
     settings->endGroup();
 }
 
@@ -100,16 +98,16 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
     QModelIndex current = !selected.isEmpty() ? selected.indexes().at(0) : QModelIndex();
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
-    insertShortcut->setEnabled(node == nullptr || node->level != RecordModel::RecordLevel);
-    editShortcut->setEnabled(!selected.isEmpty());
-    removeShortcut->setEnabled(!selected.isEmpty());
-    refreshShortcut->setEnabled(true);
+    m_tree->setInsertEnabled(node == nullptr || node->level != RecordModel::RecordLevel);
+    m_tree->setEditEnabled(!selected.isEmpty());
+    m_tree->setRemoveEnabled(!selected.isEmpty());
+    m_tree->setRefreshEnabled(true);
 
     pB_details->setEnabled(!selected.isEmpty());
     pB_protocol->setEnabled(!selected.isEmpty() && node->level == RecordModel::RecordLevel);
 
     if(!selected.isEmpty()) {
-        QModelIndex index = ui->tV_itemView->currentIndex();
+        QModelIndex index = m_tree->currentIndex();
         setInfoText(index.siblingAtColumn(3).data().toString());
     } else {
         clearInfoText();
@@ -118,7 +116,7 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
 
 bool RecordDialog::choiceButtonEnabled()
 {
-    RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()).internalPointer());
+    RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(m_tree->currentIndex()).internalPointer());
 
     return !isChoiceMode() || (node && node->level == RecordModel::RecordLevel);
 }
@@ -135,8 +133,8 @@ int RecordDialog::choice(const QItemSelection &selected) const
 
 void RecordDialog::details()
 {
-    RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(ui->tV_itemView->currentIndex()).internalPointer());
-    QModelIndex index = ui->tV_itemView->currentIndex();
+    RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(m_tree->currentIndex()).internalPointer());
+    QModelIndex index = m_tree->currentIndex();
 
     switch (node->level) {
     case RecordModel::FundLevel:
@@ -183,7 +181,7 @@ void RecordDialog::details()
 
 void RecordDialog::protocols()
 {
-    QModelIndex index = ui->tV_itemView->currentIndex();
+    QModelIndex index = m_tree->currentIndex();
     QVariant id = index.data(Qt::UserRole); //id
 
     ProtocolDialog dialog(id);
@@ -193,11 +191,11 @@ void RecordDialog::protocols()
 
 void RecordDialog::insert()
 {
-    QModelIndex proxyParent = ui->tV_itemView->currentIndex();
+    QModelIndex proxyParent = m_tree->currentIndex();
     QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
 
-    if(!ui->tV_itemView->isExpanded(proxyParent)) {
-        ui->tV_itemView->expand(proxyParent);
+    if(!m_tree->isExpanded(proxyParent)) {
+        m_tree->expand(proxyParent);
     }
 
     int v = m_proxyModel->sourceModel()->rowCount(sourceParent);
@@ -207,9 +205,9 @@ void RecordDialog::insert()
     if(insert) {
         QModelIndex currentIndex = m_proxyModel->mapFromSource(m_proxyModel->sourceModel()->index(v, 0, sourceParent));
 
-        ui->tV_itemView->setCurrentIndex(currentIndex);
-        ui->tV_itemView->scrollTo(currentIndex);
-        ui->tV_itemView->edit(ui->tV_itemView->currentIndex());
+        m_tree->setCurrentIndex(currentIndex);
+        m_tree->scrollTo(currentIndex);
+        m_tree->edit(m_tree->currentIndex());
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),

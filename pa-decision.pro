@@ -56,6 +56,7 @@ SOURCES += \
     views/explorerview.cpp \
     views/view.cpp \
     widgets/colorrect.cpp \
+    widgets/customtreeview.cpp \
     widgets/decisiontab.cpp \
     widgets/dialogheader.cpp \
     widgets/paginator.cpp \
@@ -102,6 +103,7 @@ HEADERS += \
     views/explorerview.h \
     views/view.h \
     widgets/colorrect.h \
+    widgets/customtreeview.h \
     widgets/decisiontab.h \
     widgets/dialogheader.h \
     widgets/paginator.h \

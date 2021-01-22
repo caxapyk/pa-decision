@@ -7,6 +7,8 @@
 #include "views/view.h"
 #include "views/explorerview.h"
 #include "views/decisionview.h"
+#include "utils/customcontextmenu.h"
+#include "widgets/customtreeview.h"
 
 #include <QShortcut>
 #include <QSortFilterProxyModel>
@@ -40,22 +42,16 @@ public:
 
 private:
     Ui::AuthorityView *ui;
-    QShortcut *insertShortcut = nullptr;
-    QShortcut *editShortcut = nullptr;
-    QShortcut *removeShortcut = nullptr;
-    QShortcut *refreshShortcut = nullptr;
+    ExplorerView *_explorer;
+    CustomTreeView *m_tree;
 
     AuthorityModel *m_authorityModel;
     AuthorityProxyModel *m_authorityProxyModel;
 
-    ExplorerView *_explorer;
-
     QVariant m_authorityId;
 
-    void setupShortcuts();
-
 private slots:
-    void contextMenu(const QPoint &pos);
+    void contextMenu(CustomContextMenu &menu);
     void selected(const QItemSelection &selected, const QItemSelection &deselected);
     void openInNewTab(const QModelIndex &index);
     void insert();

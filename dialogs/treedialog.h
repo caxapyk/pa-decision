@@ -2,11 +2,14 @@
 #define REFERENCEDIALOG_H
 
 #include "models/sqlbasemodel.h"
+#include "utils/customcontextmenu.h"
+#include "widgets/customtreeview.h"
 
 #include <QDialog>
 #include <QShortcut>
 #include <QPushButton>
 #include <QSortFilterProxyModel>
+#include <QBoxLayout>
 
 namespace Ui {
 class TreeDialog;
@@ -24,8 +27,6 @@ public:
     virtual void saveDialogState() {};
     virtual bool choiceButtonEnabled() { return true; };
 
-    void contextMenu(const QPoint &pos);
-
     void clearInfoText();
     void clearSelection();
 
@@ -37,6 +38,8 @@ public:
     void setInfoText(const QString &text);
     void setInfoIconVisible(bool ok = true);
 
+    QBoxLayout *buttonLayout();
+
 public slots:
     virtual void edit();
     virtual void insert();
@@ -44,12 +47,7 @@ public slots:
     virtual void remove();
 
 protected:
-    Ui::TreeDialog *ui;
-
-    QShortcut *insertShortcut = nullptr;
-    QShortcut *editShortcut = nullptr;
-    QShortcut *removeShortcut = nullptr;
-    QShortcut *refreshShortcut = nullptr;
+    CustomTreeView *m_tree;
 
     void setProxyModel(QSortFilterProxyModel *model);
 
@@ -58,14 +56,15 @@ protected slots:
     virtual int choice(const QItemSelection &selected) const = 0;
 
 private:
-    void setupShortcuts();
+    Ui::TreeDialog *ui;
+
+    QSortFilterProxyModel *m_dialogProxyModel = nullptr;
 
     bool choice_mode = false;
     int m_choice = -1;
 
-    QSortFilterProxyModel *m_dialogProxyModel = nullptr;
-
 private slots:
+    void contextMenu(CustomContextMenu &menu);
     void _selected(const QItemSelection &selected, const QItemSelection &deselected);
 
     void accept() override;

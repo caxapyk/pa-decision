@@ -1,12 +1,10 @@
 #include "subjtypedialog.h"
-#include "ui_treedialog.h"
-
 #include "application.h"
 
 #include <QDebug>
 #include <QMessageBox>
 #include <QMenu>
-
+#include <QHeaderView>
 
 SubjtypeDialog::SubjtypeDialog(QWidget *parent) :
     TreeDialog(parent)
@@ -16,7 +14,7 @@ SubjtypeDialog::SubjtypeDialog(QWidget *parent) :
     setWindowTitle(tr("Subjects"));
     setWindowIcon(QIcon(":/icons/icons/subject-16.png"));
 
-    ui->label_infoIcon->setVisible(true);
+    setInfoIconVisible(true);
     setInfoText(tr("Use subjects for grouping desicions!"));
 
     m_model = new SubjtypeModel;
@@ -25,8 +23,8 @@ SubjtypeDialog::SubjtypeDialog(QWidget *parent) :
     m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
-    ui->tV_itemView->setModel(m_proxyModel);
-    ui->tV_itemView->hideColumn(0);
+    m_tree->setModel(m_proxyModel);
+    m_tree->hideColumn(0);
 
     setProxyModel(m_proxyModel);
 }
@@ -43,7 +41,7 @@ void SubjtypeDialog::restoreDialogState()
 {
     QSettings* settings = application->applicationSettings();
     restoreGeometry(settings->value("SubjtypeDialog/geometry").toByteArray());
-    ui->tV_itemView->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
+    m_tree->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
 }
 
 void SubjtypeDialog::saveDialogState()
@@ -52,6 +50,6 @@ void SubjtypeDialog::saveDialogState()
 
     settings->beginGroup("SubjtypeDialog");
     settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_itemView", ui->tV_itemView->header()->saveState());
+    settings->setValue("tV_itemView", m_tree->header()->saveState());
     settings->endGroup();
 }
