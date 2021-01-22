@@ -44,6 +44,8 @@ void AuthorityView::initialize()
     m_authorityProxyModel->setDynamicSortFilter(true);
     m_tree->setModel(m_authorityProxyModel);
 
+    m_tree->setFrameShape(QFrame::NoFrame);
+
     m_tree->hideColumn(1);
     m_tree->hideColumn(2);
     m_tree->expandAll();

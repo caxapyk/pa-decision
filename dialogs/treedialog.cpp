@@ -16,7 +16,7 @@ TreeDialog::TreeDialog(QWidget *parent) :
     ui->setupUi(this);
 
     m_tree = new CustomTreeView;
-    ui->hL_body->addWidget(m_tree);
+    ui->hL_body->insertWidget(0, m_tree);
 
     connect(m_tree, &CustomTreeView::onContextMenuRequested, this, &TreeDialog::contextMenu);
     //connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TreeDialog::selected);
@@ -47,7 +47,6 @@ void TreeDialog::contextMenu(CustomContextMenu &menu)
 {
     menu.exec(QCursor().pos());
 }
-
 
 void TreeDialog::clearSelection()
 {

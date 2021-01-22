@@ -56,7 +56,6 @@ SOURCES += \
     widgets/colorrect.cpp \
     widgets/customtreeview.cpp \
     widgets/decisiontab.cpp \
-    widgets/dialogheader.cpp \
     widgets/paginator.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
@@ -101,7 +100,6 @@ HEADERS += \
     widgets/colorrect.h \
     widgets/customtreeview.h \
     widgets/decisiontab.h \
-    widgets/dialogheader.h \
     widgets/paginator.h \
     widgets/referencebutton.h \
     widgets/searchpanel.h \
@@ -121,7 +119,6 @@ FORMS += \
     views/authorityview.ui \
     views/decisionview.ui \
     views/explorerview.ui \
-    widgets/dialogheader.ui \
     widgets/paginator.ui \
     widgets/referencebutton.ui \
     widgets/searchpanel.ui \

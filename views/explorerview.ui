@@ -41,22 +41,10 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QTabWidget {
-background-color: #333;
-}
-QTabWidget::pane {
-border: 0px solid gray;
-}
-QTabBar {
-border: 0px solid white;
-color: white;
-}
-QTabBar::tab:top:selected {
-background-color: gray;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="tabShape">
-      <enum>QTabWidget::Triangular</enum>
+      <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
       <number>-1</number>

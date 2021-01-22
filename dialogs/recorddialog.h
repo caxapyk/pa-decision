@@ -4,7 +4,6 @@
 #include "dialogs/treedialog.h"
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
-#include "widgets/dialogheader.h"
 
 #include <QDialog>
 #include <QPushButton>
