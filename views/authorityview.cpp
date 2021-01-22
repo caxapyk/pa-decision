@@ -3,7 +3,7 @@
 
 #include "application.h"
 #include "dialogs/authoritydetailsdialog.h"
-#include "widgets/customcontextmenu.h"
+#include "utils/customcontextmenu.h"
 #include "widgets/decisiontab.h"
 
 #include <QDebug>

@@ -7,7 +7,7 @@
 #include "dialogs/recorddetailsdialog.h"
 #include "dialogs/treedialog.h"
 #include "dialogs/protocoldialog.h"
-#include "widgets/customcontextmenu.h"
+#include "utils/customcontextmenu.h"
 
 #include <QDebug>
 #include <QIcon>

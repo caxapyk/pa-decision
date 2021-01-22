@@ -1,7 +1,7 @@
 #include "treedialog.h"
 #include "ui_treedialog.h"
 
-#include "widgets/customcontextmenu.h"
+#include "utils/customcontextmenu.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -181,7 +181,7 @@ void TreeDialog::refresh()
 {
     if(m_dialogProxyModel != nullptr) {
         m_dialogProxyModel->invalidate();
-        ui->tV_itemView->sortByColumn(-1, Qt::AscendingOrder);
+        //ui->tV_itemView->sortByColumn(-1, Qt::AscendingOrder);
 
         SqlBaseModel *sqlbasemodel = dynamic_cast<SqlBaseModel*>(m_dialogProxyModel->sourceModel());
         QSqlTableModel *qsqltablemodel = dynamic_cast<QSqlTableModel*>(m_dialogProxyModel->sourceModel());
@@ -191,6 +191,7 @@ void TreeDialog::refresh()
         } else if(qsqltablemodel) {
             qsqltablemodel->select();
         }
+
         ui->tV_itemView->selectionModel()->clearCurrentIndex();
         clearSelection();
     }
@@ -210,7 +211,9 @@ void TreeDialog::remove()
         if (res == QMessageBox::Yes) {
             bool remove = m_dialogProxyModel->removeRow(index.row(), parent);
             if (remove) {
-                refresh();
+                // refresh QSqlTableModel
+                if(dynamic_cast<QSqlTableModel*>(m_dialogProxyModel->sourceModel()))
+                    refresh();
             } else {
                 QMessageBox::warning(this,
                         tr("Deleting item"),

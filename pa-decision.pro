@@ -48,6 +48,7 @@ SOURCES += \
     models/recordproxymodel.cpp \
     models/sqlbasemodel.cpp \
     models/subjtypemodel.cpp \
+    utils/customcontextmenu.cpp \
     utils/itemcounter.cpp \
     utils/stringsort.cpp \
     views/authorityview.cpp \
@@ -55,7 +56,6 @@ SOURCES += \
     views/explorerview.cpp \
     views/view.cpp \
     widgets/colorrect.cpp \
-    widgets/customcontextmenu.cpp \
     widgets/decisiontab.cpp \
     widgets/dialogheader.cpp \
     widgets/paginator.cpp \
@@ -94,6 +94,7 @@ HEADERS += \
     models/recordproxymodel.h \
     models/sqlbasemodel.h \
     models/subjtypemodel.h \
+    utils/customcontextmenu.h \
     utils/itemcounter.h \
     utils/stringsort.h \
     views/authorityview.h \
@@ -101,7 +102,6 @@ HEADERS += \
     views/explorerview.h \
     views/view.h \
     widgets/colorrect.h \
-    widgets/customcontextmenu.h \
     widgets/decisiontab.h \
     widgets/dialogheader.h \
     widgets/paginator.h \
