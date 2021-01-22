@@ -66,10 +66,10 @@ void RecordModel::setupModelData(const QModelIndex &index)
 
     switch (level) {
     case RecordModel::FundLevel:
-        if(authorityId() && filter().isEmpty())
-            where("authority_id=" + QString::number(authorityId()));
-        else if(authorityId() && !filter().isEmpty())
-            andWhere("authority_id=" + QString::number(authorityId()));
+        if(authorityId().isValid() && filter().isEmpty())
+            where("authority_id=" + authorityId().toString());
+        else if(authorityId().isValid() && !filter().isEmpty())
+            andWhere("authority_id=" + authorityId().toString());
 
         query.prepare(QString("SELECT number, comment, id, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter()));
         break;

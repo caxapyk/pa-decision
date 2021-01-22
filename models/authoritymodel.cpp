@@ -1,5 +1,7 @@
 #include "authoritymodel.h"
 
+#include "utils/itemcounter.h"
+
 #include <QDebug>
 #include <QIcon>
 #include <QSqlError>
@@ -36,25 +38,6 @@ void AuthorityModel::clear()
     clearFilter();
 
     endResetModel();
-}
-
-int AuthorityModel::itemMaxNum(int column, const QRegExp &rule) const
-{
-    int max = 1;
-    for(int i = 0; i < rowCount(rootItem()); ++i) {
-        int num = 0;
-        QModelIndex v = index(i, column, rootItem());
-
-        if (rule.isEmpty() || v.data().toString().contains(rule)) {
-            num = v.data().toString().remove(QRegExp("\\D+")).toInt();
-        }
-
-        if (num >= max) {
-            max = num + 1;
-        }
-    }
-
-    return max;
 }
 
 void AuthorityModel::select()
@@ -113,7 +96,8 @@ bool AuthorityModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     QSqlQuery query;
 
-    QVariant pa_name = tr("Public authority %1").arg(itemMaxNum(0, QRegExp("\\D+\\s\\D+\\d+")));
+    ItemCounter counter(this);
+    QVariant pa_name = tr("Public authority %1").arg(counter.next(0, QRegExp("\\D+\\s\\D+\\d+"), rootItem()));
 
     query.prepare("INSERT INTO pad_authority(name) VALUES (?)");
     query.bindValue(0, pa_name.toString());

@@ -28,10 +28,6 @@ void RecordFlatModel::select()
 {
     beginResetModel();
 
-    if(authorityId()) {
-        where("pad_fund.authority_id=" + QString::number(authorityId()));
-    }
-
     QSqlQuery query;
     query.prepare(tr(" \
                      SELECT \

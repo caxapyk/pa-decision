@@ -29,8 +29,8 @@ void DecisionModel::select()
 {
     beginResetModel();
 
-    if(authorityId()) {
-        where("pad_decision.authority_id=" + QString::number(authorityId()));
+    if(authorityId().isValid()) {
+        where("pad_decision.authority_id=" + authorityId().toString());
     }
 
     QSqlQuery query;
@@ -85,8 +85,8 @@ void DecisionModel::select()
 
 int DecisionModel::total()
 {
-    if(authorityId()) {
-        where("authority_id=" + QString::number(authorityId()));
+    if(authorityId().isValid()) {
+        where("authority_id=" + authorityId().toString());
     }
 
     QSqlQuery query;

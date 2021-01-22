@@ -13,7 +13,7 @@ public:
     virtual void clear() = 0;
     virtual void select() = 0;
 
-    int authorityId() { return m_authorityId; };
+    QVariant authorityId() const { return m_authorityId; };
     void setAuthorityId(int id) { m_authorityId = id; };
 
     void andWhere(const QString &condition);
@@ -25,11 +25,8 @@ public:
     QString filter() const { return m_filter; };
 
 private:
-    int m_authorityId = 0;
+    QVariant m_authorityId;
     QString m_filter;
-
-protected:
-    int itemMaxNum(int column, const QRegExp &rule) const;
 };
 
 #endif // ReferenceModel_H

@@ -6,13 +6,13 @@ ItemCounter::ItemCounter(QAbstractItemModel *model, QObject *parent) : QObject(p
 
 }
 
-int ItemCounter::next(int column, const QRegExp &rule) const
+int ItemCounter::next(int column, const QRegExp &rule, const QModelIndex &parent) const
 {
     if(m_model) {
         int max = 1;
-        for(int i = 0; i < m_model->rowCount(); ++i) {
+        for(int i = 0; i < m_model->rowCount(parent); ++i) {
             int num = 0;
-            QModelIndex v = m_model->index(i, column);
+            QModelIndex v = m_model->index(i, column, parent);
 
             if (rule.isEmpty() || v.data().toString().contains(rule)) {
                 num = v.data().toString().remove(QRegExp("\\D+")).toInt();

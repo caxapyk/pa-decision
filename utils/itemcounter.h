@@ -11,7 +11,7 @@ public:
     explicit ItemCounter(QAbstractItemModel *model = nullptr, QObject *parent = nullptr);
     void setModel(QAbstractItemModel *model) { m_model = model; };
 
-    int next(int column, const QRegExp &rule) const;
+    int next(int column, const QRegExp &rule, const QModelIndex &parent = QModelIndex()) const;
 
 private:
     QAbstractItemModel *m_model;

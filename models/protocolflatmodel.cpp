@@ -28,10 +28,6 @@ void ProtocolFlatModel::select()
 {
     beginResetModel();
 
-    if(authorityId()) {
-        where("pad_protocol.authority_id=" + QString::number(authorityId()));
-    }
-
     QSqlQuery query;
     query.prepare(tr(" \
                      SELECT \
