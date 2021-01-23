@@ -63,19 +63,26 @@ void RecordModel::setupModelData(const QModelIndex &index)
     int level = (index.isValid()) ? parentNode->level + 1 : RecordModel::FundLevel;
 
     QSqlQuery query;
+    QString filter;
 
     switch (level) {
     case RecordModel::FundLevel:
     {
-        QString filter;
-        if(authorityId().isValid())
+        if(m_authorityId.isValid())
             filter = "WHERE authority_id=" + authorityId().toString();
 
+        if(m_fundId.isValid())
+            filter = (filter.isEmpty() ? "WHERE " : (filter + " AND ")) + ("id=" + m_fundId.toString());
+
+        qDebug() << filter;
         query.prepare(QString("SELECT number, comment, id, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter));
     }
         break;
     case RecordModel::InventoryLevel:
     {
+        if(m_inventoryId.isValid())
+            filter = (filter.isEmpty() ? "WHERE " : (filter + " AND ")) + ("id=" + m_inventoryId.toString());
+
         query.prepare("SELECT number, comment, id, name FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
     }

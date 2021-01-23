@@ -14,7 +14,7 @@
 #include <QHeaderView>
 #include <QMessageBox>
 
-RecordDialog::RecordDialog(QWidget *parent) :
+RecordDialog::RecordDialog(const QVariant &authorityId, const QVariant &fundId, const QVariant &inventoryId, QWidget *parent) :
      TreeDialog(parent)
 {
     restoreDialogState();
@@ -37,6 +37,10 @@ RecordDialog::RecordDialog(QWidget *parent) :
     connect(pB_protocol, &QPushButton::clicked, this, &RecordDialog::protocols);
 
     m_model = new RecordModel;
+    m_model->setAuthorityId(authorityId);
+    m_model->setFundId(fundId);
+    m_model->setInventoryId(inventoryId);
+    m_model->select();
 
     m_proxyModel = new RecordProxyModel;
     m_proxyModel->setSourceModel(m_model);
@@ -48,6 +52,8 @@ RecordDialog::RecordDialog(QWidget *parent) :
     m_tree->setContextMenuPolicy(Qt::CustomContextMenu);
 
     setProxyModel(m_proxyModel);
+
+    clearSelection();
 }
 
 RecordDialog::~RecordDialog()
@@ -77,20 +83,6 @@ void RecordDialog::saveDialogState()
     settings->setValue("geometry", saveGeometry());
     settings->setValue("tV_itemView", m_tree->header()->saveState());
     settings->endGroup();
-}
-
-int RecordDialog::exec()
-{
-    if(m_authorityId.isValid()) {
-        clearInfoText();
-
-        m_model->setAuthorityId(m_authorityId.toInt());
-        m_model->select();
-
-        clearSelection();
-    }
-
-    return TreeDialog::exec();
 }
 
 void RecordDialog::selected(const QItemSelection &selected, const QItemSelection &)

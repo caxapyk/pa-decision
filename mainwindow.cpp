@@ -123,8 +123,7 @@ void MainWindow::setupToolBar()
     action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
     action_record->setDisabled(true);
     connect(action_record, &QAction::triggered, this, [=] {
-        RecordDialog *dialog = new RecordDialog;
-        dialog->setAuthorityId(m_authorityView->id());
+        RecordDialog *dialog = new RecordDialog(m_authorityView->id());
         openDialog(dialog);
     });
 

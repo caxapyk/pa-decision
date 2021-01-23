@@ -12,7 +12,13 @@ public:
     ~RecordModel();
 
     QVariant authorityId() const { return m_authorityId; };
-    void setAuthorityId(int id) { m_authorityId = id; };
+    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
+
+    QVariant fundId() const { return m_fundId; };
+    void setFundId(const QVariant &id) { m_fundId = id; };
+
+    QVariant inventoryId() const { return m_inventoryId; };
+    void setInventoryId(const QVariant &id) { m_inventoryId = id; };
 
     struct RecordNode
     {
@@ -48,10 +54,13 @@ public:
     bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
 
 private:
-    QMap<int, QVariant> columnHeaders;
-    QVariant m_authorityId;
-
     RecordNode *rootNode;
+
+    QMap<int, QVariant> columnHeaders;
+
+    QVariant m_authorityId;
+    QVariant m_fundId;
+    QVariant m_inventoryId;
 
     void setupModelData(const QModelIndex &index=QModelIndex());
     void recursivelyRemoveNodes(RecordNode *node=nullptr);

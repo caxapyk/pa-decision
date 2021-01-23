@@ -203,10 +203,9 @@ void DecisionFormDialog::updateProtocol(int recordIndex)
 
 void DecisionFormDialog::chooseFund()
 {
-    RecordDialog dialog;
+    RecordDialog dialog(m_authorityId);
     dialog.setChoiceMode();
     dialog.setChoiceLevel(RecordModel::FundLevel);
-    dialog.setAuthorityId(m_authorityId);
 
     int res = dialog.exec();
 
@@ -220,10 +219,9 @@ void DecisionFormDialog::chooseFund()
 
 void DecisionFormDialog::chooseInventory()
 {
-    RecordDialog dialog;
+    RecordDialog dialog(m_authorityId, m_fundIds.at(ui->cB_fund->currentIndex()));
     dialog.setChoiceMode();
     dialog.setChoiceLevel(RecordModel::InventoryLevel);
-    dialog.setAuthorityId(m_authorityId);
 
     int res = dialog.exec();
 
@@ -237,10 +235,9 @@ void DecisionFormDialog::chooseInventory()
 
 void DecisionFormDialog::chooseRecord()
 {
-    RecordDialog dialog;
+    RecordDialog dialog(m_authorityId, m_fundIds.at(ui->cB_fund->currentIndex()), m_inventoryIds.at(ui->cB_inventory->currentIndex()));
     dialog.setChoiceMode();
     dialog.setChoiceLevel(RecordModel::RecordLevel);
-    dialog.setAuthorityId(m_authorityId);
 
     int res = dialog.exec();
 

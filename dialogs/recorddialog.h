@@ -14,15 +14,12 @@ class RecordDialog : public TreeDialog
     Q_OBJECT
 
 public:
-    explicit RecordDialog(QWidget *parent = nullptr);
+    explicit RecordDialog(const QVariant &authorityId, const QVariant &fundId = QVariant(), const QVariant &inventoryId = QVariant(), QWidget *parent = nullptr);
     ~RecordDialog();
 
     void restoreDialogState() override;
     void saveDialogState() override;
 
-    int exec() override;
-
-    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
     void setChoiceLevel(RecordModel::Levels level) { m_choiceLevel = level; };
 
 public slots:
@@ -35,7 +32,6 @@ private:
 
     QPushButton *pB_details;
     QPushButton *pB_protocol;
-    QVariant m_authorityId;
 
     RecordModel::Levels m_choiceLevel = RecordModel::RecordLevel;
 
