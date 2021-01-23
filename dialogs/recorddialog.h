@@ -23,6 +23,7 @@ public:
     int exec() override;
 
     void setAuthorityId(const QVariant &id) { m_authorityId = id; };
+    void setChoiceLevel(RecordModel::Levels level) { m_choiceLevel = level; };
 
 public slots:
     void insert() override;
@@ -36,12 +37,14 @@ private:
     QPushButton *pB_protocol;
     QVariant m_authorityId;
 
+    RecordModel::Levels m_choiceLevel = RecordModel::RecordLevel;
+
 protected:
     bool choiceButtonEnabled() override;
 
 protected slots:
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
-    virtual int choice(const QItemSelection &selected) const override;
+    virtual QVariant choice(const QItemSelection &selected) const override;
 
 private slots:
     void details();

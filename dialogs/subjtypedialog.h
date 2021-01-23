@@ -23,7 +23,7 @@ private:
     QSortFilterProxyModel *m_proxyModel;
 
 protected slots:
-    virtual int choice(const QItemSelection &selected) const override { return 0; };
+    virtual QVariant choice(const QItemSelection &selected) const override { return 0; };
 };
 
 #endif // SUBJECTDIALOG_H

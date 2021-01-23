@@ -22,7 +22,7 @@ SOURCES += \
     connection.cpp \
     dialogs/authoritydetailsdialog.cpp \
     dialogs/connectiondialog.cpp \
-    dialogs/decisiondetailsdialog.cpp \
+    dialogs/decisionformdialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/funddetailsdialog.cpp \
     dialogs/inventorydetailsdialog.cpp \
@@ -56,18 +56,20 @@ SOURCES += \
     widgets/colorrect.cpp \
     widgets/customtreeview.cpp \
     widgets/decisiontab.cpp \
+    widgets/decisiontable.cpp \
     widgets/paginator.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp \
-    widgets/tab.cpp
+    widgets/tab.cpp \
+    widgets/table.cpp
 
 HEADERS += \
     application.h \
     connection.h \
     dialogs/authoritydetailsdialog.h \
     dialogs/connectiondialog.h \
-    dialogs/decisiondetailsdialog.h \
+    dialogs/decisionformdialog.h \
     dialogs/doctypedialog.h \
     dialogs/funddetailsdialog.h \
     dialogs/inventorydetailsdialog.h \
@@ -100,16 +102,18 @@ HEADERS += \
     widgets/colorrect.h \
     widgets/customtreeview.h \
     widgets/decisiontab.h \
+    widgets/decisiontable.h \
     widgets/paginator.h \
     widgets/referencebutton.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h \
-    widgets/tab.h
+    widgets/tab.h \
+    widgets/table.h
 
 FORMS += \
     dialogs/authoritydetailsdialog.ui \
     dialogs/connectiondialog.ui \
-    dialogs/decisiondetailsdialog.ui \
+    dialogs/decisionformdialog.ui \
     dialogs/funddetailsdialog.ui \
     dialogs/inventorydetailsdialog.ui \
     dialogs/protocoldetailsdialog.ui \

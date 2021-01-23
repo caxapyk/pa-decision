@@ -118,17 +118,17 @@ bool RecordDialog::choiceButtonEnabled()
 {
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(m_tree->currentIndex()).internalPointer());
 
-    return !isChoiceMode() || (node && node->level == RecordModel::RecordLevel);
+    return !isChoiceMode() || (node && node->level == m_choiceLevel);
 }
 
-int RecordDialog::choice(const QItemSelection &selected) const
+QVariant RecordDialog::choice(const QItemSelection &selected) const
 {
     if(!selected.isEmpty()) {
         QModelIndex current = selected.indexes().at(0).siblingAtColumn(2);
-        return m_proxyModel->mapToSource(current).data().toInt();
+        return m_proxyModel->mapToSource(current).data();
     }
 
-    return -1;
+    return QVariant();
 }
 
 void RecordDialog::details()

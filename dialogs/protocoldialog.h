@@ -42,7 +42,7 @@ protected:
 
 protected slots:
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
-    virtual int choice(const QItemSelection &selected) const override;
+    virtual QVariant choice(const QItemSelection &selected) const override;
 };
 
 #endif // PROTOCOLDIALOG_H

@@ -110,8 +110,8 @@ void AuthorityView::openInNewTab(const QModelIndex &index)
 {
     if(index.isValid() && index.parent().isValid()) {
         DecisionTab *tab = new DecisionTab;
-        tab->view()->model()->setAuthorityId(index.data(Qt::UserRole).toInt());
-        tab->view()->model()->select();
+        tab->view()->table()->setAuthorityId(index.data(Qt::UserRole));
+        tab->view()->table()->refresh();
 
         QIcon icon(index.data(Qt::DecorationRole).toString());
 

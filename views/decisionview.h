@@ -3,7 +3,9 @@
 
 #include "models/decisionmodel.h"
 #include "models/decisionproxymodel.h"
+#include "utils/customcontextmenu.h"
 #include "views/view.h"
+#include "widgets/decisiontable.h"
 #include "widgets/paginator.h"
 
 #include <QShortcut>
@@ -24,7 +26,7 @@ public:
     void restoreViewState() override;
     void saveViewState() override;
 
-    DecisionModel *model() { return m_model; };
+    DecisionTable *table() { return m_table; };
 
 public slots:
     void edit();
@@ -34,24 +36,14 @@ public slots:
 
 private:
     Ui::DecisionView *ui;
+    DecisionTable *m_table;
     Paginator *m_paginator;
-
-    DecisionModel *m_model;
-    DecisionProxyModel *m_proxyModel;
-
-    QShortcut *insertShortcut;
-    QShortcut *editShortcut;
-    QShortcut *removeShortcut;
-    QShortcut *refreshShortcut;
 
     void initialize() override;
 
-    void contextMenu(const QPoint &pos);
-    void setupShortcuts();
-
 private slots:
+    void contextMenu(CustomContextMenu &menu);
     void selected(const QItemSelection &selected, const QItemSelection &deselected);
-    void updated();
 };
 
 #endif // DECISIONVIEW_H

@@ -30,7 +30,7 @@ public:
     void clearInfoText();
     void clearSelection();
 
-    int currentChoice() { return m_choice; };
+    QVariant currentChoice() const { return m_choice; };
     bool isChoiceMode() { return choice_mode; };
     QVariant inputDialog(const QString &title, const QString &label = QString(), const QVariant &value = QVariant());
 
@@ -53,7 +53,7 @@ protected:
 
 protected slots:
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);
-    virtual int choice(const QItemSelection &selected) const = 0;
+    virtual QVariant choice(const QItemSelection &selected) const = 0;
 
 private:
     Ui::TreeDialog *ui;
@@ -61,7 +61,7 @@ private:
     QSortFilterProxyModel *m_dialogProxyModel = nullptr;
 
     bool choice_mode = false;
-    int m_choice = -1;
+    QVariant m_choice;
 
 private slots:
     void contextMenu(CustomContextMenu &menu);

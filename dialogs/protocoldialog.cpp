@@ -109,14 +109,14 @@ bool ProtocolDialog::choiceButtonEnabled()
     return !isChoiceMode() || !m_tree->selectionModel()->selection().isEmpty();
 }
 
-int ProtocolDialog::choice(const QItemSelection &selected) const
+QVariant ProtocolDialog::choice(const QItemSelection &selected) const
 {
     if(!selected.isEmpty()) {
         QModelIndex current = selected.indexes().at(0).siblingAtColumn(0);
-        return m_proxyModel->mapToSource(current).data().toInt();
+        return m_proxyModel->mapToSource(current).data();
     }
 
-    return -1;
+    return QVariant();
 }
 
 void ProtocolDialog::insert()

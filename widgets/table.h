@@ -1,18 +1,17 @@
-#ifndef TREECONTROL_H
-#define TREECONTROL_H
+#ifndef TABLE_H
+#define TABLE_H
+
+#include <QTableWidget>
+#include <QShortcut>
 
 #include "utils/customcontextmenu.h"
 
-#include <QTreeView>
-#include <QShortcut>
-
-class CustomTreeView : public QTreeView
+class Table : public QTableWidget
 {
     Q_OBJECT
-
 public:
-    explicit CustomTreeView(QWidget *parent = nullptr);
-    ~CustomTreeView();
+    Table(QWidget *parent = nullptr);
+    ~Table();
 
     void setInsertEnabled(bool ok);
     void setEditEnabled(bool ok);
@@ -39,4 +38,4 @@ signals:
     void onContextMenuRequested(CustomContextMenu &menu);
 };
 
-#endif // TREECONTROL_H
+#endif // TABLE_H

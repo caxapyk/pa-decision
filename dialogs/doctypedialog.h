@@ -27,7 +27,7 @@ protected:
     bool choiceButtonEnabled() override;
 
 protected slots:
-    virtual int choice(const QItemSelection &selected) const override;
+    virtual QVariant choice(const QItemSelection &selected) const override;
 };
 
 #endif // DOCTYPEDIALOG_H
