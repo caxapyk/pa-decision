@@ -1,6 +1,7 @@
 #include "treedialog.h"
 #include "ui_treedialog.h"
 
+#include "models/recordmodel.h"
 #include "utils/customcontextmenu.h"
 
 #include <QDebug>
@@ -45,6 +46,9 @@ QBoxLayout *TreeDialog::buttonLayout()
 
 void TreeDialog::contextMenu(CustomContextMenu &menu)
 {
+    QModelIndex currentIndex = m_tree->indexAt(m_tree->viewport()->mapFromGlobal(QCursor().pos()));
+    m_tree->setCurrentIndex(currentIndex);
+
     menu.exec(QCursor().pos());
 }
 
@@ -119,7 +123,6 @@ void TreeDialog::edit()
 
 void TreeDialog::insert()
 {
-    //QSqlTableModel *qsqltablemodel = dynamic_cast<QSqlTableModel*>(m_dialogProxyModel->sourceModel());
     bool insert = m_dialogProxyModel->sourceModel()->insertRow(0);
 
     if(insert) {
@@ -134,7 +137,6 @@ void TreeDialog::insert()
                     m_dialogProxyModel->sourceModel()->index(0, m_dialogProxyModel->columnCount() - 1));
 
         QItemSelection selection(topLeft, bottomRight);
-        m_tree->setCurrentIndex(topLeft);
         m_tree->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
         m_tree->scrollTo(topLeft);
     } else {
@@ -151,11 +153,11 @@ void TreeDialog::refresh()
         m_dialogProxyModel->invalidate();
         //m_tree->sortByColumn(-1, Qt::AscendingOrder);
 
-        SqlBaseModel *sqlbasemodel = dynamic_cast<SqlBaseModel*>(m_dialogProxyModel->sourceModel());
+        RecordModel *recordmodel = dynamic_cast<RecordModel*>(m_dialogProxyModel->sourceModel());
         QSqlTableModel *qsqltablemodel = dynamic_cast<QSqlTableModel*>(m_dialogProxyModel->sourceModel());
 
-        if(sqlbasemodel) {
-            sqlbasemodel->select();
+        if(recordmodel) {
+            recordmodel->select();
         } else if(qsqltablemodel) {
             qsqltablemodel->select();
         }

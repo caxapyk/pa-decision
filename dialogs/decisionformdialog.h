@@ -59,9 +59,9 @@ private slots:
     void updateProtocol(int inventoryIndex);
 
     void chooseFund();
-    void openProtocolDialog();
-
-    //void openExternalDialog(QComboBox *cb, TreeDialog *dialog);
+    void chooseRecord();
+    void chooseInventory();
+    void chooseProtocol();
 
     void save();
 };

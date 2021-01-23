@@ -8,7 +8,7 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 
-AuthorityModel::AuthorityModel(QObject *parent) : SqlBaseModel(parent)
+AuthorityModel::AuthorityModel(QObject *parent) : QAbstractItemModel(parent)
 {
     m_rootNode = new AT_Node;
     m_nodeList = new AT_NodeList;
@@ -34,8 +34,6 @@ void AuthorityModel::clear()
 
     m_nodeList->clear();
     m_nodeList->squeeze();
-
-    clearFilter();
 
     endResetModel();
 }

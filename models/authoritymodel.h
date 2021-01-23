@@ -1,15 +1,13 @@
 #ifndef AUTHORITYMODEL_H
 #define AUTHORITYMODEL_H
 
-#include "models/sqlbasemodel.h"
-
 #include <QAbstractItemModel>
 #include <QMap>
 #include <QRegExp>
 #include <QVariant>
 #include <QVector>
 
-class AuthorityModel : public SqlBaseModel
+class AuthorityModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -23,8 +21,8 @@ public:
     int itemMaxNum(int column, const QRegExp &rule) const;
     QModelIndex rootItem() const;
 
-    void clear() override;
-    void select() override;
+    void clear();
+    void select();
 
     int columnCount(const QModelIndex &parent=QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;

@@ -70,17 +70,6 @@ void ProtocolDialog::saveDialogState()
     settings->endGroup();
 }
 
-int ProtocolDialog::exec()
-{
-    if(m_authorityId.isValid()) {
-        clearInfoText();
-        m_model->select();
-        clearSelection();
-    }
-
-    return TreeDialog::exec();
-}
-
 void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
     pB_details->setEnabled(!selected.isEmpty());

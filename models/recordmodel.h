@@ -5,13 +5,16 @@
 
 #include <QAbstractItemModel>
 
-class RecordModel : public SqlBaseModel
+class RecordModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
     RecordModel(QObject *parent = nullptr);
     ~RecordModel();
+
+    QVariant authorityId() const { return m_authorityId; };
+    void setAuthorityId(int id) { m_authorityId = id; };
 
     struct RecordNode
     {
@@ -28,8 +31,8 @@ public:
 
     enum Levels {FundLevel, InventoryLevel, RecordLevel};
 
-    void clear() override;
-    void select() override;
+    void clear();
+    void select();
 
     bool canFetchMore(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent=QModelIndex()) const override;
@@ -48,6 +51,8 @@ public:
 
 private:
     QMap<int, QVariant> columnHeaders;
+    QVariant m_authorityId;
+
     RecordNode *rootNode;
 
     void setupModelData(const QModelIndex &index=QModelIndex());

@@ -19,10 +19,6 @@ public:
     void restoreDialogState() override;
     void saveDialogState() override;
 
-    int exec() override;
-
-    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
-
 public slots:
     void insert() override;
 
@@ -31,8 +27,6 @@ private:
     QSortFilterProxyModel *m_proxyModel;
 
     QPushButton *pB_details;
-
-    QVariant m_authorityId;
 
 private slots:
     void details();

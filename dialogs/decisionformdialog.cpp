@@ -72,6 +72,9 @@ void DecisionFormDialog::initialize()
     });
 
     connect(ui->pB_fund, &QPushButton::clicked, this, &DecisionFormDialog::chooseFund);
+    connect(ui->pB_record, &QPushButton::clicked, this, &DecisionFormDialog::chooseRecord);
+    connect(ui->pB_inventory, &QPushButton::clicked, this, &DecisionFormDialog::chooseInventory);
+    connect(ui->pB_protocol, &QPushButton::clicked, this, &DecisionFormDialog::chooseProtocol);
 }
 
 void DecisionFormDialog::updateAuthority()
@@ -115,7 +118,6 @@ void DecisionFormDialog::updateFund()
     query.bindValue(0, m_authorityId);
     query.exec();
 
-    disconnect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateInventory);
     ui->cB_fund->clear();
 
     if(!m_fundIds.isEmpty())
@@ -128,8 +130,7 @@ void DecisionFormDialog::updateFund()
     }
 
     ui->cB_fund->setCurrentIndex(-1);
-    connect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateInventory);
-}
+ }
 
 void DecisionFormDialog::updateInventory(int fundIndex)
 {
@@ -138,7 +139,6 @@ void DecisionFormDialog::updateInventory(int fundIndex)
     query.bindValue(0, m_fundIds.value(fundIndex));
     query.exec();
 
-    disconnect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateRecord);
     ui->cB_inventory->clear();
 
     if(!m_inventoryIds.isEmpty())
@@ -151,7 +151,8 @@ void DecisionFormDialog::updateInventory(int fundIndex)
     }
 
     ui->cB_inventory->setCurrentIndex(-1);
-    connect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateRecord);
+    ui->cB_inventory->setEnabled(fundIndex > -1);
+    ui->pB_inventory->setEnabled(fundIndex > -1);
 }
 
 void DecisionFormDialog::updateRecord(int inventoryIndex)
@@ -161,7 +162,6 @@ void DecisionFormDialog::updateRecord(int inventoryIndex)
     query.bindValue(0, m_inventoryIds.value(inventoryIndex));
     query.exec();
 
-    disconnect(ui->cB_record, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateProtocol);
     ui->cB_record->clear();
 
     if(!m_recordIds.isEmpty())
@@ -174,7 +174,8 @@ void DecisionFormDialog::updateRecord(int inventoryIndex)
     }
 
     ui->cB_record->setCurrentIndex(-1);
-    connect(ui->cB_record, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateProtocol);
+    ui->cB_record->setEnabled(inventoryIndex > -1);
+    ui->pB_record->setEnabled(inventoryIndex > -1);
 }
 
 void DecisionFormDialog::updateProtocol(int recordIndex)
@@ -196,14 +197,8 @@ void DecisionFormDialog::updateProtocol(int recordIndex)
     }
 
     ui->cB_protocol->setCurrentIndex(-1);
-}
-
-void DecisionFormDialog::openProtocolDialog()
-{
-    /*ProtocolDialog dialog;
-    //dialog.setAuthorityId(model()->authorityId());
-
-    openExternalDialog(ui->cB_protocol, &dialog);*/
+    ui->cB_protocol->setEnabled(recordIndex > -1);
+    ui->pB_protocol->setEnabled(recordIndex > -1);
 }
 
 void DecisionFormDialog::chooseFund()
@@ -223,34 +218,54 @@ void DecisionFormDialog::chooseFund()
     }
 }
 
-/*void DecisionFormDialog::openExternalDialog(QComboBox *cb, TreeDialog *dialog)
+void DecisionFormDialog::chooseInventory()
 {
-   /* SqlBaseModel *model = dynamic_cast<SqlBaseModel*>(cb->model());
+    RecordDialog dialog;
+    dialog.setChoiceMode();
+    dialog.setChoiceLevel(RecordModel::InventoryLevel);
+    dialog.setAuthorityId(m_authorityId);
 
-    if(model) {
-        dialog->setChoiceMode();
-        int res = dialog->exec();
+    int res = dialog.exec();
 
-        model->select();
-
-        if(res == RecordDialog::Accepted) {
-            setChosenId(cb, dialog->currentChoice());
+    if(res == RecordDialog::Accepted) {
+        if(!m_inventoryIds.contains(dialog.currentChoice())) {
+            updateInventory(ui->cB_fund->currentIndex());
         }
-    }*/
-/*}*/
+        ui->cB_inventory->setCurrentIndex(m_inventoryIds.indexOf(dialog.currentChoice()));
+    }
+}
 
-//bool DecisionFormDialog::setChosenId(QComboBox *cb, int id, int column)
-//{
-    /*QAbstractItemModel *model = cb->model();
-    for (int i = 0; i < model->rowCount(); ++i) {
-        if(model->index(i, column).data().toInt() == id) {
-            cb->setCurrentIndex(i);
-            return true;
+void DecisionFormDialog::chooseRecord()
+{
+    RecordDialog dialog;
+    dialog.setChoiceMode();
+    dialog.setChoiceLevel(RecordModel::RecordLevel);
+    dialog.setAuthorityId(m_authorityId);
+
+    int res = dialog.exec();
+
+    if(res == RecordDialog::Accepted) {
+        if(!m_recordIds.contains(dialog.currentChoice())) {
+            updateRecord(ui->cB_inventory->currentIndex());
         }
-    }*/
+        ui->cB_record->setCurrentIndex(m_recordIds.indexOf(dialog.currentChoice()));
+    }
+}
 
-//    return false;
-//}
+void DecisionFormDialog::chooseProtocol()
+{
+    ProtocolDialog dialog(m_protocolIds.at(ui->cB_record->currentIndex()));
+    dialog.setChoiceMode();
+
+    int res = dialog.exec();
+
+    if(res == ProtocolDialog::Accepted) {
+        if(!m_protocolIds.contains(dialog.currentChoice())) {
+            updateProtocol(ui->cB_protocol->currentIndex());
+        }
+        ui->cB_protocol->setCurrentIndex(m_protocolIds.indexOf(dialog.currentChoice()));
+    }
+}
 
 int DecisionFormDialog::exec()
 {

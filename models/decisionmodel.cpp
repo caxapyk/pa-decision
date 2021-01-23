@@ -29,9 +29,9 @@ void DecisionModel::select()
 {
     beginResetModel();
 
-    if(authorityId().isValid()) {
-        where("pad_decision.authority_id=" + authorityId().toString());
-    }
+    //if(authorityId().isValid()) {
+    //    where("pad_decision.authority_id=" + authorityId().toString());
+    //}
 
     QSqlQuery query;
     query.prepare(tr(" \
@@ -85,9 +85,9 @@ void DecisionModel::select()
 
 int DecisionModel::total()
 {
-    if(authorityId().isValid()) {
-        where("authority_id=" + authorityId().toString());
-    }
+    //if(authorityId().isValid()) {
+    //    where("authority_id=" + authorityId().toString());
+    //}
 
     QSqlQuery query;
     query.prepare(

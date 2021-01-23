@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-RecordModel::RecordModel(QObject *parent) : SqlBaseModel(parent)
+RecordModel::RecordModel(QObject *parent) : QAbstractItemModel(parent)
 {
     rootNode = new RecordNode;
     setHeaderData(0, Qt::Horizontal, tr("Archive records"));
@@ -32,7 +32,7 @@ void RecordModel::clear()
     rootNode->children.clear();
     rootNode->children.squeeze();
 
-    clearFilter();
+    //clearFilter();
 
     endResetModel();
 }
@@ -66,20 +66,25 @@ void RecordModel::setupModelData(const QModelIndex &index)
 
     switch (level) {
     case RecordModel::FundLevel:
-        if(authorityId().isValid() && filter().isEmpty())
-            where("authority_id=" + authorityId().toString());
-        else if(authorityId().isValid() && !filter().isEmpty())
-            andWhere("authority_id=" + authorityId().toString());
+    {
+        QString filter;
+        if(authorityId().isValid())
+            filter = "WHERE authority_id=" + authorityId().toString();
 
-        query.prepare(QString("SELECT number, comment, id, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter()));
+        query.prepare(QString("SELECT number, comment, id, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter));
+    }
         break;
     case RecordModel::InventoryLevel:
+    {
         query.prepare("SELECT number, comment, id, name FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
+    }
         break;
     case RecordModel::RecordLevel:
+    {
         query.prepare("SELECT number, comment, id, name FROM pad_record WHERE inventory_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
         query.bindValue(0, parentNode->id.toInt());
+    }
         break;
     }
 

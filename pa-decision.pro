@@ -44,7 +44,6 @@ SOURCES += \
     models/protocolmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
-    models/sqlbasemodel.cpp \
     models/subjtypemodel.cpp \
     utils/customcontextmenu.cpp \
     utils/itemcounter.cpp \
@@ -90,7 +89,6 @@ HEADERS += \
     models/protocolmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \
-    models/sqlbasemodel.h \
     models/subjtypemodel.h \
     utils/customcontextmenu.h \
     utils/itemcounter.h \

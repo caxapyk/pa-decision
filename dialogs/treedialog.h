@@ -1,7 +1,6 @@
 #ifndef REFERENCEDIALOG_H
 #define REFERENCEDIALOG_H
 
-#include "models/sqlbasemodel.h"
 #include "utils/customcontextmenu.h"
 #include "widgets/customtreeview.h"
 
