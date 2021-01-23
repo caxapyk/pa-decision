@@ -1,11 +1,10 @@
 #ifndef DECISIONREADMODEL_H
 #define DECISIONREADMODEL_H
 
-#include "models/sqlbasemodel.h"
-
+#include <QAbstractItemModel>
 #include <QSqlQueryModel>
 
-class DecisionModel : public SqlBaseModel
+class DecisionModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -31,8 +30,8 @@ public:
 
     QVariant lastInsertId() { return m_lastInsertId; };
 
-    void clear() override;
-    void select() override;
+    void clear();
+    void select();
 
     QSqlQueryModel *sourceModel() { return m_internalModel; };
 

@@ -40,7 +40,6 @@ SOURCES += \
     models/decisionmodel.cpp \
     models/decisionproxymodel.cpp \
     models/documenttypemodel.cpp \
-    models/protocolflatmodel.cpp \
     models/protocolmodel.cpp \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
@@ -85,7 +84,6 @@ HEADERS += \
     models/decisionmodel.h \
     models/decisionproxymodel.h \
     models/documenttypemodel.h \
-    models/protocolflatmodel.h \
     models/protocolmodel.h \
     models/recordmodel.h \
     models/recordproxymodel.h \

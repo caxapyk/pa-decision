@@ -3,7 +3,6 @@
 
 #include "models/authoritymodel.h"
 #include "models/authorityproxymodel.h"
-#include "models/sqlbasemodel.h"
 #include "views/view.h"
 #include "views/explorerview.h"
 #include "views/decisionview.h"

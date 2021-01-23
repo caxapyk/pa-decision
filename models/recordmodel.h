@@ -1,8 +1,6 @@
 #ifndef RECORDTREEMODEL_H
 #define RECORDTREEMODEL_H
 
-#include "models/sqlbasemodel.h"
-
 #include <QAbstractItemModel>
 
 class RecordModel : public QAbstractItemModel

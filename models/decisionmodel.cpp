@@ -7,7 +7,7 @@
 #include <QSqlQuery>
 
 DecisionModel::DecisionModel(QObject *parent)
-    : SqlBaseModel(parent)
+    : QAbstractItemModel(parent)
 {
     m_internalModel = new QSqlQueryModel;
 }
@@ -60,7 +60,7 @@ void DecisionModel::select()
                           LEFT JOIN pad_authority ON pad_decision.authority_id=pad_authority.id \
                           LEFT JOIN pad_protocol ON pad_decision.protocol_id=pad_protocol.id \
                           %1 ORDER BY pad_decision.id DESC"
-    ).arg(filter().isEmpty() ? QString() : filter()));
+    ).arg(1/*filter().isEmpty() ? QString() : filter())*/));
 
     if (query.exec()) {
         m_internalModel->setQuery(query);
@@ -92,7 +92,7 @@ int DecisionModel::total()
     QSqlQuery query;
     query.prepare(
                 QString("SELECT COUNT(id) FROM pad_decision %1")
-                .arg(filter().isEmpty() ? QString() : filter()));
+                .arg(1/*filter().isEmpty() ? QString() : filter())*/));
 
     if (query.exec()) {
         query.first();
