@@ -90,9 +90,9 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
     QModelIndex current = !selected.isEmpty() ? selected.indexes().at(0) : QModelIndex();
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
-    m_tree->setInsertEnabled(node == nullptr || node->level != RecordModel::RecordLevel);
-    m_tree->setEditEnabled(!selected.isEmpty());
-    m_tree->setRemoveEnabled(!selected.isEmpty());
+    m_tree->setInsertEnabled(node == nullptr || node->level != RecordModel::RecordLevel || (isChoiceMode() && node->level == m_choiceLevel));
+    m_tree->setEditEnabled(!selected.isEmpty() || (isChoiceMode() && node->level == m_choiceLevel));
+    m_tree->setRemoveEnabled(!selected.isEmpty() || (isChoiceMode() && node->level == m_choiceLevel));
     m_tree->setRefreshEnabled(true);
 
     pB_details->setEnabled(!selected.isEmpty());
