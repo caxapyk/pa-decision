@@ -63,6 +63,8 @@ private slots:
     void chooseInventory();
     void chooseProtocol();
 
+    void useProtocolStateChanged(bool checked);
+
     void save();
 };
 

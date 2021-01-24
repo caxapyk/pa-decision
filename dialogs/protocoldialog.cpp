@@ -37,6 +37,8 @@ ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
 
     m_tree->setModel(m_proxyModel);
     m_tree->hideColumn(0);
+    m_tree->hideColumn(1);
+    m_tree->hideColumn(3);
     m_tree->hideColumn(6);
 
     setProxyModel(m_proxyModel);

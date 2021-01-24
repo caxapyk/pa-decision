@@ -85,18 +85,45 @@ void RecordDialog::saveDialogState()
     settings->endGroup();
 }
 
+int RecordDialog::exec()
+{
+    if(isChoiceMode())
+        m_tree->expandAll();
+
+    return TreeDialog::exec();
+}
+
+void RecordDialog::contextMenu(CustomContextMenu &menu)
+{
+    QModelIndex currentIndex = m_tree->indexAt(m_tree->viewport()->mapFromGlobal(QCursor().pos()));
+    m_tree->setCurrentIndex(currentIndex);
+
+    if(isChoiceMode() && !currentIndex.isValid() && m_choiceLevel != RecordModel::FundLevel) {
+        menu.action(CustomContextMenu::Insert)->setDisabled(true);
+    }
+
+    menu.exec(QCursor().pos());
+}
+
 void RecordDialog::selected(const QItemSelection &selected, const QItemSelection &)
 {
     QModelIndex current = !selected.isEmpty() ? selected.indexes().at(0) : QModelIndex();
     RecordModel::RecordNode *node = static_cast<RecordModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
 
-    m_tree->setInsertEnabled(node == nullptr || node->level != RecordModel::RecordLevel || (isChoiceMode() && node->level == m_choiceLevel));
-    m_tree->setEditEnabled(!selected.isEmpty() || (isChoiceMode() && node->level == m_choiceLevel));
-    m_tree->setRemoveEnabled(!selected.isEmpty() || (isChoiceMode() && node->level == m_choiceLevel));
+    int level;
+    if(node == nullptr) {
+        level = RecordModel::FundLevel;
+    } else {
+        level = node->level;
+    }
+
+    m_tree->setInsertEnabled((level != RecordModel::RecordLevel) && (!isChoiceMode() || (isChoiceMode() && level == m_choiceLevel - 1)));
+    m_tree->setEditEnabled(!selected.isEmpty() && (!isChoiceMode() || (isChoiceMode() && level == m_choiceLevel)));
+    m_tree->setRemoveEnabled(!selected.isEmpty() && (!isChoiceMode() || (isChoiceMode() && level == m_choiceLevel)));
     m_tree->setRefreshEnabled(true);
 
     pB_details->setEnabled(!selected.isEmpty());
-    pB_protocol->setEnabled(!selected.isEmpty() && node->level == RecordModel::RecordLevel);
+    pB_protocol->setEnabled(!isChoiceMode() && !selected.isEmpty() && level == RecordModel::RecordLevel);
 
     if(!selected.isEmpty()) {
         QModelIndex index = m_tree->currentIndex();
@@ -104,6 +131,17 @@ void RecordDialog::selected(const QItemSelection &selected, const QItemSelection
     } else {
         clearInfoText();
     }
+}
+
+void RecordDialog::setChoiceLevel(RecordModel::Levels level)
+{
+    switch (level) {
+        case RecordModel::FundLevel: m_model->setMaxDepth(1); break;
+        case RecordModel::InventoryLevel: m_model->setMaxDepth(2); break;
+        case RecordModel::RecordLevel: m_model->setMaxDepth(3); break;
+    }
+
+    m_choiceLevel = level;
 }
 
 bool RecordDialog::choiceButtonEnabled()

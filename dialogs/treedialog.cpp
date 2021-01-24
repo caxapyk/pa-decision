@@ -31,7 +31,6 @@ TreeDialog::TreeDialog(QWidget *parent) :
     ui->label_commentIcon->setVisible(false);
 
     connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &TreeDialog::accept);
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &TreeDialog::reject);
 }
 
 TreeDialog::~TreeDialog()
@@ -76,6 +75,14 @@ QVariant TreeDialog::inputDialog(const QString &title, const QString &label, con
 
     return QVariant(inputDialog.textValue());
 }
+
+void TreeDialog::setChoiceMode(bool ok)
+{
+    if(ok)
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
+
+    choice_mode = ok;
+};
 
 void TreeDialog::clearInfoText()
 {

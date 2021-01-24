@@ -11,15 +11,6 @@ public:
     RecordModel(QObject *parent = nullptr);
     ~RecordModel();
 
-    QVariant authorityId() const { return m_authorityId; };
-    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
-
-    QVariant fundId() const { return m_fundId; };
-    void setFundId(const QVariant &id) { m_fundId = id; };
-
-    QVariant inventoryId() const { return m_inventoryId; };
-    void setInventoryId(const QVariant &id) { m_inventoryId = id; };
-
     struct RecordNode
     {
         QVariant id;
@@ -34,6 +25,17 @@ public:
     };
 
     enum Levels {FundLevel, InventoryLevel, RecordLevel};
+
+    QVariant authorityId() const { return m_authorityId; };
+    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
+
+    QVariant fundId() const { return m_fundId; };
+    void setFundId(const QVariant &id) { m_fundId = id; };
+
+    QVariant inventoryId() const { return m_inventoryId; };
+    void setInventoryId(const QVariant &id) { m_inventoryId = id; };
+
+    void setMaxDepth(int depth) { m_maxDepth = depth; };
 
     void clear();
     void select();
@@ -61,6 +63,8 @@ private:
     QVariant m_authorityId;
     QVariant m_fundId;
     QVariant m_inventoryId;
+
+    int m_maxDepth = 3;
 
     void setupModelData(const QModelIndex &index=QModelIndex());
     void recursivelyRemoveNodes(RecordNode *node=nullptr);

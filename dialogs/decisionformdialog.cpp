@@ -63,13 +63,11 @@ void DecisionFormDialog::initialize()
     connect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateInventory);
     connect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateRecord);
     connect(ui->cB_record, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateProtocol);
-
-    connect(ui->gB_protocol, &QGroupBox::clicked, [=](bool checked) {
-        if(!checked) {
-            ui->cB_protocol->setCurrentIndex(-1);
-            ui->lE_protcolPage->clear();
-        }
+    connect(ui->cB_protocol, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [=](int index) {
+             ui->lE_protcolPage->setEnabled(index >= 0);
     });
+
+    connect(ui->gB_protocol, &QGroupBox::clicked, this, &DecisionFormDialog::useProtocolStateChanged);
 
     connect(ui->pB_fund, &QPushButton::clicked, this, &DecisionFormDialog::chooseFund);
     connect(ui->pB_record, &QPushButton::clicked, this, &DecisionFormDialog::chooseRecord);
@@ -151,8 +149,8 @@ void DecisionFormDialog::updateInventory(int fundIndex)
     }
 
     ui->cB_inventory->setCurrentIndex(-1);
-    ui->cB_inventory->setEnabled(fundIndex > -1);
-    ui->pB_inventory->setEnabled(fundIndex > -1);
+    ui->cB_inventory->setEnabled(fundIndex >= 0);
+    ui->pB_inventory->setEnabled(fundIndex >= 0);
 }
 
 void DecisionFormDialog::updateRecord(int inventoryIndex)
@@ -209,10 +207,8 @@ void DecisionFormDialog::chooseFund()
 
     int res = dialog.exec();
 
+    updateFund();
     if(res == RecordDialog::Accepted) {
-        if(!m_fundIds.contains(dialog.currentChoice())) {
-            updateFund();
-        }
         ui->cB_fund->setCurrentIndex(m_fundIds.indexOf(dialog.currentChoice()));
     }
 }
@@ -225,10 +221,8 @@ void DecisionFormDialog::chooseInventory()
 
     int res = dialog.exec();
 
+    updateInventory(ui->cB_fund->currentIndex());
     if(res == RecordDialog::Accepted) {
-        if(!m_inventoryIds.contains(dialog.currentChoice())) {
-            updateInventory(ui->cB_fund->currentIndex());
-        }
         ui->cB_inventory->setCurrentIndex(m_inventoryIds.indexOf(dialog.currentChoice()));
     }
 }
@@ -241,26 +235,35 @@ void DecisionFormDialog::chooseRecord()
 
     int res = dialog.exec();
 
+    updateRecord(ui->cB_inventory->currentIndex());
     if(res == RecordDialog::Accepted) {
-        if(!m_recordIds.contains(dialog.currentChoice())) {
-            updateRecord(ui->cB_inventory->currentIndex());
-        }
         ui->cB_record->setCurrentIndex(m_recordIds.indexOf(dialog.currentChoice()));
     }
 }
 
 void DecisionFormDialog::chooseProtocol()
 {
-    ProtocolDialog dialog(m_protocolIds.at(ui->cB_record->currentIndex()));
+    ProtocolDialog dialog(m_recordIds.at(ui->cB_record->currentIndex()));
     dialog.setChoiceMode();
 
     int res = dialog.exec();
 
+    updateProtocol(ui->cB_record->currentIndex());
     if(res == ProtocolDialog::Accepted) {
-        if(!m_protocolIds.contains(dialog.currentChoice())) {
-            updateProtocol(ui->cB_protocol->currentIndex());
-        }
         ui->cB_protocol->setCurrentIndex(m_protocolIds.indexOf(dialog.currentChoice()));
+        ui->lE_protcolPage->setEnabled(true);
+    } else {
+        ui->lE_protcolPage->setDisabled(true);
+    }
+}
+
+void DecisionFormDialog::useProtocolStateChanged(bool checked)
+{
+    if(!checked) {
+        ui->cB_protocol->setCurrentIndex(-1);
+        ui->lE_protcolPage->clear();
+    } else {
+        ui->lE_protcolPage->setDisabled(true);
     }
 }
 

@@ -74,17 +74,18 @@ void RecordModel::setupModelData(const QModelIndex &index)
         if(m_fundId.isValid())
             filter = (filter.isEmpty() ? "WHERE " : (filter + " AND ")) + ("id=" + m_fundId.toString());
 
-        qDebug() << filter;
         query.prepare(QString("SELECT number, comment, id, name FROM pad_fund %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter));
     }
         break;
     case RecordModel::InventoryLevel:
     {
         if(m_inventoryId.isValid())
-            filter = (filter.isEmpty() ? "WHERE " : (filter + " AND ")) + ("id=" + m_inventoryId.toString());
+            filter = " AND id=" + m_inventoryId.toString();
 
-        query.prepare("SELECT number, comment, id, name FROM pad_inventory WHERE fund_id=? ORDER BY CAST(number AS UNSIGNED) ASC");
+        query.prepare(QString("SELECT number, comment, id, name FROM pad_inventory WHERE fund_id=? %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter));
         query.bindValue(0, parentNode->id.toInt());
+
+        qDebug() << query.lastQuery();
     }
         break;
     case RecordModel::RecordLevel:
@@ -135,6 +136,9 @@ bool RecordModel::hasChildren(const QModelIndex &parent) const
     }
 
     RecordNode *parentNode = static_cast<RecordNode*>(parent.internalPointer());
+    if(parentNode->level == m_maxDepth - 1) {
+        return false;
+    }
 
     QSqlQuery query;
 

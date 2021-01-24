@@ -20,7 +20,9 @@ public:
     void restoreDialogState() override;
     void saveDialogState() override;
 
-    void setChoiceLevel(RecordModel::Levels level) { m_choiceLevel = level; };
+    void setChoiceLevel(RecordModel::Levels level);
+
+    int exec() override;
 
 public slots:
     void insert() override;
@@ -39,8 +41,9 @@ protected:
     bool choiceButtonEnabled() override;
 
 protected slots:
-    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
-    virtual QVariant choice(const QItemSelection &selected) const override;
+    void contextMenu(CustomContextMenu &menu) override;
+    void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
+    QVariant choice(const QItemSelection &selected) const override;
 
 private slots:
     void details();

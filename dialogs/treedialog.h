@@ -33,7 +33,7 @@ public:
     bool isChoiceMode() { return choice_mode; };
     QVariant inputDialog(const QString &title, const QString &label = QString(), const QVariant &value = QVariant());
 
-    void setChoiceMode() { choice_mode = true; };
+    void setChoiceMode(bool ok = true);
     void setInfoText(const QString &text);
     void setInfoIconVisible(bool ok = true);
 
@@ -51,6 +51,7 @@ protected:
     void setProxyModel(QSortFilterProxyModel *model);
 
 protected slots:
+    virtual void contextMenu(CustomContextMenu &menu);
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);
     virtual QVariant choice(const QItemSelection &selected) const = 0;
 
@@ -63,7 +64,6 @@ private:
     QVariant m_choice;
 
 private slots:
-    void contextMenu(CustomContextMenu &menu);
     void _selected(const QItemSelection &selected, const QItemSelection &deselected);
 
     void accept() override;
