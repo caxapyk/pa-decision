@@ -143,8 +143,8 @@ void ProtocolDialog::insert()
             m_tree->scrollTo(topLeft);
         } else {
             QMessageBox::critical(this,
-                    tr("New protocol"),
-                    tr("Could not create new protocol"),
+                    tr("Protocols"),
+                    tr("Could not create item."),
                     QMessageBox::Ok);
         }
     }

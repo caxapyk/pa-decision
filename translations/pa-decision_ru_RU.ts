@@ -4,119 +4,119 @@
 <context>
     <name>Application</name>
     <message>
-        <location filename="../application.cpp" line="45"/>
         <location filename="../application.cpp" line="125"/>
         <source>Public Authority&apos;s Decisions Database</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="48"/>
         <source>Address of database server</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="50"/>
         <source>Database name</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="52"/>
         <source>Database user</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="54"/>
         <source>Password to database user</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="80"/>
         <source>Database connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Соединение с БД</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="80"/>
         <source>Could not connect to database.
 Do you want to config now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось соединиться с базой данных.
+Хотите настроить параметры поключения?</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="125"/>
         <source> v %1</source>
-        <translation type="unfinished"></translation>
+        <translation> версия %1</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="126"/>
         <source>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="131"/>
         <source>Application icons by </source>
-        <translation type="unfinished"></translation>
+        <translation>Иконки приложения </translation>
     </message>
     <message>
         <location filename="../application.cpp" line="133"/>
         <source>Copyright &amp;copy; 2020 Alexander Sakharuk</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;copy; Александр Сахарук, 2020</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="136"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>О программе</translation>
     </message>
     <message>
         <location filename="../application.h" line="23"/>
-        <source>Records Invetories Register %1</source>
-        <translation type="unfinished"></translation>
+        <source>Public Authority&apos;s Decisions Database %1</source>
+        <translation>РОГВ | Решения органов государственной власти %1</translation>
     </message>
 </context>
 <context>
     <name>AuthorityDetailsDialog</name>
     <message>
-        <location filename="../dialogs/authoritydetailsdialog.ui" line="26"/>
         <source>Public authority info</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Орган государственной власти</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/authoritydetailsdialog.ui" line="26"/>
+        <location filename="../dialogs/authoritydetailsdialog.cpp" line="47"/>
+        <source>Public authority</source>
+        <translation>Орган государственной власти</translation>
     </message>
     <message>
         <location filename="../dialogs/authoritydetailsdialog.ui" line="45"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Наименование</translation>
     </message>
     <message>
         <location filename="../dialogs/authoritydetailsdialog.ui" line="55"/>
         <source>Short name</source>
-        <translation type="unfinished"></translation>
+        <translation>Краткое наименование</translation>
     </message>
     <message>
         <location filename="../dialogs/authoritydetailsdialog.ui" line="65"/>
         <source>Geography</source>
-        <translation type="unfinished"></translation>
+        <translation>География</translation>
     </message>
     <message>
         <location filename="../dialogs/authoritydetailsdialog.ui" line="75"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/authoritydetailsdialog.cpp" line="47"/>
-        <source>Authority details</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../dialogs/authoritydetailsdialog.cpp" line="48"/>
         <source>Could not save data.</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось сохранить данные.</translation>
     </message>
     <message>
         <location filename="../dialogs/authoritydetailsdialog.cpp" line="67"/>
         <source>Close without saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть без сохранения</translation>
     </message>
     <message>
         <location filename="../dialogs/authoritydetailsdialog.cpp" line="68"/>
         <source>Are you shure that you want to dicard all changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите закрыть окно?</translation>
     </message>
 </context>
 <context>
@@ -124,27 +124,27 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/authoritymodel.cpp" line="16"/>
         <source>Public Authorities</source>
-        <translation type="unfinished"></translation>
+        <translation>Органы госвласти</translation>
     </message>
     <message>
         <location filename="../models/authoritymodel.cpp" line="17"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../models/authoritymodel.cpp" line="18"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../models/authoritymodel.cpp" line="98"/>
         <source>Public authority %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Орган госвласти %1</translation>
     </message>
     <message>
         <location filename="../models/authoritymodel.cpp" line="214"/>
         <source>All Public Authorities</source>
-        <translation type="unfinished"></translation>
+        <translation>Все органы госвласти</translation>
     </message>
 </context>
 <context>
@@ -152,53 +152,49 @@ Do you want to config now?</source>
     <message>
         <location filename="../views/authorityview.ui" line="20"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../views/authorityview.ui" line="64"/>
         <source>Authorities</source>
-        <translation type="unfinished"></translation>
+        <translation>Органы госвласти</translation>
     </message>
     <message>
         <location filename="../views/authorityview.ui" line="90"/>
         <source>Detail search</source>
-        <translation type="unfinished"></translation>
+        <translation>Расширенный поиск</translation>
     </message>
     <message>
         <location filename="../views/authorityview.cpp" line="78"/>
         <source>Open in new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть в новой вкладке</translation>
     </message>
     <message>
         <location filename="../views/authorityview.cpp" line="85"/>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Сведения</translation>
     </message>
     <message>
         <location filename="../views/authorityview.cpp" line="150"/>
-        <source>Creating items</source>
-        <translation type="unfinished"></translation>
+        <location filename="../views/authorityview.cpp" line="180"/>
+        <location filename="../views/authorityview.cpp" line="190"/>
+        <source>Public authorities</source>
+        <translation>Органы госвласти</translation>
     </message>
     <message>
         <location filename="../views/authorityview.cpp" line="151"/>
         <source>Could not create item.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../views/authorityview.cpp" line="180"/>
-        <location filename="../views/authorityview.cpp" line="190"/>
-        <source>Deleting item</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось создать элемент.</translation>
     </message>
     <message>
         <location filename="../views/authorityview.cpp" line="181"/>
         <source>Are you shure that you want to delete this item?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить этот элемент?</translation>
     </message>
     <message>
         <location filename="../views/authorityview.cpp" line="191"/>
         <source>Could not remove the item.</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось удалить элемент.</translation>
     </message>
 </context>
 <context>
@@ -206,42 +202,42 @@ Do you want to config now?</source>
     <message>
         <location filename="../dialogs/connectiondialog.ui" line="14"/>
         <source>Database connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Соединение с БД</translation>
     </message>
     <message>
         <location filename="../dialogs/connectiondialog.ui" line="26"/>
         <source>Hostname</source>
-        <translation type="unfinished"></translation>
+        <translation>Адрес сервера</translation>
     </message>
     <message>
         <location filename="../dialogs/connectiondialog.ui" line="36"/>
         <source>Database</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя базы данных</translation>
     </message>
     <message>
         <location filename="../dialogs/connectiondialog.ui" line="46"/>
         <source>Username</source>
-        <translation type="unfinished"></translation>
+        <translation>Пользователь</translation>
     </message>
     <message>
         <location filename="../dialogs/connectiondialog.ui" line="56"/>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Пароль</translation>
     </message>
     <message>
         <location filename="../dialogs/connectiondialog.ui" line="99"/>
         <source>Test connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Проверка соединения</translation>
     </message>
     <message>
         <location filename="../dialogs/connectiondialog.cpp" line="44"/>
         <source>Connection is successfull!</source>
-        <translation type="unfinished"></translation>
+        <translation>Соединение успешно установлено!</translation>
     </message>
     <message>
         <location filename="../dialogs/connectiondialog.cpp" line="50"/>
         <source>Could not connect to database!</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось соединиться с базой данных!</translation>
     </message>
 </context>
 <context>
@@ -249,125 +245,125 @@ Do you want to config now?</source>
     <message>
         <location filename="../utils/customcontextmenu.cpp" line="10"/>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Создать</translation>
     </message>
     <message>
         <location filename="../utils/customcontextmenu.cpp" line="17"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Редактировать</translation>
     </message>
     <message>
         <location filename="../utils/customcontextmenu.cpp" line="24"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <location filename="../utils/customcontextmenu.cpp" line="33"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновить</translation>
     </message>
 </context>
 <context>
     <name>DecisionFormDialog</name>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="14"/>
-        <source>Decision dialog</source>
-        <translation type="unfinished"></translation>
+        <source>Document form</source>
+        <translation>Форма документа</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="37"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Базовые сведения</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="66"/>
         <source>Public authority</source>
-        <translation type="unfinished"></translation>
+        <translation>Орган г.в.</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="96"/>
         <source>Document type</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип док.-та</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="136"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>№ док.-та</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="174"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation>Дата рег.-ции</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="203"/>
         <source>Pages</source>
-        <translation type="unfinished"></translation>
+        <translation>Страницы</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="233"/>
         <source>Include attachments</source>
-        <translation type="unfinished"></translation>
+        <translation>Содержит приложения</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="254"/>
         <source>Decision title</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок решения</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="300"/>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>№ дела</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="344"/>
         <source>Fund</source>
-        <translation type="unfinished"></translation>
+        <translation>№ фонда</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="385"/>
         <source>Inventory</source>
-        <translation type="unfinished"></translation>
+        <translation>№ описи</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="431"/>
         <source>Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>В составе протокола</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="491"/>
         <source>Рage</source>
-        <translation type="unfinished"></translation>
+        <translation>Страница протокола</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="544"/>
         <source>Subjects</source>
-        <translation type="unfinished"></translation>
+        <translation>Субъекты</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="573"/>
         <source>Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Содержание</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="602"/>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>Дополнительно</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="608"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="634"/>
         <source>Access denied</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступ закрыт</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="639"/>
         <source>Access permited</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступ открыт</translation>
     </message>
 </context>
 <context>
@@ -385,12 +381,12 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/decisionmodel.cpp" line="74"/>
         <source>Document type</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Тип док.-та</translation>
     </message>
     <message>
         <location filename="../models/decisionmodel.cpp" line="75"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Дата рег.-ции</translation>
     </message>
     <message>
         <location filename="../models/decisionmodel.cpp" line="76"/>
@@ -400,7 +396,7 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/decisionmodel.cpp" line="77"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Заголовок</translation>
     </message>
     <message>
         <location filename="../models/decisionmodel.cpp" line="78"/>
@@ -410,17 +406,17 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/decisionmodel.cpp" line="79"/>
         <source>Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">В составе протокола</translation>
     </message>
     <message>
         <location filename="../models/decisionmodel.cpp" line="80"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Комментарий</translation>
     </message>
     <message>
         <location filename="../models/decisionmodel.cpp" line="81"/>
         <source>Content</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Содержание</translation>
     </message>
     <message>
         <location filename="../models/decisionmodel.cpp" line="82"/>
@@ -438,22 +434,22 @@ Do you want to config now?</source>
     <message>
         <location filename="../widgets/decisiontable.h" line="18"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/decisiontable.h" line="18"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>№ док.-та</translation>
     </message>
     <message>
         <location filename="../widgets/decisiontable.h" line="18"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="../widgets/decisiontable.h" line="18"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
 </context>
 <context>
@@ -461,23 +457,23 @@ Do you want to config now?</source>
     <message>
         <location filename="../views/decisionview.ui" line="20"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../views/decisionview.ui" line="116"/>
         <source>Records counter</source>
-        <translation type="unfinished"></translation>
+        <translation>Счетчик записей</translation>
     </message>
     <message>
         <location filename="../views/decisionview.ui" line="143"/>
         <location filename="../views/decisionview.ui" line="156"/>
         <source>Current public authority</source>
-        <translation type="unfinished"></translation>
+        <translation>Текущий орган государственной власти</translation>
     </message>
     <message>
         <location filename="../views/decisionview.ui" line="159"/>
         <source>All public authorities</source>
-        <translation type="unfinished"></translation>
+        <translation>Все</translation>
     </message>
 </context>
 <context>
@@ -485,7 +481,7 @@ Do you want to config now?</source>
     <message>
         <location filename="../dialogs/doctypedialog.cpp" line="14"/>
         <source>Document types</source>
-        <translation type="unfinished"></translation>
+        <translation>Типы документов</translation>
     </message>
     <message>
         <location filename="../dialogs/doctypedialog.cpp" line="18"/>
@@ -498,17 +494,17 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/documenttypemodel.cpp" line="15"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../models/documenttypemodel.cpp" line="16"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Наименование</translation>
     </message>
     <message>
         <location filename="../models/documenttypemodel.cpp" line="35"/>
         <source>Document type %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип документа %1</translation>
     </message>
 </context>
 <context>
@@ -516,108 +512,92 @@ Do you want to config now?</source>
     <message>
         <location filename="../views/explorerview.ui" line="20"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>FundDetailsDialog</name>
     <message>
         <location filename="../dialogs/funddetailsdialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/funddetailsdialog.cpp" line="33"/>
+        <location filename="../dialogs/funddetailsdialog.cpp" line="49"/>
+        <source>Fund details</source>
+        <translation>Сведения о фонде</translation>
     </message>
     <message>
         <location filename="../dialogs/funddetailsdialog.ui" line="31"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>№ фонда</translation>
     </message>
     <message>
         <location filename="../dialogs/funddetailsdialog.ui" line="45"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="../dialogs/funddetailsdialog.ui" line="64"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/funddetailsdialog.cpp" line="33"/>
-        <source>Edit fund</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/funddetailsdialog.cpp" line="49"/>
-        <source>Fund</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../dialogs/funddetailsdialog.cpp" line="50"/>
-        <source>Could not save fund</source>
-        <translation type="unfinished"></translation>
+        <source>Could not save data.</source>
+        <translation>Не удалось сохранить данные.</translation>
     </message>
     <message>
         <location filename="../dialogs/funddetailsdialog.cpp" line="75"/>
         <source>Close without saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть без сохранения</translation>
     </message>
     <message>
         <location filename="../dialogs/funddetailsdialog.cpp" line="76"/>
         <source>Are you shure that you want to dicard all changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите закрыть окно?</translation>
     </message>
 </context>
 <context>
     <name>InventoryDetailsDialog</name>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/inventorydetailsdialog.cpp" line="33"/>
+        <location filename="../dialogs/inventorydetailsdialog.cpp" line="50"/>
+        <source>Inventory details</source>
+        <translation>Сведения об описи</translation>
     </message>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.ui" line="31"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>№ описи</translation>
     </message>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.ui" line="41"/>
         <source>Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Том</translation>
     </message>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.ui" line="59"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.ui" line="78"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/inventorydetailsdialog.cpp" line="33"/>
-        <source>Edit inventory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/inventorydetailsdialog.cpp" line="50"/>
-        <source>Fund</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.cpp" line="51"/>
-        <source>Could not save inventory</source>
-        <translation type="unfinished"></translation>
+        <source>Could not save data.</source>
+        <translation>Не удалось сохранить данные.</translation>
     </message>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.cpp" line="76"/>
         <source>Close without saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть без сохранения</translation>
     </message>
     <message>
         <location filename="../dialogs/inventorydetailsdialog.cpp" line="77"/>
         <source>Are you shure that you want to dicard all changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите закрыть окно?</translation>
     </message>
 </context>
 <context>
@@ -625,119 +605,119 @@ Do you want to config now?</source>
     <message>
         <location filename="../mainwindow.ui" line="14"/>
         <source>Public Authority&apos;s Decisions Database</source>
-        <translation type="unfinished"></translation>
+        <translation>РОГВ | Решения органов государственной власти</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="75"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="84"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Справка</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="90"/>
         <source>Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Сервис</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="111"/>
         <source>toolBar</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="143"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>О программе</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="148"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Выход</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="157"/>
         <source>Database connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Параметры подключения</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="166"/>
         <location filename="../mainwindow.ui" line="226"/>
         <location filename="../mainwindow.cpp" line="89"/>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Создать</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="169"/>
         <source>Ctrl+Shift+N</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="178"/>
         <location filename="../mainwindow.cpp" line="98"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Редактировать</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="181"/>
         <source>F2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="190"/>
         <location filename="../mainwindow.ui" line="235"/>
         <location filename="../mainwindow.cpp" line="95"/>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Печать</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="193"/>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="202"/>
         <location filename="../mainwindow.cpp" line="104"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="205"/>
         <source>Del</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="214"/>
         <location filename="../mainwindow.cpp" line="110"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновить</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="217"/>
         <source>F5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="238"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="84"/>
         <source>Ready</source>
-        <translation type="unfinished"></translation>
+        <translation>Готов</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="116"/>
         <source>Left panel</source>
-        <translation type="unfinished"></translation>
+        <translation>Панель</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="123"/>
         <source>Records</source>
-        <translation type="unfinished"></translation>
+        <translation>Архивный фонд</translation>
     </message>
 </context>
 <context>
@@ -745,145 +725,139 @@ Do you want to config now?</source>
     <message>
         <location filename="../widgets/paginator.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="38"/>
         <source>Previous page</source>
-        <translation type="unfinished"></translation>
+        <translation>Предыдущая страница</translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="61"/>
         <source>Backward record</source>
-        <translation type="unfinished"></translation>
+        <translation>Назад</translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="84"/>
         <source>Toward record</source>
-        <translation type="unfinished"></translation>
+        <translation>Вперед</translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="107"/>
         <source>Next page</source>
-        <translation type="unfinished"></translation>
+        <translation>Следующая страница</translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="155"/>
         <source>Go to page</source>
-        <translation type="unfinished"></translation>
+        <translation>Перейти на страницу</translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="188"/>
         <source>Page 1/1</source>
-        <translation type="unfinished"></translation>
+        <translation>Страница 1/1</translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="204"/>
         <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать</translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="215"/>
         <source>10</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="220"/>
         <source>20</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="225"/>
         <source>50</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/paginator.ui" line="230"/>
         <source>100</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>ProtocolDetailsDialog</name>
     <message>
         <location filename="../dialogs/protocoldetailsdialog.ui" line="26"/>
-        <location filename="../dialogs/protocoldetailsdialog.cpp" line="36"/>
-        <source>Edit protocol</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/protocoldetailsdialog.cpp" line="63"/>
+        <source>Protocol</source>
+        <translation>Протокол</translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldetailsdialog.ui" line="47"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>№ док.-та</translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldetailsdialog.ui" line="57"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation>Дата рег.-ции</translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldetailsdialog.ui" line="64"/>
         <source>dd.MM.yyyy</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldetailsdialog.ui" line="74"/>
         <source>Pages</source>
-        <translation type="unfinished"></translation>
+        <translation>Страниц</translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldetailsdialog.ui" line="93"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldetailsdialog.ui" line="103"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../dialogs/protocoldetailsdialog.cpp" line="52"/>
-        <location filename="../dialogs/protocoldetailsdialog.cpp" line="66"/>
-        <source>New protocol</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/protocoldetailsdialog.cpp" line="64"/>
+        <source>Fill all required fields.</source>
+        <translation>Заполните все обязательные поля.</translation>
     </message>
     <message>
-        <location filename="../dialogs/protocoldetailsdialog.cpp" line="67"/>
-        <source>Could not create new protocol. Fill required fields.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/protocoldetailsdialog.cpp" line="81"/>
+        <location filename="../dialogs/protocoldetailsdialog.cpp" line="78"/>
         <source>Close without saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть без сохранения</translation>
     </message>
     <message>
-        <location filename="../dialogs/protocoldetailsdialog.cpp" line="82"/>
+        <location filename="../dialogs/protocoldetailsdialog.cpp" line="79"/>
         <source>Are you shure that you want to dicard all changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите закрыть окно?</translation>
     </message>
 </context>
 <context>
     <name>ProtocolDialog</name>
     <message>
         <location filename="../dialogs/protocoldialog.cpp" line="19"/>
+        <location filename="../dialogs/protocoldialog.cpp" line="146"/>
         <source>Protocols</source>
-        <translation type="unfinished"></translation>
+        <translation>Протоколы</translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldialog.cpp" line="21"/>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Сведения</translation>
     </message>
     <message>
-        <location filename="../dialogs/protocoldialog.cpp" line="146"/>
-        <source>New protocol</source>
-        <translation type="unfinished"></translation>
+        <source>Protocol</source>
+        <translation type="obsolete">Протокол</translation>
     </message>
     <message>
         <location filename="../dialogs/protocoldialog.cpp" line="147"/>
-        <source>Could not create new protocol</source>
-        <translation type="unfinished"></translation>
+        <source>Could not create item.</source>
+        <translation>Не удалось создать элемент.</translation>
     </message>
 </context>
 <context>
@@ -891,118 +865,106 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/protocolmodel.cpp" line="11"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../models/protocolmodel.cpp" line="12"/>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>№ дела</translation>
     </message>
     <message>
         <location filename="../models/protocolmodel.cpp" line="13"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>№ док.-та</translation>
     </message>
     <message>
         <location filename="../models/protocolmodel.cpp" line="14"/>
         <source>Pages</source>
-        <translation type="unfinished"></translation>
+        <translation>Страниц</translation>
     </message>
     <message>
         <location filename="../models/protocolmodel.cpp" line="15"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="../models/protocolmodel.cpp" line="16"/>
         <source>Date</source>
-        <translation type="unfinished"></translation>
+        <translation>Дата рег.-ции</translation>
     </message>
     <message>
         <location filename="../models/protocolmodel.cpp" line="17"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
 </context>
 <context>
     <name>RecordDetailsDialog</name>
     <message>
         <location filename="../dialogs/recorddetailsdialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/recorddetailsdialog.cpp" line="34"/>
+        <location filename="../dialogs/recorddetailsdialog.cpp" line="51"/>
+        <source>Record details</source>
+        <translation>Единица хранения</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddetailsdialog.ui" line="31"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>№ док.-та</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddetailsdialog.ui" line="41"/>
         <source>Pages</source>
-        <translation type="unfinished"></translation>
+        <translation>Страниц</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddetailsdialog.ui" line="59"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddetailsdialog.ui" line="78"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/recorddetailsdialog.cpp" line="34"/>
-        <source>Edit record</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/recorddetailsdialog.cpp" line="51"/>
-        <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddetailsdialog.cpp" line="52"/>
-        <source>Could not save record</source>
-        <translation type="unfinished"></translation>
+        <source>Could not save data.</source>
+        <translation>Не удалось сохранить данные.</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddetailsdialog.cpp" line="77"/>
         <source>Close without saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть без сохранения</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddetailsdialog.cpp" line="78"/>
         <source>Are you shure that you want to dicard all changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите закрыть окно?</translation>
     </message>
 </context>
 <context>
     <name>RecordDialog</name>
     <message>
         <location filename="../dialogs/recorddialog.cpp" line="22"/>
+        <location filename="../dialogs/recorddialog.cpp" line="243"/>
         <source>Archive records</source>
-        <translation type="unfinished"></translation>
+        <translation>Архивный фонд</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddialog.cpp" line="25"/>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Сведения</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddialog.cpp" line="32"/>
         <source>Protocols</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/recorddialog.cpp" line="243"/>
-        <source>Creating items</source>
-        <translation type="unfinished"></translation>
+        <translation>Протоколы</translation>
     </message>
     <message>
         <location filename="../dialogs/recorddialog.cpp" line="244"/>
         <source>Could not create item.</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось создать элемент.</translation>
     </message>
 </context>
 <context>
@@ -1010,52 +972,52 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/recordmodel.cpp" line="12"/>
         <source>Archive records</source>
-        <translation type="unfinished"></translation>
+        <translation>Архивный фонд</translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="13"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="14"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="15"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="229"/>
         <source>New fund</source>
-        <translation type="unfinished"></translation>
+        <translation>Новый фонд</translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="235"/>
         <source>New inventory</source>
-        <translation type="unfinished"></translation>
+        <translation>Новая опись</translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="241"/>
         <source>New record</source>
-        <translation type="unfinished"></translation>
+        <translation>Единица_хранения</translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="365"/>
         <source>F. </source>
-        <translation type="unfinished"></translation>
+        <translation>Ф. </translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="368"/>
         <source>Inv. </source>
-        <translation type="unfinished"></translation>
+        <translation>Оп. </translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="371"/>
         <source>R. </source>
-        <translation type="unfinished"></translation>
+        <translation>Д. </translation>
     </message>
 </context>
 <context>
@@ -1063,22 +1025,22 @@ Do you want to config now?</source>
     <message>
         <location filename="../widgets/referencebutton.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/referencebutton.ui" line="47"/>
         <source>References</source>
-        <translation type="unfinished"></translation>
+        <translation>Справочники</translation>
     </message>
     <message>
         <location filename="../widgets/referencebutton.cpp" line="10"/>
         <source>Document types</source>
-        <translation type="unfinished"></translation>
+        <translation>Типы документов</translation>
     </message>
     <message>
         <location filename="../widgets/referencebutton.cpp" line="11"/>
         <source>Subject types</source>
-        <translation type="unfinished"></translation>
+        <translation>Виды субъектов</translation>
     </message>
 </context>
 <context>
@@ -1086,17 +1048,17 @@ Do you want to config now?</source>
     <message>
         <location filename="../widgets/searchpanel.ui" line="23"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/searchpanel.ui" line="69"/>
         <source>Fulltext search... (Ctrl+F)</source>
-        <translation type="unfinished"></translation>
+        <translation>Полнотекстовый поиск... (Ctrl+F)</translation>
     </message>
     <message>
         <location filename="../widgets/searchpanel.ui" line="94"/>
         <source>In titles</source>
-        <translation type="unfinished"></translation>
+        <translation>По заголовкам</translation>
     </message>
     <message>
         <location filename="../widgets/searchpanel.ui" line="99"/>
@@ -1119,17 +1081,17 @@ Do you want to config now?</source>
     <message>
         <location filename="../widgets/statusbarpanel.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/statusbarpanel.ui" line="38"/>
         <source>Database server address</source>
-        <translation type="unfinished"></translation>
+        <translation>Адрес сервера</translation>
     </message>
     <message>
         <location filename="../widgets/statusbarpanel.ui" line="116"/>
         <source>User name</source>
-        <translation type="unfinished"></translation>
+        <translation>Пользователь</translation>
     </message>
 </context>
 <context>
@@ -1137,7 +1099,7 @@ Do you want to config now?</source>
     <message>
         <location filename="../dialogs/subjtypedialog.cpp" line="14"/>
         <source>Subjects</source>
-        <translation type="unfinished"></translation>
+        <translation>Субъекты</translation>
     </message>
     <message>
         <location filename="../dialogs/subjtypedialog.cpp" line="18"/>
@@ -1150,17 +1112,17 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/subjtypemodel.cpp" line="14"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../models/subjtypemodel.cpp" line="15"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Наименование</translation>
     </message>
     <message>
         <location filename="../models/subjtypemodel.cpp" line="24"/>
         <source>Subject type %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Вид субъекта %1</translation>
     </message>
 </context>
 <context>
@@ -1168,33 +1130,33 @@ Do you want to config now?</source>
     <message>
         <location filename="../dialogs/treedialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../dialogs/treedialog.cpp" line="151"/>
         <source>Creating items</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../dialogs/treedialog.cpp" line="152"/>
         <source>Could not create item.</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось создать элемент.</translation>
     </message>
     <message>
         <location filename="../dialogs/treedialog.cpp" line="184"/>
         <location filename="../dialogs/treedialog.cpp" line="196"/>
         <source>Deleting item</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../dialogs/treedialog.cpp" line="185"/>
         <source>Are you shure that you want to delete this item?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить этот элемент?</translation>
     </message>
     <message>
         <location filename="../dialogs/treedialog.cpp" line="197"/>
         <source>Could not remove the item.</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось удалить элемент.</translation>
     </message>
 </context>
 </TS>

@@ -42,7 +42,7 @@ void Application::initMainWindow()
 void Application::connect()
 {
     QCommandLineParser parser;
-    parser.setApplicationDescription(tr("Public Authority's Decisions Database"));
+    parser.setApplicationDescription(basename());
     parser.addVersionOption();
 
     QCommandLineOption hostnameOption(QStringList() << "h" << "hostname", tr("Address of database server"), "localhost");

@@ -44,7 +44,7 @@ int AuthorityDetailsDialog::exec()
                 accept();
             } else {
                 QMessageBox::warning(this,
-                                     tr("Authority details"),
+                                     tr("Public authority"),
                                      tr("Could not save data."),
                                      QMessageBox::Ok);
             }

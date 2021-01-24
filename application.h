@@ -20,7 +20,7 @@ public:
     QSettings* applicationSettings() { return m_settings; }
     QVariant version() const { return m_version; };
     QIcon icon() const{ return m_icon; };
-    QString basename() { return QString(tr("Records Invetories Register %1").arg(version().toString())); };
+    QString basename() { return QString(tr("Public Authority's Decisions Database %1").arg(version().toString())); };
     MainWindow *mainWindow() { return m_mainWindow; };
     void connect();
 

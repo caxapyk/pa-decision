@@ -147,7 +147,7 @@ void AuthorityView::insert()
         m_tree->edit(currentIndex);
     } else {
         QMessageBox::warning(this,
-                tr("Creating items"),
+                tr("Public authorities"),
                 tr("Could not create item."),
                 QMessageBox::Ok);
     }
@@ -177,7 +177,7 @@ void AuthorityView::remove()
     QModelIndex parent = m_authorityProxyModel->parent(index);
 
     int res = QMessageBox::critical(this,
-        tr("Deleting item"),
+        tr("Public authorities"),
         tr("Are you shure that you want to delete this item?"),
         QMessageBox::No | QMessageBox::Yes);
 
@@ -187,7 +187,7 @@ void AuthorityView::remove()
             m_tree->setCurrentIndex(QModelIndex());
         } else {
             QMessageBox::warning(this,
-                    tr("Deleting item"),
+                    tr("Public authorities"),
                     tr("Could not remove the item."),
                     QMessageBox::Ok);
         }

@@ -240,7 +240,7 @@ void RecordDialog::insert()
         m_tree->edit(m_tree->currentIndex());
     } else {
         QMessageBox::warning(this,
-                tr("Creating items"),
+                tr("Archive records"),
                 tr("Could not create item."),
                 QMessageBox::Ok);
     }

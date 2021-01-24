@@ -31,7 +31,7 @@ int RecordDetailsDialog::exec()
     model.select();
 
     if (model.rowCount() > 0) {
-        setWindowTitle(tr("Edit record"));
+        setWindowTitle(tr("Record details"));
 
         m_mapper = new QDataWidgetMapper;
         m_mapper->setModel(&model);
@@ -48,8 +48,8 @@ int RecordDetailsDialog::exec()
                 accept();
             } else {
                 QMessageBox::critical(this,
-                                      tr("Record"),
-                                      tr("Could not save record"),
+                                      tr("Record details"),
+                                      tr("Could not save data."),
                                       QMessageBox::Ok);
             }
         });

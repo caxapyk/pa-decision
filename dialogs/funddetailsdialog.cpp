@@ -30,7 +30,7 @@ int FundDetailsDialog::exec()
     model.select();
 
     if (model.rowCount() > 0) {
-        setWindowTitle(tr("Edit fund"));
+        setWindowTitle(tr("Fund details"));
 
         m_mapper = new QDataWidgetMapper;
         m_mapper->setModel(&model);
@@ -46,8 +46,8 @@ int FundDetailsDialog::exec()
                 accept();
             } else {
                 QMessageBox::critical(this,
-                                      tr("Fund"),
-                                      tr("Could not save fund"),
+                                      tr("Fund details"),
+                                      tr("Could not save data."),
                                       QMessageBox::Ok);
             }
         });

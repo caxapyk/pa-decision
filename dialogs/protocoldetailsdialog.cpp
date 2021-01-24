@@ -33,8 +33,6 @@ int ProtocolDetailsDialog::exec()
         model.select();
 
         if (model.rowCount() > 0) {
-            setWindowTitle(tr("Edit protocol"));
-
             m_mapper = new QDataWidgetMapper;
             m_mapper->setModel(&model);
             m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
@@ -49,7 +47,6 @@ int ProtocolDetailsDialog::exec()
             connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ProtocolDetailsDialog::accept);
         }
     } else {
-        setWindowTitle(tr("New protocol"));
         ui->dE_date->setDate(QDate::currentDate());
     }
 
@@ -63,8 +60,8 @@ void ProtocolDetailsDialog::accept()
     bool invalid = ui->lE_title->text().isEmpty() || ui->lE_number->text().isEmpty();
     if(invalid) {
         QMessageBox::critical(this,
-                tr("New protocol"),
-                tr("Could not create new protocol. Fill required fields."),
+                tr("Protocol"),
+                tr("Fill all required fields."),
                 QMessageBox::Ok);
 
         return;

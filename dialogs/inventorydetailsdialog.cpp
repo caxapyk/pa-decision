@@ -30,7 +30,7 @@ int InventoryDetailsDialog::exec()
     model.select();
 
     if (model.rowCount() > 0) {
-        setWindowTitle(tr("Edit inventory"));
+        setWindowTitle(tr("Inventory details"));
 
         m_mapper = new QDataWidgetMapper;
         m_mapper->setModel(&model);
@@ -47,8 +47,8 @@ int InventoryDetailsDialog::exec()
                 accept();
             } else {
                 QMessageBox::critical(this,
-                                      tr("Fund"),
-                                      tr("Could not save inventory"),
+                                      tr("Inventory details"),
+                                      tr("Could not save data."),
                                       QMessageBox::Ok);
             }
         });
