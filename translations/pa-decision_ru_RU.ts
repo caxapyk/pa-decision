@@ -1002,7 +1002,7 @@ Do you want to config now?</source>
     <message>
         <location filename="../models/recordmodel.cpp" line="241"/>
         <source>New record</source>
-        <translation>Единица_хранения</translation>
+        <translation>Единица хранения</translation>
     </message>
     <message>
         <location filename="../models/recordmodel.cpp" line="365"/>

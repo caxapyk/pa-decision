@@ -32,8 +32,6 @@ void RecordModel::clear()
     rootNode->children.clear();
     rootNode->children.squeeze();
 
-    //clearFilter();
-
     endResetModel();
 }
 
@@ -84,8 +82,6 @@ void RecordModel::setupModelData(const QModelIndex &index)
 
         query.prepare(QString("SELECT number, comment, id, name FROM pad_inventory WHERE fund_id=? %1 ORDER BY CAST(number AS UNSIGNED) ASC").arg(filter));
         query.bindValue(0, parentNode->id.toInt());
-
-        qDebug() << query.lastQuery();
     }
         break;
     case RecordModel::RecordLevel:

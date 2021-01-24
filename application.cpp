@@ -111,11 +111,11 @@ void Application::initializeLanguage()
     if(qtTranslator->load("qt_" + QLocale::system().name(),
              QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
         installTranslator(qtTranslator);
-    } else if (qtTranslator->load("qt_ru.qm", ":/translations/")) {
+    } else if (qtTranslator->load("qt_ru.qm", ":/translations/translations/")) {
          installTranslator(qtTranslator);
     }
 
-    if (appTranslator->load("pa-decision_ru_RU.qm", ":/translations/")) {
+    if (appTranslator->load("pa-decision_ru_RU.qm", ":/translations/translations/")) {
         installTranslator(appTranslator);
     }
 }

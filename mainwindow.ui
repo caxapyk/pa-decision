@@ -74,8 +74,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="action_mNew"/>
-    <addaction name="action_mPrint"/>
     <addaction name="separator"/>
     <addaction name="action_exit"/>
    </widget>

@@ -41,5 +41,6 @@
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>
         <file>translations/pa-decision_ru_RU.ts</file>
+        <file>translations/pa-decision_ru_RU.qm</file>
     </qresource>
 </RCC>
