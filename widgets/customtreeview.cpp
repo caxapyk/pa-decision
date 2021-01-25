@@ -63,11 +63,9 @@ void CustomTreeView::contextMenuRequested(const QPoint &)
     refreshAction->setShortcut(m_refreshShortcut->key());
     connect(refreshAction, &QAction::triggered, this, [=]  { emit onRefresh(); });
 
-    contextMenu(&menu);
-    qDebug()<<"last";
+    contextMenu(menu);
+
     menu.exec(QCursor().pos());
-
-
 }
 
 void CustomTreeView::setInsertEnabled(bool ok)
