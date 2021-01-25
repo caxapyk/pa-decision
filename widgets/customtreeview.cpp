@@ -42,6 +42,8 @@ void CustomTreeView::setupShortcuts()
 
 void CustomTreeView::contextMenuRequested(const QPoint &)
 {
+    setCurrentIndex(indexAtCursor());
+
     CustomContextMenu menu(CustomContextMenu::Insert | CustomContextMenu::Edit | CustomContextMenu::Remove | CustomContextMenu::Refresh);
 
     QAction *insertAction = menu.action(CustomContextMenu::Insert);

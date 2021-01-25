@@ -9,7 +9,7 @@ SubjtypeModel::SubjtypeModel(QObject *parent) :
     QSqlTableModel(parent)
 {
     setTable("pad_subjtype");
-    setEditStrategy(QSqlTableModel::OnRowChange);
+    setEditStrategy(QSqlTableModel::OnFieldChange);
 
     setHeaderData(1, Qt::Horizontal, tr("ID"));
     setHeaderData(1, Qt::Horizontal, tr("Name"));

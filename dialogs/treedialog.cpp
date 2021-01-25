@@ -135,6 +135,8 @@ void TreeDialog::insert()
             m_tree->resizeColumnToContents(i);
         }
 
+        clearSelection();
+
         QModelIndex topLeft = m_dialogProxyModel->mapFromSource(
                     m_dialogProxyModel->sourceModel()->index(0, 0));
         QModelIndex bottomRight = m_dialogProxyModel->mapFromSource(
@@ -143,8 +145,13 @@ void TreeDialog::insert()
         QItemSelection selection(topLeft, bottomRight);
         m_tree->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
         m_tree->scrollTo(topLeft);
-        m_tree->edit(topLeft);
-        qDebug() << topLeft;
+
+        for (int i=0; i < m_dialogProxyModel->columnCount(); ++i) {
+            if(m_tree->isColumnHidden(i) == false) {
+                QModelIndex section = m_dialogProxyModel->index(topLeft.row(), i);
+                m_tree->edit(section);
+            }
+        }
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),

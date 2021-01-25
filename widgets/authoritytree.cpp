@@ -25,7 +25,6 @@ AuthorityTree::~AuthorityTree()
 void AuthorityTree::contextMenu(CustomContextMenu &menu)
 {
     QModelIndex currentIndex = indexAtCursor();
-    setCurrentIndex(currentIndex);
 
     openInNTAction->setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
     menu.insertAction(menu.action(CustomContextMenu::Insert), openInNTAction);

@@ -11,6 +11,7 @@ DocumentTypeModel::DocumentTypeModel(QObject *parent) :
     QSqlTableModel(parent)
 {
    setTable("pad_doctype");
+   setEditStrategy(QSqlTableModel::OnFieldChange);
 
    setHeaderData(0, Qt::Horizontal, tr("ID"));
    setHeaderData(1, Qt::Horizontal, tr("Name"));
