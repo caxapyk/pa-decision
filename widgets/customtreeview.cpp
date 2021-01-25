@@ -5,12 +5,12 @@
 CustomTreeView::CustomTreeView(QWidget *parent) : QTreeView(parent)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
-    setEditTriggers(QTreeView::NoEditTriggers);
+    setEditTriggers(QTreeView::EditKeyPressed);
     setSortingEnabled(true);
 
     setupShortcuts();
 
-    connect(this, &QMenu::customContextMenuRequested, this, &CustomTreeView::contextMenu);
+    connect(this, &QMenu::customContextMenuRequested, this, &CustomTreeView::contextMenuRequested);
 }
 
 CustomTreeView::~CustomTreeView()
@@ -40,7 +40,7 @@ void CustomTreeView::setupShortcuts()
     connect(m_refreshShortcut, &QShortcut::activated, this, [=]  { emit onRefresh(); });
 }
 
-void CustomTreeView::contextMenu(const QPoint &)
+void CustomTreeView::contextMenuRequested(const QPoint &)
 {
     CustomContextMenu menu(CustomContextMenu::Insert | CustomContextMenu::Edit | CustomContextMenu::Remove | CustomContextMenu::Refresh);
 
@@ -63,7 +63,11 @@ void CustomTreeView::contextMenu(const QPoint &)
     refreshAction->setShortcut(m_refreshShortcut->key());
     connect(refreshAction, &QAction::triggered, this, [=]  { emit onRefresh(); });
 
-    emit onContextMenuRequested(menu);
+    contextMenu(menu);
+qDebug()<<"last";
+    menu.exec(QCursor().pos());
+
+
 }
 
 void CustomTreeView::setInsertEnabled(bool ok)

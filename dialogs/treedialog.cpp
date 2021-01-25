@@ -19,9 +19,6 @@ TreeDialog::TreeDialog(QWidget *parent) :
     m_tree = new CustomTreeView;
     ui->hL_body->insertWidget(0, m_tree);
 
-    connect(m_tree, &CustomTreeView::onContextMenuRequested, this, &TreeDialog::contextMenu);
-    //connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TreeDialog::selected);
-
     connect(m_tree, &CustomTreeView::onInsert, this, &TreeDialog::insert);
     connect(m_tree, &CustomTreeView::onEdit, this,  &TreeDialog::edit);
     connect(m_tree, &CustomTreeView::onRemove, this,  &TreeDialog::remove);
@@ -146,6 +143,8 @@ void TreeDialog::insert()
         QItemSelection selection(topLeft, bottomRight);
         m_tree->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
         m_tree->scrollTo(topLeft);
+        m_tree->edit(topLeft);
+        qDebug() << topLeft;
     } else {
         QMessageBox::warning(this,
                 tr("Creating items"),

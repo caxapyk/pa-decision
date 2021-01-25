@@ -9,6 +9,8 @@ class SubjtypeModel : public QSqlTableModel
 public:
     SubjtypeModel(QObject *parent = nullptr);
 
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+
 private slots:
     void setDefaults(int row, QSqlRecord &record);
 };

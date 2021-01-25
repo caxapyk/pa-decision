@@ -13,5 +13,5 @@ DecisionTable::DecisionTable()
 
 void DecisionTable::contextMenu(CustomContextMenu &menu)
 {
-    //menu.addAction("Open");
+    menu.addAction("Open");
 }

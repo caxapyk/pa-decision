@@ -7,7 +7,7 @@
 #include "views/explorerview.h"
 #include "views/decisionview.h"
 #include "utils/customcontextmenu.h"
-#include "widgets/customtreeview.h"
+#include "widgets/authoritytreeview.h"
 
 #include <QShortcut>
 #include <QSortFilterProxyModel>
@@ -42,7 +42,7 @@ public:
 private:
     Ui::AuthorityView *ui;
     ExplorerView *_explorer;
-    CustomTreeView *m_tree;
+    AuthorityTreeView *m_tree;
 
     AuthorityModel *m_authorityModel;
     AuthorityProxyModel *m_authorityProxyModel;
@@ -50,7 +50,6 @@ private:
     QVariant m_authorityId;
 
 private slots:
-    void contextMenu(CustomContextMenu &menu);
     void selected(const QItemSelection &selected, const QItemSelection &deselected);
     void openInNewTab(const QModelIndex &index);
     void insert();

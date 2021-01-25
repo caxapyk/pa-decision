@@ -17,6 +17,11 @@ SubjtypeModel::SubjtypeModel(QObject *parent) :
     connect(this, &QSqlTableModel::primeInsert, this, &SubjtypeModel::setDefaults);
 }
 
+Qt::ItemFlags SubjtypeModel::flags(const QModelIndex &) const
+{
+    return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
+}
+
 void SubjtypeModel::setDefaults(int, QSqlRecord &record)
 {
     ItemCounter counter(this);

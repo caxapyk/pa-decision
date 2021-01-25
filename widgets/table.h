@@ -30,7 +30,7 @@ private slots:
     void contextMenuRequested(const QPoint &pos);
 
 protected:
-    virtual void contextMenu(CustomContextMenu &menu) {};
+    virtual void contextMenu(CustomContextMenu &) {};
 
 signals:
     void onInsert(const QModelIndex &index);

@@ -16,9 +16,6 @@ AuthorityView::AuthorityView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_tree = new CustomTreeView;
-    ui->tab_authorities->layout()->addWidget(m_tree);
-
     initialize();
     restoreViewState();
 }
@@ -36,6 +33,9 @@ AuthorityView::~AuthorityView()
 
 void AuthorityView::initialize()
 {
+    m_tree = new AuthorityTreeView;
+    ui->tab_authorities->layout()->addWidget(m_tree);
+
     m_authorityModel = new AuthorityModel;
     m_authorityModel->select();
 
@@ -50,14 +50,16 @@ void AuthorityView::initialize()
     m_tree->hideColumn(2);
     m_tree->expandAll();
 
-    connect(m_tree, &CustomTreeView::onContextMenuRequested, this, &AuthorityView::contextMenu);
+    connect(m_tree, &AuthorityTreeView::openInNewTabRequested, this, [=](const QModelIndex &index) { openInNewTab(index); });
+    connect(m_tree, &AuthorityTreeView::detailsRequested, this,  &AuthorityView::details);
+
     connect(m_tree, &QTreeView::doubleClicked, this, &AuthorityView::openInNewTab);
     connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AuthorityView::selected);
 
-    connect(m_tree, &CustomTreeView::onInsert, this, &AuthorityView::insert);
-    connect(m_tree, &CustomTreeView::onEdit, this,  &AuthorityView::edit);
-    connect(m_tree, &CustomTreeView::onRemove, this,  &AuthorityView::remove);
-    connect(m_tree, &CustomTreeView::onRefresh, this, &AuthorityView::refresh);
+    connect(m_tree, &AuthorityTreeView::onInsert, this, &AuthorityView::insert);
+    connect(m_tree, &AuthorityTreeView::onEdit, this,  &AuthorityView::edit);
+    connect(m_tree, &AuthorityTreeView::onRemove, this,  &AuthorityView::remove);
+    connect(m_tree, &AuthorityTreeView::onRefresh, this, &AuthorityView::refresh);
 }
 
 void AuthorityView::restoreViewState()
@@ -68,26 +70,6 @@ void AuthorityView::restoreViewState()
 void AuthorityView::saveViewState()
 {
 
-}
-
-void AuthorityView::contextMenu(CustomContextMenu &menu)
-{
-    QModelIndex currentIndex = m_tree->indexAt(m_tree->viewport()->mapFromGlobal(QCursor().pos()));
-    m_tree->setCurrentIndex(currentIndex);
-
-    QAction openInNTAction(tr("Open in new tab"));
-    connect(&openInNTAction, &QAction::triggered, this, [=] { openInNewTab(currentIndex); });
-    openInNTAction.setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
-    menu.insertAction(menu.action(CustomContextMenu::Insert), &openInNTAction);
-
-    menu.insertSeparator(menu.action(CustomContextMenu::Insert));
-
-    QAction detailsAction(tr("Details"));
-    connect(&detailsAction, &QAction::triggered, this,  &AuthorityView::details);
-    detailsAction.setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
-    menu.addAction(&detailsAction);
-
-    menu.exec(QCursor().pos());
 }
 
 void AuthorityView::selected(const QItemSelection &selected, const QItemSelection &)
