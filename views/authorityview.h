@@ -7,7 +7,7 @@
 #include "views/explorerview.h"
 #include "views/decisionview.h"
 #include "utils/customcontextmenu.h"
-#include "widgets/authoritytreeview.h"
+#include "widgets/authoritytree.h"
 
 #include <QShortcut>
 #include <QSortFilterProxyModel>
@@ -42,7 +42,7 @@ public:
 private:
     Ui::AuthorityView *ui;
     ExplorerView *_explorer;
-    AuthorityTreeView *m_tree;
+    AuthorityTree *m_tree;
 
     AuthorityModel *m_authorityModel;
     AuthorityProxyModel *m_authorityProxyModel;

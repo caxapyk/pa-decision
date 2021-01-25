@@ -33,7 +33,7 @@ AuthorityView::~AuthorityView()
 
 void AuthorityView::initialize()
 {
-    m_tree = new AuthorityTreeView;
+    m_tree = new AuthorityTree;
     ui->tab_authorities->layout()->addWidget(m_tree);
 
     m_authorityModel = new AuthorityModel;
@@ -50,16 +50,16 @@ void AuthorityView::initialize()
     m_tree->hideColumn(2);
     m_tree->expandAll();
 
-    connect(m_tree, &AuthorityTreeView::openInNewTabRequested, this, [=](const QModelIndex &index) { openInNewTab(index); });
-    connect(m_tree, &AuthorityTreeView::detailsRequested, this,  &AuthorityView::details);
+    connect(m_tree, &AuthorityTree::openInNewTabRequested, this, [=](const QModelIndex &index) { openInNewTab(index); });
+    connect(m_tree, &AuthorityTree::detailsRequested, this,  &AuthorityView::details);
 
     connect(m_tree, &QTreeView::doubleClicked, this, &AuthorityView::openInNewTab);
     connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AuthorityView::selected);
 
-    connect(m_tree, &AuthorityTreeView::onInsert, this, &AuthorityView::insert);
-    connect(m_tree, &AuthorityTreeView::onEdit, this,  &AuthorityView::edit);
-    connect(m_tree, &AuthorityTreeView::onRemove, this,  &AuthorityView::remove);
-    connect(m_tree, &AuthorityTreeView::onRefresh, this, &AuthorityView::refresh);
+    connect(m_tree, &AuthorityTree::onInsert, this, &AuthorityView::insert);
+    connect(m_tree, &AuthorityTree::onEdit, this,  &AuthorityView::edit);
+    connect(m_tree, &AuthorityTree::onRemove, this,  &AuthorityView::remove);
+    connect(m_tree, &AuthorityTree::onRefresh, this, &AuthorityView::refresh);
 }
 
 void AuthorityView::restoreViewState()

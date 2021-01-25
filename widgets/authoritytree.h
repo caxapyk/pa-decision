@@ -2,17 +2,20 @@
 #define AUTHORITYTREEVIEW_H
 
 #include "widgets/customtreeview.h"
-#include "utils/customcontextmenu.h"
 
-class AuthorityTreeView : public CustomTreeView
+class AuthorityTree : public CustomTreeView
 {
     Q_OBJECT
 
 public:
-    AuthorityTreeView(QWidget *parent = nullptr);
+    AuthorityTree(QWidget *parent = nullptr);
+    ~AuthorityTree();
 
 private:
     void contextMenu(CustomContextMenu &menu) override;
+
+    QAction *openInNTAction;
+    QAction *detailsAction;
 
 signals:
     void openInNewTabRequested(const QModelIndex &index);

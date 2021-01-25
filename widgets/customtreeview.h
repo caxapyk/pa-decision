@@ -19,6 +19,8 @@ public:
     void setRemoveEnabled(bool ok);
     void setRefreshEnabled(bool ok);
 
+    QModelIndex indexAtCursor() const;
+
 private:
     QShortcut *m_insertShortcut;
     QShortcut *m_editShortcut;

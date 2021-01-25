@@ -51,7 +51,7 @@ SOURCES += \
     views/decisionview.cpp \
     views/explorerview.cpp \
     views/view.cpp \
-    widgets/authoritytreeview.cpp \
+    widgets/authoritytree.cpp \
     widgets/colorrect.cpp \
     widgets/customtreeview.cpp \
     widgets/decisiontab.cpp \
@@ -96,7 +96,7 @@ HEADERS += \
     views/decisionview.h \
     views/explorerview.h \
     views/view.h \
-    widgets/authoritytreeview.h \
+    widgets/authoritytree.h \
     widgets/colorrect.h \
     widgets/customtreeview.h \
     widgets/decisiontab.h \

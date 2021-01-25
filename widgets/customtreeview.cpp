@@ -87,3 +87,9 @@ void CustomTreeView::setRefreshEnabled(bool ok)
 {
     m_refreshShortcut->setEnabled(ok);
 }
+
+QModelIndex CustomTreeView::indexAtCursor() const
+{
+    return indexAt(viewport()->mapFromGlobal(QCursor().pos()));
+}
+
