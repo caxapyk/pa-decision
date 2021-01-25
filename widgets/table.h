@@ -27,15 +27,16 @@ private:
     void setupShortcuts();
 
 private slots:
-    void contextMenu(const QPoint &pos);
+    void contextMenuRequested(const QPoint &pos);
+
+protected:
+    virtual void contextMenu(CustomContextMenu &menu) {};
 
 signals:
     void onInsert(const QModelIndex &index);
     void onEdit(const QModelIndex &index);
     void onRemove(const QModelIndex &index);
     void onRefresh();
-
-    void onContextMenuRequested(CustomContextMenu &menu);
 };
 
 #endif // TABLE_H

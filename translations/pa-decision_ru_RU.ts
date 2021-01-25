@@ -267,6 +267,15 @@ Do you want to config now?</source>
     <name>DecisionFormDialog</name>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="14"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="277"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="280"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="283"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="286"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="289"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="292"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="295"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="298"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="318"/>
         <source>Document form</source>
         <translation>Форма документа</translation>
     </message>
@@ -278,7 +287,7 @@ Do you want to config now?</source>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="66"/>
         <source>Public authority</source>
-        <translation>Орган г.в.</translation>
+        <translation>Орган гoc. власти</translation>
     </message>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="96"/>
@@ -301,69 +310,114 @@ Do you want to config now?</source>
         <translation>Страницы</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="233"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="236"/>
         <source>Include attachments</source>
         <translation>Содержит приложения</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="254"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="257"/>
         <source>Decision title</source>
         <translation>Заголовок решения</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="300"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="303"/>
         <source>Record</source>
         <translation>№ дела</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="344"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="347"/>
         <source>Fund</source>
         <translation>№ фонда</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="385"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="388"/>
         <source>Inventory</source>
         <translation>№ описи</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="431"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="434"/>
         <source>Protocol</source>
         <translation>В составе протокола</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="491"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="494"/>
         <source>Рage</source>
         <translation>Страница протокола</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="544"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="550"/>
         <source>Subjects</source>
         <translation>Субъекты</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="573"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="579"/>
         <source>Content</source>
         <translation>Содержание</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="602"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="608"/>
         <source>Other</source>
         <translation>Дополнительно</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="608"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="614"/>
         <source>Comment</source>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="634"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="640"/>
         <source>Access denied</source>
         <translation>Доступ закрыт</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="639"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="645"/>
         <source>Access permited</source>
         <translation>Доступ открыт</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="277"/>
+        <source>Please enter number.</source>
+        <translation>Пожалуйста заполните номер документа.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="280"/>
+        <source>Please enter title.</source>
+        <translation>Пожалуйста заполните заголовок.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="283"/>
+        <source>Please choose fund.</source>
+        <translation>Пожалуйста выберите фонд.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="286"/>
+        <source>Please choose inventory.</source>
+        <translation>Пожалуйста выберите опись.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="289"/>
+        <source>Please choose record.</source>
+        <translation>Пожалуйста выберите дело.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="292"/>
+        <source>Please choose protocol or diselect.</source>
+        <translation>Пожалуйста выберите протокол или снимите отметку.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="295"/>
+        <source>Title is too long.</source>
+        <translation>Заголовок слишком длинный.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="298"/>
+        <source>Comment is too long.</source>
+        <translation>Комментарий слишком длинный.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="319"/>
+        <source>Are you shure that you want to dicard all changes?</source>
+        <translation>Вы уверены, что хотите закрыть окно?</translation>
     </message>
 </context>
 <context>
@@ -613,94 +667,94 @@ Do you want to config now?</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="84"/>
+        <location filename="../mainwindow.ui" line="82"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="90"/>
+        <location filename="../mainwindow.ui" line="88"/>
         <source>Service</source>
         <translation>Сервис</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="111"/>
+        <location filename="../mainwindow.ui" line="109"/>
         <source>toolBar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="143"/>
+        <location filename="../mainwindow.ui" line="141"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="148"/>
+        <location filename="../mainwindow.ui" line="146"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="157"/>
+        <location filename="../mainwindow.ui" line="155"/>
         <source>Database connection</source>
         <translation>Параметры подключения</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="166"/>
-        <location filename="../mainwindow.ui" line="226"/>
+        <location filename="../mainwindow.ui" line="164"/>
+        <location filename="../mainwindow.ui" line="224"/>
         <location filename="../mainwindow.cpp" line="89"/>
         <source>New</source>
         <translation>Создать</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="169"/>
+        <location filename="../mainwindow.ui" line="167"/>
         <source>Ctrl+Shift+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="178"/>
+        <location filename="../mainwindow.ui" line="176"/>
         <location filename="../mainwindow.cpp" line="98"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="181"/>
+        <location filename="../mainwindow.ui" line="179"/>
         <source>F2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="190"/>
-        <location filename="../mainwindow.ui" line="235"/>
+        <location filename="../mainwindow.ui" line="188"/>
+        <location filename="../mainwindow.ui" line="233"/>
         <location filename="../mainwindow.cpp" line="95"/>
         <source>Print</source>
         <translation>Печать</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="193"/>
+        <location filename="../mainwindow.ui" line="191"/>
         <source>Ctrl+P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="202"/>
+        <location filename="../mainwindow.ui" line="200"/>
         <location filename="../mainwindow.cpp" line="104"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="205"/>
+        <location filename="../mainwindow.ui" line="203"/>
         <source>Del</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="214"/>
+        <location filename="../mainwindow.ui" line="212"/>
         <location filename="../mainwindow.cpp" line="110"/>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="217"/>
+        <location filename="../mainwindow.ui" line="215"/>
         <source>F5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="238"/>
+        <location filename="../mainwindow.ui" line="236"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
@@ -990,32 +1044,32 @@ Do you want to config now?</source>
         <translation>Заголовок</translation>
     </message>
     <message>
-        <location filename="../models/recordmodel.cpp" line="229"/>
+        <location filename="../models/recordmodel.cpp" line="225"/>
         <source>New fund</source>
         <translation>Новый фонд</translation>
     </message>
     <message>
-        <location filename="../models/recordmodel.cpp" line="235"/>
+        <location filename="../models/recordmodel.cpp" line="231"/>
         <source>New inventory</source>
         <translation>Новая опись</translation>
     </message>
     <message>
-        <location filename="../models/recordmodel.cpp" line="241"/>
+        <location filename="../models/recordmodel.cpp" line="237"/>
         <source>New record</source>
         <translation>Единица хранения</translation>
     </message>
     <message>
-        <location filename="../models/recordmodel.cpp" line="365"/>
+        <location filename="../models/recordmodel.cpp" line="361"/>
         <source>F. </source>
         <translation>Ф. </translation>
     </message>
     <message>
-        <location filename="../models/recordmodel.cpp" line="368"/>
+        <location filename="../models/recordmodel.cpp" line="364"/>
         <source>Inv. </source>
         <translation>Оп. </translation>
     </message>
     <message>
-        <location filename="../models/recordmodel.cpp" line="371"/>
+        <location filename="../models/recordmodel.cpp" line="367"/>
         <source>R. </source>
         <translation>Д. </translation>
     </message>

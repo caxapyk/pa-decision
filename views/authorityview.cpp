@@ -109,10 +109,7 @@ void AuthorityView::selected(const QItemSelection &selected, const QItemSelectio
 void AuthorityView::openInNewTab(const QModelIndex &index)
 {
     if(index.isValid() && index.parent().isValid()) {
-        DecisionTab *tab = new DecisionTab;
-        tab->view()->table()->setAuthorityId(index.data(Qt::UserRole));
-        tab->view()->table()->refresh();
-
+        DecisionTab *tab = new DecisionTab(index.data(Qt::UserRole));
         QIcon icon(index.data(Qt::DecorationRole).toString());
 
         explorer()->createTab(tab, index.data().toString(), icon);

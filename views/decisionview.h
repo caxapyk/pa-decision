@@ -20,13 +20,13 @@ class DecisionView : public View
     Q_OBJECT
 
 public:
-    explicit DecisionView(QWidget *parent = nullptr);
+    explicit DecisionView(const QVariant &authorityId, QWidget *parent = nullptr);
     ~DecisionView();
 
     void restoreViewState() override;
     void saveViewState() override;
 
-    DecisionTable *table() { return m_table; };
+    QVariant authorityId() const { return m_authorityId; };
 
 public slots:
     void edit();
@@ -39,10 +39,15 @@ private:
     DecisionTable *m_table;
     Paginator *m_paginator;
 
+    QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
+    QVariant m_authorityId;
+    int m_total = -1;
+
     void initialize() override;
+    void clear();
+    void updateTotal();
 
 private slots:
-    void contextMenu(CustomContextMenu &menu);
     void selected(const QItemSelection &selected, const QItemSelection &deselected);
 };
 

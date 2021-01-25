@@ -1,8 +1,8 @@
 #include "decisiontab.h"
 
-DecisionTab::DecisionTab(QWidget *parent) : Tab(parent)
+DecisionTab::DecisionTab(const QVariant &authorityId, QWidget *parent) : Tab(parent)
 {
-    m_view = new DecisionView;
+    m_view = new DecisionView(authorityId);
     layout()->addWidget(m_view);
 }
 

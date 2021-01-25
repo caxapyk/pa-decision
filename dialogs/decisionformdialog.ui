@@ -32,7 +32,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_1">
+     <widget class="QWidget" name="tab_general">
       <attribute name="title">
        <string>General</string>
       </attribute>
@@ -212,6 +212,9 @@ background-color:  #666;
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="maxLength">
+               <number>50</number>
+              </property>
              </widget>
             </item>
             <item>
@@ -222,7 +225,7 @@ background-color:  #666;
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="cB_attachemnts">
+             <widget class="QCheckBox" name="cB_annexes">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -503,6 +506,9 @@ background-color:  #666;
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="maxLength">
+                  <number>3</number>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -535,7 +541,7 @@ background-color:  #666;
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tab_subject">
       <attribute name="icon">
        <iconset resource="../resources.qrc">
         <normaloff>:/icons/icons/subject-16.png</normaloff>:/icons/icons/subject-16.png</iconset>
@@ -559,16 +565,9 @@ background-color:  #666;
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
-        <widget class="QTableView" name="tableView">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="tab_content">
       <attribute name="title">
        <string>Content</string>
       </attribute>
@@ -589,15 +588,11 @@ background-color:  #666;
         <number>0</number>
        </property>
        <item>
-        <widget class="QTextEdit" name="tE_content">
-         <property name="frameShape">
-          <enum>QFrame::Box</enum>
-         </property>
-        </widget>
+        <widget class="QPlainTextEdit" name="pTE_content"/>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="tab_other">
       <attribute name="title">
        <string>Other</string>
       </attribute>
@@ -617,7 +612,7 @@ background-color:  #666;
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_8">
+    <layout class="QHBoxLayout" name="hL_access">
      <item>
       <widget class="QComboBox" name="cB_access">
        <property name="minimumSize">
@@ -647,7 +642,7 @@ background-color:  #666;
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="standardButtons">
-        <set>QDialogButtonBox::Discard|QDialogButtonBox::Ok|QDialogButtonBox::Save</set>
+        <set>QDialogButtonBox::Discard|QDialogButtonBox::Save</set>
        </property>
       </widget>
      </item>

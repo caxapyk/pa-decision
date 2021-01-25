@@ -9,13 +9,8 @@ class DecisionTable : public Table
 public:
     DecisionTable();
 
-    void refresh();
-    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
-    QVariant authorityId() const { return m_authorityId; };
-
 private:
-    QVariant m_authorityId;
-    QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
+    void contextMenu(CustomContextMenu &menu) override;
 };
 
 #endif // DECISIONTABLE_H

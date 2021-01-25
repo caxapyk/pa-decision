@@ -8,7 +8,7 @@ class DecisionTab : public Tab
 {
     Q_OBJECT
 public:
-    DecisionTab(QWidget *parent = nullptr);
+    DecisionTab(const QVariant &authorityId, QWidget *parent = nullptr);
     ~DecisionTab();
 
     DecisionView *view() { return m_view; };

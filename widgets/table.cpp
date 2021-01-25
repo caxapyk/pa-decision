@@ -1,5 +1,7 @@
 #include "table.h"
 
+#include <QDebug>
+
 Table::Table(QWidget *parent) : QTableWidget(parent)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -8,7 +10,7 @@ Table::Table(QWidget *parent) : QTableWidget(parent)
 
     setupShortcuts();
 
-    connect(this, &QMenu::customContextMenuRequested, this, &Table::contextMenu);
+    connect(this, &QMenu::customContextMenuRequested, this, &Table::contextMenuRequested);
 }
 
 Table::~Table()
@@ -38,7 +40,7 @@ void Table::setupShortcuts()
     connect(m_refreshShortcut, &QShortcut::activated, this, [=]  { emit onRefresh(); });
 }
 
-void Table::contextMenu(const QPoint &)
+void Table::contextMenuRequested(const QPoint &)
 {
     CustomContextMenu menu(CustomContextMenu::Insert | CustomContextMenu::Edit | CustomContextMenu::Remove | CustomContextMenu::Refresh);
 
@@ -61,7 +63,9 @@ void Table::contextMenu(const QPoint &)
     refreshAction->setShortcut(m_refreshShortcut->key());
     connect(refreshAction, &QAction::triggered, this, [=]  { emit onRefresh(); });
 
-    emit onContextMenuRequested(menu);
+    contextMenu(menu);
+
+    menu.exec(QCursor().pos());
 }
 
 void Table::setInsertEnabled(bool ok)
