@@ -12,7 +12,7 @@ public:
     AuthorityTreeView(QWidget *parent = nullptr);
 
 private:
-    void contextMenu(CustomContextMenu &menu) override;
+    void contextMenu(CustomContextMenu *menu) override;
 
 signals:
     void openInNewTabRequested(const QModelIndex &index);
