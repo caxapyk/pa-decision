@@ -180,27 +180,31 @@ void DecisionView::insert()
 
 void DecisionView::remove()
 {
+    QModelIndexList indexes = m_table->selectionModel()->selectedRows();
+
     int res = QMessageBox::critical(this,
         tr("Documents"),
-        tr("Are you shure that you want to delete this item?"),
+        tr("Are you shure that you want to delete %1 item(s)?").arg(indexes.length()),
         QMessageBox::No | QMessageBox::Yes);
 
     if (res == QMessageBox::Yes) {
-        const QVariant id = m_table->item(m_table->currentRow(), 0)->data(Qt::DisplayRole);
-        QSqlQuery query;
-        query.prepare("delete from pad_decision where id=?");
-        query.bindValue(0, id);
+        for (int i = 0; i < indexes.length(); ++i) {
+            const QVariant id = indexes.at(i).data();
+            QSqlQuery query;
+            query.prepare("delete from pad_decision where id=?");
+            query.bindValue(0, id);
 
-        if(query.exec()) {
-            refresh();
-        } else {
-            qDebug() << query.lastError().text();
-
-            QMessageBox::warning(this,
-                    tr("Documents"),
-                    tr("Could not remove the item."),
-                    QMessageBox::Ok);
+            if(query.exec()) {
+                m_table->removeRow(indexes.at(i).row() - i);
+            } else {
+                qDebug() << query.lastError().text();
+                QMessageBox::warning(this,
+                        tr("Documents"),
+                        tr("Could not remove the item."),
+                        QMessageBox::Ok);
+            }
         }
+        m_table->setCurrentIndex(QModelIndex());
     }
 }
 

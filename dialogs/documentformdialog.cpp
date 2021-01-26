@@ -79,7 +79,6 @@ void DocumentFormDialog::initialize()
     connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::accessStateChanged);
 
     connect(m_subjectsTable, &Table::onInsert, this, &DocumentFormDialog::insertSubject);
-    connect(m_subjectsTable, &Table::onEdit, this, &DocumentFormDialog::editSubject);
     connect(m_subjectsTable, &Table::onRemove, this, &DocumentFormDialog::removeSubject);
 
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DocumentFormDialog::reject);
@@ -320,11 +319,6 @@ void DocumentFormDialog::insertSubject()
     m_subjectsTable->selectRow(row);
 
     m_subjectsTable->setSortingEnabled(true);
-}
-
-void DocumentFormDialog::editSubject(const QModelIndex &index)
-{
-
 }
 
 void DocumentFormDialog::removeSubject(const QModelIndex &index)

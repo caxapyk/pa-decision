@@ -84,7 +84,6 @@ private slots:
 
     void insertSubject();
     void removeSubject(const QModelIndex &index);
-    void editSubject(const QModelIndex &index);
 
     void useProtocolStateChanged(bool checked);
     void accessStateChanged(int index);
