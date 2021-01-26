@@ -61,6 +61,8 @@ private:
     QVector<QVariant> m_recordIds;
     QVector<QVariant> m_protocolIds;
 
+    QStringList m_subjectHeaderLabels = {tr("ID"), tr("Type"), tr("Name"), tr("Address"), tr("Description")};
+
     void initialize();
     void setValues();
     void updateAuthority();
@@ -79,6 +81,10 @@ private slots:
     void chooseRecord();
     void chooseInventory();
     void chooseProtocol();
+
+    void insertSubject();
+    void removeSubject(const QModelIndex &index);
+    void editSubject(const QModelIndex &index);
 
     void useProtocolStateChanged(bool checked);
     void accessStateChanged(int index);

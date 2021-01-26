@@ -52,6 +52,9 @@ void DecisionFormDialog::saveDialogState()
 void DecisionFormDialog::initialize()
 {
     m_subjectsTable = new Table;
+    m_subjectsTable->setEditEnabled(true);
+    m_subjectsTable->setColumnCount(5);
+    m_subjectsTable->setHorizontalHeaderLabels(m_subjectHeaderLabels);
     ui->tab_subject->layout()->addWidget(m_subjectsTable);
 
     ui->dE_date->setDate(QDate::currentDate());
@@ -74,6 +77,10 @@ void DecisionFormDialog::initialize()
     connect(ui->pB_protocol, &QPushButton::clicked, this, &DecisionFormDialog::chooseProtocol);
 
     connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::accessStateChanged);
+
+    connect(m_subjectsTable, &Table::onInsert, this, &DecisionFormDialog::insertSubject);
+    connect(m_subjectsTable, &Table::onEdit, this, &DecisionFormDialog::editSubject);
+    connect(m_subjectsTable, &Table::onRemove, this, &DecisionFormDialog::removeSubject);
 
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DecisionFormDialog::reject);
     connect(ui->buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &DecisionFormDialog::save);
@@ -303,6 +310,28 @@ void DecisionFormDialog::chooseProtocol()
     }
 }
 
+void DecisionFormDialog::insertSubject()
+{
+    int row = m_subjectsTable->rowCount();
+
+    m_subjectsTable->setSortingEnabled(false);
+
+    m_subjectsTable->insertRow(row);
+    m_subjectsTable->selectRow(row);
+
+    m_subjectsTable->setSortingEnabled(true);
+}
+
+void DecisionFormDialog::editSubject(const QModelIndex &index)
+{
+
+}
+
+void DecisionFormDialog::removeSubject(const QModelIndex &index)
+{
+    m_subjectsTable->removeRow(index.row());
+}
+
 void DecisionFormDialog::useProtocolStateChanged(bool checked)
 {
     if(!checked) {
@@ -361,7 +390,7 @@ void DecisionFormDialog::save()
     } else {
         db.rollback();
         QMessageBox::warning(this,
-                tr("Documents"),
+                tr("Document form"),
                 m_id.isValid() ? tr("Could not save data.") : tr("Could not create item."),
                 QMessageBox::Ok);
     }

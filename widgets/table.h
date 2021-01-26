@@ -33,10 +33,10 @@ protected:
     virtual void contextMenu(CustomContextMenu &) {};
 
 signals:
-    void onInsert(const QModelIndex &index);
+    void onInsert();
     void onEdit(const QModelIndex &index);
     void onRemove(const QModelIndex &index);
-    void onRefresh();
+    void onRefresh(Qt::SortOrder);
 };
 
 #endif // TABLE_H

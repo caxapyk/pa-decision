@@ -148,6 +148,19 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
+    <name>AuthorityTree</name>
+    <message>
+        <location filename="../widgets/authoritytree.cpp" line="7"/>
+        <source>Open in new tab</source>
+        <translation>Открыть в новой вкладке</translation>
+    </message>
+    <message>
+        <location filename="../widgets/authoritytree.cpp" line="8"/>
+        <source>Details</source>
+        <translation>Сведения</translation>
+    </message>
+</context>
+<context>
     <name>AuthorityView</name>
     <message>
         <location filename="../views/authorityview.ui" line="20"/>
@@ -165,34 +178,32 @@ Do you want to config now?</source>
         <translation>Расширенный поиск</translation>
     </message>
     <message>
-        <location filename="../views/authorityview.cpp" line="78"/>
         <source>Open in new tab</source>
-        <translation>Открыть в новой вкладке</translation>
+        <translation type="vanished">Открыть в новой вкладке</translation>
     </message>
     <message>
-        <location filename="../views/authorityview.cpp" line="85"/>
         <source>Details</source>
-        <translation>Сведения</translation>
+        <translation type="vanished">Сведения</translation>
     </message>
     <message>
-        <location filename="../views/authorityview.cpp" line="150"/>
-        <location filename="../views/authorityview.cpp" line="180"/>
-        <location filename="../views/authorityview.cpp" line="190"/>
+        <location filename="../views/authorityview.cpp" line="129"/>
+        <location filename="../views/authorityview.cpp" line="159"/>
+        <location filename="../views/authorityview.cpp" line="169"/>
         <source>Public authorities</source>
         <translation>Органы госвласти</translation>
     </message>
     <message>
-        <location filename="../views/authorityview.cpp" line="151"/>
+        <location filename="../views/authorityview.cpp" line="130"/>
         <source>Could not create item.</source>
         <translation>Не удалось создать элемент.</translation>
     </message>
     <message>
-        <location filename="../views/authorityview.cpp" line="181"/>
+        <location filename="../views/authorityview.cpp" line="160"/>
         <source>Are you shure that you want to delete this item?</source>
         <translation>Вы уверены, что хотите удалить этот элемент?</translation>
     </message>
     <message>
-        <location filename="../views/authorityview.cpp" line="191"/>
+        <location filename="../views/authorityview.cpp" line="170"/>
         <source>Could not remove the item.</source>
         <translation>Не удалось удалить элемент.</translation>
     </message>
@@ -267,15 +278,16 @@ Do you want to config now?</source>
     <name>DecisionFormDialog</name>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="14"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="277"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="280"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="283"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="286"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="289"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="292"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="295"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="298"/>
-        <location filename="../dialogs/decisionformdialog.cpp" line="318"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="353"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="356"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="359"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="362"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="365"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="368"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="371"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="374"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="393"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="549"/>
         <source>Document form</source>
         <translation>Форма документа</translation>
     </message>
@@ -350,74 +362,118 @@ Do you want to config now?</source>
         <translation>Субъекты</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="579"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="572"/>
         <source>Content</source>
         <translation>Содержание</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="608"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="593"/>
+        <source>Enter content of document...</source>
+        <translation>Введите содержание документа...</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.ui" line="601"/>
         <source>Other</source>
         <translation>Дополнительно</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="614"/>
-        <source>Comment</source>
+        <location filename="../dialogs/decisionformdialog.ui" line="622"/>
+        <source>Comment...</source>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="640"/>
+        <source>Comment</source>
+        <translation type="vanished">Комментарий</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.ui" line="645"/>
         <source>Access denied</source>
         <translation>Доступ закрыт</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.ui" line="645"/>
+        <location filename="../dialogs/decisionformdialog.ui" line="650"/>
         <source>Access permited</source>
         <translation>Доступ открыт</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="277"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="353"/>
         <source>Please enter number.</source>
         <translation>Пожалуйста заполните номер документа.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="280"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="356"/>
         <source>Please enter title.</source>
         <translation>Пожалуйста заполните заголовок.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="283"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="359"/>
         <source>Please choose fund.</source>
         <translation>Пожалуйста выберите фонд.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="286"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="362"/>
         <source>Please choose inventory.</source>
         <translation>Пожалуйста выберите опись.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="289"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="365"/>
         <source>Please choose record.</source>
         <translation>Пожалуйста выберите дело.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="292"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="368"/>
         <source>Please choose protocol or diselect.</source>
         <translation>Пожалуйста выберите протокол или снимите отметку.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="295"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="371"/>
         <source>Title is too long.</source>
         <translation>Заголовок слишком длинный.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="298"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="374"/>
         <source>Comment is too long.</source>
         <translation>Комментарий слишком длинный.</translation>
     </message>
     <message>
-        <location filename="../dialogs/decisionformdialog.cpp" line="319"/>
+        <location filename="../dialogs/decisionformdialog.cpp" line="394"/>
+        <source>Could not save data.</source>
+        <translation type="unfinished">Не удалось сохранить данные.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="394"/>
+        <source>Could not create item.</source>
+        <translation type="unfinished">Не удалось создать элемент.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.cpp" line="550"/>
         <source>Are you shure that you want to dicard all changes?</source>
         <translation>Вы уверены, что хотите закрыть окно?</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.h" line="64"/>
+        <source>ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.h" line="64"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.h" line="64"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.h" line="64"/>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/decisionformdialog.h" line="64"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -486,24 +542,16 @@ Do you want to config now?</source>
 <context>
     <name>DecisionTable</name>
     <message>
-        <location filename="../widgets/decisiontable.h" line="18"/>
-        <source>ID</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../widgets/decisiontable.h" line="18"/>
         <source>Number</source>
-        <translation>№ док.-та</translation>
+        <translation type="vanished">№ док.-та</translation>
     </message>
     <message>
-        <location filename="../widgets/decisiontable.h" line="18"/>
         <source>Name</source>
-        <translation>Заголовок</translation>
+        <translation type="vanished">Заголовок</translation>
     </message>
     <message>
-        <location filename="../widgets/decisiontable.h" line="18"/>
         <source>Comment</source>
-        <translation>Комментарий</translation>
+        <translation type="vanished">Комментарий</translation>
     </message>
 </context>
 <context>
@@ -519,15 +567,54 @@ Do you want to config now?</source>
         <translation>Счетчик записей</translation>
     </message>
     <message>
-        <location filename="../views/decisionview.ui" line="143"/>
-        <location filename="../views/decisionview.ui" line="156"/>
         <source>Current public authority</source>
-        <translation>Текущий орган государственной власти</translation>
+        <translation type="vanished">Текущий орган государственной власти</translation>
     </message>
     <message>
-        <location filename="../views/decisionview.ui" line="159"/>
         <source>All public authorities</source>
-        <translation>Все</translation>
+        <translation type="vanished">Все</translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.cpp" line="124"/>
+        <location filename="../views/decisionview.cpp" line="172"/>
+        <location filename="../views/decisionview.cpp" line="188"/>
+        <source>Documents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.cpp" line="125"/>
+        <source>Could not fetch data.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.cpp" line="173"/>
+        <source>Are you shure that you want to delete this item?</source>
+        <translation type="unfinished">Вы уверены, что хотите удалить этот элемент?</translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.cpp" line="189"/>
+        <source>Could not remove the item.</source>
+        <translation type="unfinished">Не удалось удалить элемент.</translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.h" line="42"/>
+        <source>ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.h" line="42"/>
+        <source>Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.h" line="42"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/decisionview.h" line="42"/>
+        <source>Comment</source>
+        <translation type="unfinished">Комментарий</translation>
     </message>
 </context>
 <context>
@@ -546,17 +633,17 @@ Do you want to config now?</source>
 <context>
     <name>DocumentTypeModel</name>
     <message>
-        <location filename="../models/documenttypemodel.cpp" line="15"/>
+        <location filename="../models/documenttypemodel.cpp" line="16"/>
         <source>ID</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../models/documenttypemodel.cpp" line="16"/>
+        <location filename="../models/documenttypemodel.cpp" line="17"/>
         <source>Name</source>
         <translation>Наименование</translation>
     </message>
     <message>
-        <location filename="../models/documenttypemodel.cpp" line="35"/>
+        <location filename="../models/documenttypemodel.cpp" line="36"/>
         <source>Document type %1</source>
         <translation>Тип документа %1</translation>
     </message>
@@ -659,7 +746,7 @@ Do you want to config now?</source>
     <message>
         <location filename="../mainwindow.ui" line="14"/>
         <source>Public Authority&apos;s Decisions Database</source>
-        <translation>РОГВ | Решения органов государственной власти</translation>
+        <translation>РОГВ (Десктоп) | Решения органов государственной власти</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="75"/>
@@ -1174,7 +1261,7 @@ Do you want to config now?</source>
         <translation>Наименование</translation>
     </message>
     <message>
-        <location filename="../models/subjtypemodel.cpp" line="24"/>
+        <location filename="../models/subjtypemodel.cpp" line="29"/>
         <source>Subject type %1</source>
         <translation>Вид субъекта %1</translation>
     </message>
@@ -1187,28 +1274,28 @@ Do you want to config now?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../dialogs/treedialog.cpp" line="151"/>
+        <location filename="../dialogs/treedialog.cpp" line="157"/>
         <source>Creating items</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../dialogs/treedialog.cpp" line="152"/>
+        <location filename="../dialogs/treedialog.cpp" line="158"/>
         <source>Could not create item.</source>
         <translation>Не удалось создать элемент.</translation>
     </message>
     <message>
-        <location filename="../dialogs/treedialog.cpp" line="184"/>
-        <location filename="../dialogs/treedialog.cpp" line="196"/>
+        <location filename="../dialogs/treedialog.cpp" line="190"/>
+        <location filename="../dialogs/treedialog.cpp" line="202"/>
         <source>Deleting item</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../dialogs/treedialog.cpp" line="185"/>
+        <location filename="../dialogs/treedialog.cpp" line="191"/>
         <source>Are you shure that you want to delete this item?</source>
         <translation>Вы уверены, что хотите удалить этот элемент?</translation>
     </message>
     <message>
-        <location filename="../dialogs/treedialog.cpp" line="197"/>
+        <location filename="../dialogs/treedialog.cpp" line="203"/>
         <source>Could not remove the item.</source>
         <translation>Не удалось удалить элемент.</translation>
     </message>

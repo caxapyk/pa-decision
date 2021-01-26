@@ -25,7 +25,7 @@ void Table::setupShortcuts()
 {
     m_insertShortcut = new QShortcut(QKeySequence::New, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_insertShortcut->setEnabled(true);
-    connect(m_insertShortcut, &QShortcut::activated, this, [=] { emit onInsert(currentIndex()); });
+    connect(m_insertShortcut, &QShortcut::activated, this, [=] { emit onInsert(); });
 
     m_editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this, nullptr, nullptr, Qt::WidgetShortcut);
     m_editShortcut->setEnabled(false);
@@ -37,7 +37,7 @@ void Table::setupShortcuts()
 
     m_refreshShortcut = new QShortcut(QKeySequence::Refresh, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_refreshShortcut->setEnabled(true);
-    connect(m_refreshShortcut, &QShortcut::activated, this, [=]  { emit onRefresh(); });
+    connect(m_refreshShortcut, &QShortcut::activated, this, [=]  { emit onRefresh(Qt::AscendingOrder); });
 }
 
 void Table::contextMenuRequested(const QPoint &)
@@ -47,7 +47,7 @@ void Table::contextMenuRequested(const QPoint &)
     QAction *insertAction = menu.action(CustomContextMenu::Insert);
     insertAction->setShortcut(m_insertShortcut->key());
     insertAction->setEnabled(m_insertShortcut->isEnabled());
-    connect(insertAction, &QAction::triggered, this, [=] { emit onInsert(currentIndex()); });
+    connect(insertAction, &QAction::triggered, this, [=] { emit onInsert(); });
 
     QAction *editAction = menu.action(CustomContextMenu::Edit);
     editAction->setShortcut(m_editShortcut->key());
@@ -61,7 +61,7 @@ void Table::contextMenuRequested(const QPoint &)
 
     QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
-    connect(refreshAction, &QAction::triggered, this, [=]  { emit onRefresh(); });
+    connect(refreshAction, &QAction::triggered, this, [=]  { emit onRefresh(Qt::AscendingOrder); });
 
     contextMenu(menu);
 

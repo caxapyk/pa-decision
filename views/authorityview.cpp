@@ -6,6 +6,7 @@
 #include "widgets/decisiontab.h"
 
 #include <QDebug>
+#include <QHeaderView>
 #include <QMenu>
 #include <QSortFilterProxyModel>
 #include <QMessageBox>
@@ -15,6 +16,10 @@ AuthorityView::AuthorityView(QWidget *parent) :
     ui(new Ui::AuthorityView)
 {
     ui->setupUi(this);
+
+    m_tree = new AuthorityTree;
+    m_authorityModel = new AuthorityModel;
+    m_authorityProxyModel = new AuthorityProxyModel;
 
     initialize();
     restoreViewState();
@@ -33,13 +38,9 @@ AuthorityView::~AuthorityView()
 
 void AuthorityView::initialize()
 {
-    m_tree = new AuthorityTree;
     ui->tab_authorities->layout()->addWidget(m_tree);
 
-    m_authorityModel = new AuthorityModel;
     m_authorityModel->select();
-
-    m_authorityProxyModel = new AuthorityProxyModel;
     m_authorityProxyModel->setSourceModel(m_authorityModel);
     m_authorityProxyModel->setDynamicSortFilter(true);
     m_tree->setModel(m_authorityProxyModel);
@@ -64,12 +65,17 @@ void AuthorityView::initialize()
 
 void AuthorityView::restoreViewState()
 {
-
+    QSettings* settings = application->applicationSettings();
+    m_tree->header()->restoreState(settings->value("Views/authority_tree").toByteArray());
 }
 
 void AuthorityView::saveViewState()
 {
+    QSettings* settings = application->applicationSettings();
 
+    settings->beginGroup("Views");
+    settings->setValue("authority_tree", m_tree->header()->saveState());
+    settings->endGroup();
 }
 
 void AuthorityView::selected(const QItemSelection &selected, const QItemSelection &)

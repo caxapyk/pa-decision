@@ -31,7 +31,7 @@ public:
 public slots:
     void edit();
     void insert();
-    void refresh();
+    void refresh(Qt::SortOrder order = Qt::AscendingOrder);
     void remove();
 
 private:
@@ -41,7 +41,6 @@ private:
 
     QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
     QVariant m_authorityId;
-    QString m_sortOrder = "id asc";
     int m_total = -1;
 
     void initialize() override;

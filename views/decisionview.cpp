@@ -21,8 +21,13 @@ DecisionView::DecisionView(const QVariant &authorityId, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_table = new DecisionTable;
+    m_paginator = new Paginator;
+
     initialize();
     restoreViewState();
+
+    refresh(m_table->horizontalHeader()->sortIndicatorOrder());
 }
 
 DecisionView::~DecisionView()
@@ -36,10 +41,14 @@ DecisionView::~DecisionView()
 
 void DecisionView::initialize()
 {
-    m_table = new DecisionTable;
+    m_table->setSortingEnabled(false);
+    m_table->horizontalHeader()->setSortIndicatorShown(true);
+    m_table->setColumnCount(m_headerLabels.length());
+    m_table->setHorizontalHeaderLabels(m_headerLabels);
+    m_table->hideColumn(0);
+
     ui->vL_data->insertWidget(0, m_table);
 
-    m_paginator = new Paginator;
     ui->vL_paginator->addWidget(m_paginator);
 
     connect(m_table->selectionModel(), &QItemSelectionModel::selectionChanged, this, &DecisionView::selected);
@@ -49,9 +58,9 @@ void DecisionView::initialize()
     connect(m_table, &Table::onRemove, this,  &DecisionView::remove);
     connect(m_table, &Table::onRefresh, this, &DecisionView::refresh);
 
-    connect(m_table->horizontalHeader(), &QHeaderView::sortIndicatorChanged, this, &DecisionView::sort);
-
-    refresh();
+    // save header state dynamicly
+    connect(m_table->horizontalHeader(), &QHeaderView::sectionResized, [=] { saveViewState(); } );
+    connect(m_table->horizontalHeader(), &QHeaderView::sortIndicatorChanged, [=] { saveViewState(); } );
 }
 
 void DecisionView::restoreViewState()
@@ -59,6 +68,8 @@ void DecisionView::restoreViewState()
     QSettings* settings = application->applicationSettings();
     ui->splitter_data->restoreState(settings->value("Views/splitter_data").toByteArray());
     m_table->horizontalHeader()->restoreState(settings->value("Views/document_table").toByteArray());
+
+    connect(m_table->horizontalHeader(), &QHeaderView::sortIndicatorChanged, this, &DecisionView::sort);
 }
 
 void DecisionView::saveViewState()
@@ -76,23 +87,31 @@ void DecisionView::clear()
     m_table->clearContents();
     m_table->setRowCount(0);
 
-    m_table->setColumnCount(m_headerLabels.length());
-    m_table->setHorizontalHeaderLabels(m_headerLabels);
     // stretch last item
     m_table->horizontalHeader()->setSectionResizeMode(m_headerLabels.length() - 1, QHeaderView::Stretch);
 }
 
-void DecisionView::refresh()
+void DecisionView::refresh(Qt::SortOrder order)
 {
     if (!m_authorityId.isValid())
         return;
 
     clear();
 
+    QString fieldName;
+    switch (m_table->horizontalHeader()->sortIndicatorSection()) {
+    case 1: fieldName = "cast(number as unsigned)"; break;
+    case 2: fieldName = "name"; break;
+    case 3: fieldName = "comment"; break;
+
+    default: fieldName = "id"; break;
+    }
+
+    QString sort = fieldName + (order == Qt::AscendingOrder ? " asc" : " desc");
+
     QSqlQuery query;
-    query.prepare("select id, number, name, comment from pad_decision where authority_id=? order by ?");
+    query.prepare(QString("select id, number, name, comment from pad_decision where authority_id=? order by %1").arg(sort));
     query.bindValue(0, m_authorityId);
-    query.bindValue(1, m_sortOrder);
     query.exec();
 
     if(query.isActive()) {
@@ -100,8 +119,6 @@ void DecisionView::refresh()
             return;
 
         int cols = query.record().count();
-
-        m_table->setSortingEnabled(false);
 
         while(query.next()) {
             m_table->setRowCount(m_table->rowCount() + 1);
@@ -113,7 +130,6 @@ void DecisionView::refresh()
              }
         }
 
-        m_table->setSortingEnabled(true);
         m_table->hideColumn(0); //id
     } else {
         qDebug() << query.lastError().text();
@@ -149,7 +165,6 @@ void DecisionView::insert()
     int res = dialog.exec();
 
     if(res == DecisionFormDialog::Accepted) {
-        m_table->setSortingEnabled(false);
         m_table->insertRow(0);
 
         m_table->setItem(0, 0, new QTableWidgetItem(dialog.getId().toString()));
@@ -158,7 +173,6 @@ void DecisionView::insert()
         m_table->setItem(0, 3, new QTableWidgetItem(dialog.getComment().toString()));
 
         m_table->selectRow(0);
-        m_table->setSortingEnabled(true);
 
         ui->lcdn_counter->display(m_total + 1);
     }
@@ -190,20 +204,9 @@ void DecisionView::remove()
     }
 }
 
-void DecisionView::sort(int section, Qt::SortOrder order)
+void DecisionView::sort(int, Qt::SortOrder order)
 {
-    QString fieldName;
-    switch (section) {
-    case 1: fieldName = "number"; break;
-    case 2: fieldName = "name"; break;
-    case 3: fieldName = "comment"; break;
-
-    default: fieldName = "id"; break;
-    }
-
-    m_sortOrder = fieldName + (order == Qt::AscendingOrder ? " asc" : " desc");
-
-    refresh();
+    refresh(order);
 }
 
 void DecisionView::selected(const QItemSelection &, const QItemSelection &)
