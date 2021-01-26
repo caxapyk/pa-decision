@@ -25,7 +25,6 @@ public:
     ~BaseContextMenu();
     QAction *action(BaseContextMenu::StandardAction which) const;
     void setEnabled(bool b, BaseContextMenu::StandardAction which);
-    //void setSelection(const QModelIndexList &selected);
 
 signals:
     void insertRequested();

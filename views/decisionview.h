@@ -48,7 +48,7 @@ private:
     void updateTotal();
 
 private slots:
-    void selected(const QItemSelection &selected, const QItemSelection &deselected);
+    void onSelectionChanged();
     void sort(int section, Qt::SortOrder order);
 };
 

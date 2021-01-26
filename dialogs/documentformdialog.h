@@ -49,7 +49,7 @@ public slots:
 
 private:
     Ui::DocumentFormDialog *ui;
-    Table *m_subjectsTable;
+    QTableWidget *m_subjectsTable;
 
     QVariant m_authorityId;
     QVariant m_id;

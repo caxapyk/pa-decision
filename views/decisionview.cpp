@@ -51,7 +51,7 @@ void DecisionView::initialize()
 
     ui->vL_paginator->addWidget(m_paginator);
 
-    connect(m_table->selectionModel(), &QItemSelectionModel::selectionChanged, this, &DecisionView::selected);
+    connect(m_table, &Table::itemSelectionChanged, this, &DecisionView::onSelectionChanged);
 
     connect(m_table, &Table::onInsert, this, &DecisionView::insert);
     connect(m_table, &Table::onEdit, this,  &DecisionView::edit);
@@ -219,18 +219,10 @@ void DecisionView::sort(int, Qt::SortOrder order)
     refresh(order);
 }
 
-void DecisionView::selected(const QItemSelection &, const QItemSelection &)
+void DecisionView::onSelectionChanged()
 {
-    int len = m_table->selectionModel()->selectedRows().length();
-
-    if(!len)
-        m_table->setCurrentIndex(QModelIndex());
-
-    m_table->setEditEnabled(len > 0);
-    m_table->setRemoveEnabled(len > 0);
-
-    application->mainWindow()->action_edit->setEnabled(len == 1);
-    application->mainWindow()->action_remove->setEnabled(len > 0);
+    application->mainWindow()->action_edit->setEnabled(m_table->isEditEnabled());
+    application->mainWindow()->action_remove->setEnabled(m_table->isRemoveEnabled());
 }
 
 void DecisionView::updateTotal()

@@ -18,6 +18,11 @@ public:
     void setRemoveEnabled(bool ok);
     void setRefreshEnabled(bool ok);
 
+    bool isInsertEnabled() const;
+    bool isEditEnabled() const;
+    bool isRemoveEnabled() const;
+    bool isRefreshEnabled() const;
+
 private:
     QShortcut *m_insertShortcut;
     QShortcut *m_editShortcut;
@@ -28,14 +33,15 @@ private:
 
 private slots:
     void contextMenuRequested(const QPoint &pos);
+    void onSelectionChanged();
 
 protected:
     virtual void contextMenu(BaseContextMenu &) {};
 
 signals:
     void onInsert();
-    void onEdit(const QModelIndex &index);
-    void onRemove(const QModelIndex &index);
+    void onEdit(int row);
+    void onRemove(const QList<QTableWidgetSelectionRange> &rangeList);
     void onRefresh(Qt::SortOrder);
 };
 

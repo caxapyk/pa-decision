@@ -22,6 +22,8 @@ DocumentFormDialog::DocumentFormDialog(const QVariant &authorityId, const QVaria
 {
     ui->setupUi(this);
 
+    m_subjectsTable = new QTableWidget;
+
     initialize();
     restoreDialogState();
 }
@@ -51,8 +53,8 @@ void DocumentFormDialog::saveDialogState()
 
 void DocumentFormDialog::initialize()
 {
-    m_subjectsTable = new Table;
-    m_subjectsTable->setEditEnabled(true);
+    m_subjectsTable->setSelectionMode(QAbstractItemView::NoSelection);
+    m_subjectsTable->setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::DoubleClicked);
     m_subjectsTable->setColumnCount(5);
     m_subjectsTable->setHorizontalHeaderLabels(m_subjectHeaderLabels);
     ui->tab_subject->layout()->addWidget(m_subjectsTable);
@@ -78,8 +80,8 @@ void DocumentFormDialog::initialize()
 
     connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::accessStateChanged);
 
-    connect(m_subjectsTable, &Table::onInsert, this, &DocumentFormDialog::insertSubject);
-    connect(m_subjectsTable, &Table::onRemove, this, &DocumentFormDialog::removeSubject);
+    //connect(m_subjectsTable, &Table::onInsert, this, &DocumentFormDialog::insertSubject);
+    //connect(m_subjectsTable, &Table::onRemove, this, &DocumentFormDialog::removeSubject);
 
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DocumentFormDialog::reject);
     connect(ui->buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &DocumentFormDialog::save);

@@ -64,13 +64,6 @@ QAction *BaseContextMenu::action(BaseContextMenu::StandardAction which) const
     }
 }
 
-/*void BaseContextMenu::setSelection(const QModelIndexList &selected)
-{
-    //disable edit action for more then one row selected
-    setEnabled(selected.length() == 1, BaseContextMenu::Edit);
-    setEnabled(!selected.isEmpty(), BaseContextMenu::Remove);
-}*/
-
 void BaseContextMenu::setEnabled(bool b, BaseContextMenu::StandardAction which) {
     if(action(which)) {
         action(which)->setEnabled(b);

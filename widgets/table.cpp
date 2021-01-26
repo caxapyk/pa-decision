@@ -11,6 +11,7 @@ Table::Table(QWidget *parent) : QTableWidget(parent)
     setupShortcuts();
 
     connect(this, &QMenu::customContextMenuRequested, this, &Table::contextMenuRequested);
+    connect(this, &QTableWidget::itemSelectionChanged, this, &Table::onSelectionChanged);
 }
 
 Table::~Table()
@@ -29,11 +30,11 @@ void Table::setupShortcuts()
 
     m_editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this, nullptr, nullptr, Qt::WidgetShortcut);
     m_editShortcut->setEnabled(false);
-    connect(m_editShortcut, &QShortcut::activated, this, [=] { emit onEdit(currentIndex()); });
+    connect(m_editShortcut, &QShortcut::activated, this, [=] { emit onEdit(currentRow()); });
 
     m_removeShortcut = new QShortcut(QKeySequence::Delete, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_removeShortcut->setEnabled(false);
-    connect(m_removeShortcut, &QShortcut::activated, this, [=] { emit onRemove(currentIndex()); });
+    connect(m_removeShortcut, &QShortcut::activated, this, [=] { emit onRemove(selectedRanges()); });
 
     m_refreshShortcut = new QShortcut(QKeySequence::Refresh, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_refreshShortcut->setEnabled(true);
@@ -42,6 +43,9 @@ void Table::setupShortcuts()
 
 void Table::contextMenuRequested(const QPoint &)
 {
+    if(itemAt(viewport()->mapFromGlobal(QCursor().pos())) == nullptr)
+        clearSelection();
+
     BaseContextMenu menu(BaseContextMenu::Insert | BaseContextMenu::Edit | BaseContextMenu::Remove | BaseContextMenu::Refresh);
 
     QAction *insertAction = menu.action(BaseContextMenu::Insert);
@@ -52,12 +56,12 @@ void Table::contextMenuRequested(const QPoint &)
     QAction *editAction = menu.action(BaseContextMenu::Edit);
     editAction->setShortcut(m_editShortcut->key());
     editAction->setEnabled(m_editShortcut->isEnabled());
-    connect(editAction, &QAction::triggered, this, [=] { emit onEdit(currentIndex()); });
+    connect(editAction, &QAction::triggered, this, [=] { emit onEdit(currentRow()); });
 
     QAction *removeAction = menu.action(BaseContextMenu::Remove);
     removeAction->setShortcut(m_removeShortcut->key());
     removeAction->setEnabled(m_removeShortcut->isEnabled());
-    connect(removeAction, &QAction::triggered, this, [=] { emit onRemove(currentIndex()); });
+    connect(removeAction, &QAction::triggered, this, [=] { emit onRemove(selectedRanges()); });
 
     QAction *refreshAction = menu.action(BaseContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
@@ -66,6 +70,17 @@ void Table::contextMenuRequested(const QPoint &)
     contextMenu(menu);
 
     menu.exec(QCursor().pos());
+}
+
+void Table::onSelectionChanged()
+{
+    QList<QTableWidgetSelectionRange> ranges = selectedRanges();
+
+    if(ranges.length() == 0)
+        setCurrentIndex(QModelIndex());
+
+    setEditEnabled(ranges.length() > 0);
+    setRemoveEnabled(ranges.length() > 0);
 }
 
 void Table::setInsertEnabled(bool ok)
@@ -86,5 +101,25 @@ void Table::setRemoveEnabled(bool ok)
 void Table::setRefreshEnabled(bool ok)
 {
     m_refreshShortcut->setEnabled(ok);
+}
+
+bool Table::isInsertEnabled() const
+{
+    return m_insertShortcut->isEnabled();
+}
+
+bool Table::isEditEnabled() const
+{
+    return m_editShortcut->isEnabled();
+}
+
+bool Table::isRemoveEnabled() const
+{
+    return m_removeShortcut->isEnabled();
+}
+
+bool Table::isRefreshEnabled() const
+{
+    return m_refreshShortcut->isEnabled();
 }
 
