@@ -2,7 +2,7 @@
 #include "ui_decisionview.h"
 
 #include "application.h"
-#include "dialogs/decisionformdialog.h"
+#include "dialogs/documentformdialog.h"
 #include "utils/customcontextmenu.h"
 
 #include <QDebug>
@@ -147,10 +147,10 @@ void DecisionView::edit()
 {
     const QVariant id = m_table->item(m_table->currentRow(), 0)->data(Qt::DisplayRole);
 
-    DecisionFormDialog dialog(m_authorityId, id);
+    DocumentFormDialog dialog(m_authorityId, id);
     int res = dialog.exec();
 
-    if(res == DecisionFormDialog::Accepted) {
+    if(res == DocumentFormDialog::Accepted) {
         int row = m_table->currentRow();
         m_table->item(row, 0)->setText(dialog.getId().toString());
         m_table->item(row, 1)->setText(dialog.getNumber().toString());
@@ -161,10 +161,10 @@ void DecisionView::edit()
 
 void DecisionView::insert()
 {
-    DecisionFormDialog dialog(m_authorityId);
+    DocumentFormDialog dialog(m_authorityId);
     int res = dialog.exec();
 
-    if(res == DecisionFormDialog::Accepted) {
+    if(res == DocumentFormDialog::Accepted) {
         m_table->insertRow(0);
 
         m_table->setItem(0, 0, new QTableWidgetItem(dialog.getId().toString()));

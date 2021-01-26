@@ -22,8 +22,8 @@ SOURCES += \
     connection.cpp \
     dialogs/authoritydetailsdialog.cpp \
     dialogs/connectiondialog.cpp \
-    dialogs/decisionformdialog.cpp \
     dialogs/doctypedialog.cpp \
+    dialogs/documentformdialog.cpp \
     dialogs/funddetailsdialog.cpp \
     dialogs/inventorydetailsdialog.cpp \
     dialogs/protocoldetailsdialog.cpp \
@@ -68,8 +68,8 @@ HEADERS += \
     connection.h \
     dialogs/authoritydetailsdialog.h \
     dialogs/connectiondialog.h \
-    dialogs/decisionformdialog.h \
     dialogs/doctypedialog.h \
+    dialogs/documentformdialog.h \
     dialogs/funddetailsdialog.h \
     dialogs/inventorydetailsdialog.h \
     dialogs/protocoldetailsdialog.h \
@@ -111,7 +111,7 @@ HEADERS += \
 FORMS += \
     dialogs/authoritydetailsdialog.ui \
     dialogs/connectiondialog.ui \
-    dialogs/decisionformdialog.ui \
+    dialogs/documentformdialog.ui \
     dialogs/funddetailsdialog.ui \
     dialogs/inventorydetailsdialog.ui \
     dialogs/protocoldetailsdialog.ui \

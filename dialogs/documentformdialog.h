@@ -9,16 +9,16 @@
 #include <QComboBox>
 
 namespace Ui {
-class DecisionFormDialog;
+class DocumentFormDialog;
 }
 
-class DecisionFormDialog : public QDialog
+class DocumentFormDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DecisionFormDialog(const QVariant &authorityId, const QVariant &id = QVariant(), QWidget *parent = nullptr);
-    ~DecisionFormDialog();
+    explicit DocumentFormDialog(const QVariant &authorityId, const QVariant &id = QVariant(), QWidget *parent = nullptr);
+    ~DocumentFormDialog();
 
     void restoreDialogState();
     void saveDialogState();
@@ -48,7 +48,7 @@ public slots:
     void reject() override;
 
 private:
-    Ui::DecisionFormDialog *ui;
+    Ui::DocumentFormDialog *ui;
     Table *m_subjectsTable;
 
     QVariant m_authorityId;

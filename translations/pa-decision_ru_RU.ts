@@ -275,7 +275,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>DecisionFormDialog</name>
+    <name>DocumentFormDialog</name>
     <message>
         <location filename="../dialogs/decisionformdialog.ui" line="14"/>
         <location filename="../dialogs/decisionformdialog.cpp" line="353"/>

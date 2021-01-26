@@ -1,5 +1,5 @@
-#include "decisionformdialog.h"
-#include "ui_decisionformdialog.h"
+#include "documentformdialog.h"
+#include "ui_documentformdialog.h"
 
 #include "application.h"
 #include "dialogs/doctypedialog.h"
@@ -14,9 +14,9 @@
 #include <QStringListModel>
 #include <QComboBox>
 
-DecisionFormDialog::DecisionFormDialog(const QVariant &authorityId, const QVariant &id, QWidget *parent) :
+DocumentFormDialog::DocumentFormDialog(const QVariant &authorityId, const QVariant &id, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DecisionFormDialog),
+    ui(new Ui::DocumentFormDialog),
     m_authorityId(authorityId),
     m_id(id)
 {
@@ -26,7 +26,7 @@ DecisionFormDialog::DecisionFormDialog(const QVariant &authorityId, const QVaria
     restoreDialogState();
 }
 
-DecisionFormDialog::~DecisionFormDialog()
+DocumentFormDialog::~DocumentFormDialog()
 {
     saveDialogState();
 
@@ -34,22 +34,22 @@ DecisionFormDialog::~DecisionFormDialog()
     delete m_subjectsTable;
 }
 
-void DecisionFormDialog::restoreDialogState()
+void DocumentFormDialog::restoreDialogState()
 {
     QSettings* settings = application->applicationSettings();
-    restoreGeometry(settings->value("DecisionFormDialog/geometry").toByteArray());
+    restoreGeometry(settings->value("DocumentFormDialog/geometry").toByteArray());
 }
 
-void DecisionFormDialog::saveDialogState()
+void DocumentFormDialog::saveDialogState()
 {
     QSettings* settings = application->applicationSettings();
 
-    settings->beginGroup("DecisionFormDialog");
+    settings->beginGroup("DocumentFormDialog");
     settings->setValue("geometry", saveGeometry());
     settings->endGroup();
 }
 
-void DecisionFormDialog::initialize()
+void DocumentFormDialog::initialize()
 {
     m_subjectsTable = new Table;
     m_subjectsTable->setEditEnabled(true);
@@ -62,29 +62,29 @@ void DecisionFormDialog::initialize()
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
 
-    connect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateInventory);
-    connect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateRecord);
-    connect(ui->cB_record, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateProtocol);
+    connect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::updateInventory);
+    connect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::updateRecord);
+    connect(ui->cB_record, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::updateProtocol);
     connect(ui->cB_protocol, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [=](int index) {
              ui->lE_protcolPage->setEnabled(index >= 0);
     });
 
-    connect(ui->gB_protocol, &QGroupBox::clicked, this, &DecisionFormDialog::useProtocolStateChanged);
+    connect(ui->gB_protocol, &QGroupBox::clicked, this, &DocumentFormDialog::useProtocolStateChanged);
 
-    connect(ui->pB_fund, &QPushButton::clicked, this, &DecisionFormDialog::chooseFund);
-    connect(ui->pB_record, &QPushButton::clicked, this, &DecisionFormDialog::chooseRecord);
-    connect(ui->pB_inventory, &QPushButton::clicked, this, &DecisionFormDialog::chooseInventory);
-    connect(ui->pB_protocol, &QPushButton::clicked, this, &DecisionFormDialog::chooseProtocol);
+    connect(ui->pB_fund, &QPushButton::clicked, this, &DocumentFormDialog::chooseFund);
+    connect(ui->pB_record, &QPushButton::clicked, this, &DocumentFormDialog::chooseRecord);
+    connect(ui->pB_inventory, &QPushButton::clicked, this, &DocumentFormDialog::chooseInventory);
+    connect(ui->pB_protocol, &QPushButton::clicked, this, &DocumentFormDialog::chooseProtocol);
 
-    connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::accessStateChanged);
+    connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::accessStateChanged);
 
-    connect(m_subjectsTable, &Table::onInsert, this, &DecisionFormDialog::insertSubject);
-    connect(m_subjectsTable, &Table::onEdit, this, &DecisionFormDialog::editSubject);
-    connect(m_subjectsTable, &Table::onRemove, this, &DecisionFormDialog::removeSubject);
+    connect(m_subjectsTable, &Table::onInsert, this, &DocumentFormDialog::insertSubject);
+    connect(m_subjectsTable, &Table::onEdit, this, &DocumentFormDialog::editSubject);
+    connect(m_subjectsTable, &Table::onRemove, this, &DocumentFormDialog::removeSubject);
 
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DecisionFormDialog::reject);
-    connect(ui->buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &DecisionFormDialog::save);
-    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &DecisionFormDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DocumentFormDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &DocumentFormDialog::save);
+    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &DocumentFormDialog::accept);
 
     updateAuthority();
     updateDoctype();
@@ -94,7 +94,7 @@ void DecisionFormDialog::initialize()
         setValues();
 }
 
-void DecisionFormDialog::setValues()
+void DocumentFormDialog::setValues()
 {
     QSqlQuery query("select * from pad_decision where id=" + m_id.toString());
 
@@ -126,7 +126,7 @@ void DecisionFormDialog::setValues()
     }
 }
 
-void DecisionFormDialog::updateAuthority()
+void DocumentFormDialog::updateAuthority()
 {
     QSqlQuery query;
 
@@ -142,7 +142,7 @@ void DecisionFormDialog::updateAuthority()
     }
 }
 
-void DecisionFormDialog::updateDoctype()
+void DocumentFormDialog::updateDoctype()
 {
     QSqlQuery query;
     query.prepare("select id, name from pad_doctype");
@@ -160,7 +160,7 @@ void DecisionFormDialog::updateDoctype()
     }
 }
 
-void DecisionFormDialog::updateFund()
+void DocumentFormDialog::updateFund()
 {
     QSqlQuery query;
     query.prepare("select id, number from pad_fund where authority_id=?");
@@ -181,7 +181,7 @@ void DecisionFormDialog::updateFund()
     ui->cB_fund->setCurrentIndex(-1);
  }
 
-void DecisionFormDialog::updateInventory(int fundIndex)
+void DocumentFormDialog::updateInventory(int fundIndex)
 {
     QSqlQuery query;
     query.prepare("select id, number from pad_inventory where fund_id=?");
@@ -204,7 +204,7 @@ void DecisionFormDialog::updateInventory(int fundIndex)
     ui->pB_inventory->setEnabled(fundIndex >= 0);
 }
 
-void DecisionFormDialog::updateRecord(int inventoryIndex)
+void DocumentFormDialog::updateRecord(int inventoryIndex)
 {
     QSqlQuery query;
     query.prepare("select id, number from pad_record where inventory_id=?");
@@ -227,7 +227,7 @@ void DecisionFormDialog::updateRecord(int inventoryIndex)
     ui->pB_record->setEnabled(inventoryIndex > -1);
 }
 
-void DecisionFormDialog::updateProtocol(int recordIndex)
+void DocumentFormDialog::updateProtocol(int recordIndex)
 {
     QSqlQuery query;
     query.prepare("select id, CONCAT('№', number, ', ', date) from pad_protocol where record_id=?");
@@ -252,7 +252,7 @@ void DecisionFormDialog::updateProtocol(int recordIndex)
     ui->lE_protcolPage->clear();
 }
 
-void DecisionFormDialog::chooseFund()
+void DocumentFormDialog::chooseFund()
 {
     RecordDialog dialog(m_authorityId);
     dialog.setChoiceMode();
@@ -266,7 +266,7 @@ void DecisionFormDialog::chooseFund()
     }
 }
 
-void DecisionFormDialog::chooseInventory()
+void DocumentFormDialog::chooseInventory()
 {
     RecordDialog dialog(m_authorityId, m_fundIds.at(ui->cB_fund->currentIndex()));
     dialog.setChoiceMode();
@@ -280,7 +280,7 @@ void DecisionFormDialog::chooseInventory()
     }
 }
 
-void DecisionFormDialog::chooseRecord()
+void DocumentFormDialog::chooseRecord()
 {
     RecordDialog dialog(m_authorityId, m_fundIds.at(ui->cB_fund->currentIndex()), m_inventoryIds.at(ui->cB_inventory->currentIndex()));
     dialog.setChoiceMode();
@@ -294,7 +294,7 @@ void DecisionFormDialog::chooseRecord()
     }
 }
 
-void DecisionFormDialog::chooseProtocol()
+void DocumentFormDialog::chooseProtocol()
 {
     ProtocolDialog dialog(m_recordIds.at(ui->cB_record->currentIndex()));
     dialog.setChoiceMode();
@@ -310,7 +310,7 @@ void DecisionFormDialog::chooseProtocol()
     }
 }
 
-void DecisionFormDialog::insertSubject()
+void DocumentFormDialog::insertSubject()
 {
     int row = m_subjectsTable->rowCount();
 
@@ -322,17 +322,17 @@ void DecisionFormDialog::insertSubject()
     m_subjectsTable->setSortingEnabled(true);
 }
 
-void DecisionFormDialog::editSubject(const QModelIndex &index)
+void DocumentFormDialog::editSubject(const QModelIndex &index)
 {
 
 }
 
-void DecisionFormDialog::removeSubject(const QModelIndex &index)
+void DocumentFormDialog::removeSubject(const QModelIndex &index)
 {
     m_subjectsTable->removeRow(index.row());
 }
 
-void DecisionFormDialog::useProtocolStateChanged(bool checked)
+void DocumentFormDialog::useProtocolStateChanged(bool checked)
 {
     if(!checked) {
         ui->cB_protocol->setCurrentIndex(-1);
@@ -342,12 +342,12 @@ void DecisionFormDialog::useProtocolStateChanged(bool checked)
     }
 }
 
-void DecisionFormDialog::accessStateChanged(int index)
+void DocumentFormDialog::accessStateChanged(int index)
 {
     ui->cB_access->setStyleSheet(QString("background-color:%1;").arg(index ? "green" : "red"));
 }
 
-bool DecisionFormDialog::validate()
+bool DocumentFormDialog::validate()
 {
     if(ui->lE_number->text().isEmpty()) {
         QMessageBox::critical(this, tr("Document form"), tr("Please enter number."), QMessageBox::Ok);
@@ -378,7 +378,7 @@ bool DecisionFormDialog::validate()
     return true;
 }
 
-void DecisionFormDialog::save()
+void DocumentFormDialog::save()
 {
     if(!validate())
         return;
@@ -396,7 +396,7 @@ void DecisionFormDialog::save()
     }
 }
 
-bool DecisionFormDialog::saveForm()
+bool DocumentFormDialog::saveForm()
 {
     QSqlQuery query;
 
@@ -438,7 +438,7 @@ bool DecisionFormDialog::saveForm()
     return true;
 }
 
-bool DecisionFormDialog::saveSubjects()
+bool DocumentFormDialog::saveSubjects()
 {
    /* QSqlQuery query;
 
@@ -458,92 +458,92 @@ bool DecisionFormDialog::saveSubjects()
     return true;
 }
 
-QVariant DecisionFormDialog::getAuthority() const
+QVariant DocumentFormDialog::getAuthority() const
 {
     return m_authorityId;
 }
 
-QVariant DecisionFormDialog::getDoctype() const
+QVariant DocumentFormDialog::getDoctype() const
 {
     return m_doctypeIds.at(ui->cB_doctype->currentIndex());
 }
 
-QVariant DecisionFormDialog::getNumber() const
+QVariant DocumentFormDialog::getNumber() const
 {
     return QVariant(ui->lE_number->text());
 }
 
-QVariant DecisionFormDialog::getDate() const
+QVariant DocumentFormDialog::getDate() const
 {
     return QVariant(ui->dE_date->date());
 }
 
-QVariant DecisionFormDialog::getTitle() const
+QVariant DocumentFormDialog::getTitle() const
 {
     return QVariant(ui->pTE_title->toPlainText());
 }
 
-QVariant DecisionFormDialog::getPages() const
+QVariant DocumentFormDialog::getPages() const
 {
     QString v = ui->lE_pages->text();
     return v.length() > 0 ? QVariant(v) : QVariant();
 }
 
-QVariant DecisionFormDialog::getAnnexes() const
+QVariant DocumentFormDialog::getAnnexes() const
 {
     return QVariant(ui->cB_annexes->isChecked());
 }
 
-QVariant DecisionFormDialog::getFund() const
+QVariant DocumentFormDialog::getFund() const
 {
     return QVariant(m_fundIds.at(ui->cB_fund->currentIndex()));
 }
 
-QVariant DecisionFormDialog::getInventory() const
+QVariant DocumentFormDialog::getInventory() const
 {
     return QVariant(m_inventoryIds.at(ui->cB_inventory->currentIndex()));
 }
 
-QVariant DecisionFormDialog::getRecord() const
+QVariant DocumentFormDialog::getRecord() const
 {
     return QVariant(m_recordIds.at(ui->cB_record->currentIndex()));
 }
 
-QVariant DecisionFormDialog::getProtocol() const
+QVariant DocumentFormDialog::getProtocol() const
 {
     int v = ui->cB_protocol->currentIndex();
     return  v > 0 ? QVariant(m_protocolIds.at(v)) : QVariant();
 }
 
-QVariant DecisionFormDialog::getProtocolPage() const
+QVariant DocumentFormDialog::getProtocolPage() const
 {
     QString v = ui->lE_protcolPage->text();
     return v.length() > 0 ? QVariant(v) : QVariant();
 }
 
-QVariant DecisionFormDialog::getContent() const
+QVariant DocumentFormDialog::getContent() const
 {
     QString v = ui->pTE_content->toPlainText();
     return v.length() > 0 ? QVariant(v) : QVariant();
 }
 
-QVariant DecisionFormDialog::getComment() const
+QVariant DocumentFormDialog::getComment() const
 {
     QString v = ui->pTE_comment->toPlainText();
     return v.length() > 0 ? QVariant(v) : QVariant();
 }
 
-QVariant DecisionFormDialog::getAccess() const
+QVariant DocumentFormDialog::getAccess() const
 {
     return QVariant(ui->cB_access->currentIndex());
 }
 
-void DecisionFormDialog::accept()
+void DocumentFormDialog::accept()
 {
     QDialog::accept();
 }
 
-void DecisionFormDialog::reject()
+void DocumentFormDialog::reject()
 {
     int res = QMessageBox::critical(this,
                                     tr("Document form"),
