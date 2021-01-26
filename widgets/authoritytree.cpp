@@ -22,14 +22,14 @@ AuthorityTree::~AuthorityTree()
     delete detailsAction;
 }
 
-void AuthorityTree::contextMenu(CustomContextMenu &menu)
+void AuthorityTree::contextMenu(BaseContextMenu &menu)
 {
     QModelIndex currentIndex = indexAtCursor();
 
     openInNTAction->setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
-    menu.insertAction(menu.action(CustomContextMenu::Insert), openInNTAction);
+    menu.insertAction(menu.action(BaseContextMenu::Insert), openInNTAction);
 
-    menu.insertSeparator(menu.action(CustomContextMenu::Insert));
+    menu.insertSeparator(menu.action(BaseContextMenu::Insert));
 
     detailsAction->setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
     menu.addAction(detailsAction);

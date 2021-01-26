@@ -6,7 +6,7 @@
 #include "dialogs/recorddetailsdialog.h"
 #include "dialogs/treedialog.h"
 #include "dialogs/protocoldialog.h"
-#include "utils/customcontextmenu.h"
+#include "utils/basecontextmenu.h"
 
 #include <QDebug>
 #include <QIcon>
@@ -93,13 +93,13 @@ int RecordDialog::exec()
     return TreeDialog::exec();
 }
 
-void RecordDialog::contextMenu(CustomContextMenu &menu)
+void RecordDialog::contextMenu(BaseContextMenu &menu)
 {
     QModelIndex currentIndex = m_tree->indexAt(m_tree->viewport()->mapFromGlobal(QCursor().pos()));
     m_tree->setCurrentIndex(currentIndex);
 
     if(isChoiceMode() && !currentIndex.isValid() && m_choiceLevel != RecordModel::FundLevel) {
-        menu.action(CustomContextMenu::Insert)->setDisabled(true);
+        menu.action(BaseContextMenu::Insert)->setDisabled(true);
     }
 
     menu.exec(QCursor().pos());

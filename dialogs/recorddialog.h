@@ -41,7 +41,7 @@ protected:
     bool choiceButtonEnabled() override;
 
 protected slots:
-    void contextMenu(CustomContextMenu &menu) override;
+    void contextMenu(BaseContextMenu &menu) override;
     void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
     QVariant choice(const QItemSelection &selected) const override;
 

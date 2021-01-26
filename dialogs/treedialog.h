@@ -1,7 +1,7 @@
 #ifndef REFERENCEDIALOG_H
 #define REFERENCEDIALOG_H
 
-#include "utils/customcontextmenu.h"
+#include "utils/basecontextmenu.h"
 #include "widgets/customtreeview.h"
 
 #include <QDialog>
@@ -51,7 +51,7 @@ protected:
     void setProxyModel(QSortFilterProxyModel *model);
 
 protected slots:
-    virtual void contextMenu(CustomContextMenu &menu);
+    virtual void contextMenu(BaseContextMenu &menu);
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);
     virtual QVariant choice(const QItemSelection &selected) const = 0;
 

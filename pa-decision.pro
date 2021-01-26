@@ -44,7 +44,7 @@ SOURCES += \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/subjtypemodel.cpp \
-    utils/customcontextmenu.cpp \
+    utils/basecontextmenu.cpp \
     utils/itemcounter.cpp \
     utils/stringsort.cpp \
     views/authorityview.cpp \
@@ -89,7 +89,7 @@ HEADERS += \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/subjtypemodel.h \
-    utils/customcontextmenu.h \
+    utils/basecontextmenu.h \
     utils/itemcounter.h \
     utils/stringsort.h \
     views/authorityview.h \

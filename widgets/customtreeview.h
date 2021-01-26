@@ -1,7 +1,7 @@
 #ifndef TREECONTROL_H
 #define TREECONTROL_H
 
-#include "utils/customcontextmenu.h"
+#include "utils/basecontextmenu.h"
 
 #include <QTreeView>
 #include <QShortcut>
@@ -33,7 +33,7 @@ private slots:
     void contextMenuRequested(const QPoint &pos);
 
 protected:
-    virtual void contextMenu(CustomContextMenu &) {};
+    virtual void contextMenu(BaseContextMenu &) {};
 
 signals:
     void onInsert(const QModelIndex &index);

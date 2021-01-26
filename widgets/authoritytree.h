@@ -12,7 +12,7 @@ public:
     ~AuthorityTree();
 
 private:
-    void contextMenu(CustomContextMenu &menu) override;
+    void contextMenu(BaseContextMenu &menu) override;
 
     QAction *openInNTAction;
     QAction *detailsAction;

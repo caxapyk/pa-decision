@@ -5,7 +5,7 @@
 #include <QMenu>
 #include <QModelIndexList>
 
-class CustomContextMenu : public QMenu
+class BaseContextMenu : public QMenu
 {
     Q_OBJECT
 public:
@@ -21,11 +21,11 @@ public:
     Q_DECLARE_FLAGS(StandardActions, StandardAction)
     Q_FLAG(StandardActions)
 
-    CustomContextMenu(CustomContextMenu::StandardActions actions, QWidget *parent = nullptr);
-    ~CustomContextMenu();
-    QAction *action(CustomContextMenu::StandardAction which) const;
-    void setEnabled(bool b, CustomContextMenu::StandardAction which);
-    void setSelection(const QModelIndexList &selected);
+    BaseContextMenu(BaseContextMenu::StandardActions actions, QWidget *parent = nullptr);
+    ~BaseContextMenu();
+    QAction *action(BaseContextMenu::StandardAction which) const;
+    void setEnabled(bool b, BaseContextMenu::StandardAction which);
+    //void setSelection(const QModelIndexList &selected);
 
 signals:
     void insertRequested();
@@ -40,6 +40,6 @@ private:
     QAction *action_refresh = nullptr;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(CustomContextMenu::StandardActions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BaseContextMenu::StandardActions)
 
 #endif // CUSTOMCONTEXMENU_H

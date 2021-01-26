@@ -11,7 +11,7 @@ DecisionTable::DecisionTable()
     setSelectionMode(Table::ExtendedSelection);
 }
 
-void DecisionTable::contextMenu(CustomContextMenu &menu)
+void DecisionTable::contextMenu(BaseContextMenu &menu)
 {
     menu.addAction("Open");
 }

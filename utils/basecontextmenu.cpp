@@ -1,26 +1,26 @@
-#include "customcontextmenu.h"
+#include "basecontextmenu.h"
 
 #include <QItemSelectionModel>
 #include <QtDebug>
 
-CustomContextMenu::CustomContextMenu(CustomContextMenu::StandardActions actions, QWidget *parent) : QMenu(parent)
+BaseContextMenu::BaseContextMenu(BaseContextMenu::StandardActions actions, QWidget *parent) : QMenu(parent)
 {
     // add action
-    if(actions & CustomContextMenu::Insert || actions & CustomContextMenu::All) {
+    if(actions & BaseContextMenu::Insert || actions & BaseContextMenu::All) {
         action_insert = addAction(tr("New"));
         action_insert->setIcon(QIcon(":/icons/icons/add-16.png"));
         connect(action_insert, &QAction::triggered, this, [=] { emit insertRequested(); });
     }
 
     // edit action
-    if(actions & CustomContextMenu::Edit || actions & CustomContextMenu::All) {
+    if(actions & BaseContextMenu::Edit || actions & BaseContextMenu::All) {
         action_edit = addAction(tr("Edit"));
         action_edit->setIcon(QIcon(":/icons/icons/edit-16.png"));
         connect(action_edit, &QAction::triggered, this, [=] { emit editRequested(); });
     }
 
     // remove action
-    if(actions & CustomContextMenu::Remove || actions & CustomContextMenu::All) {
+    if(actions & BaseContextMenu::Remove || actions & BaseContextMenu::All) {
         action_remove = addAction(tr("Remove"));
         action_remove->setIcon(QIcon(":/icons/icons/remove-16.png"));
         connect(action_remove, &QAction::triggered, this, [=] { emit removeRequested(); });
@@ -29,14 +29,14 @@ CustomContextMenu::CustomContextMenu(CustomContextMenu::StandardActions actions,
     addSeparator();
 
     // refresh action
-    if(actions & CustomContextMenu::Refresh || actions & CustomContextMenu::All) {
+    if(actions & BaseContextMenu::Refresh || actions & BaseContextMenu::All) {
         action_refresh = addAction(tr("Refresh"));
         action_refresh->setIcon(QIcon(":/icons/icons/refresh-16.png"));
         connect(action_refresh, &QAction::triggered, this, [=] { emit refreshRequested(); });
     }
 }
 
-CustomContextMenu::~CustomContextMenu()
+BaseContextMenu::~BaseContextMenu()
 {
     delete action_insert;
     delete action_edit;
@@ -44,19 +44,19 @@ CustomContextMenu::~CustomContextMenu()
     delete action_refresh;
 }
 
-QAction *CustomContextMenu::action(CustomContextMenu::StandardAction which) const
+QAction *BaseContextMenu::action(BaseContextMenu::StandardAction which) const
 {
     switch (which) {
-    case CustomContextMenu::Insert:
+    case BaseContextMenu::Insert:
         return action_insert;
         break;
-    case CustomContextMenu::Edit:
+    case BaseContextMenu::Edit:
         return action_edit;
         break;
-    case CustomContextMenu::Remove:
+    case BaseContextMenu::Remove:
         return action_remove;
         break;
-    case CustomContextMenu::Refresh:
+    case BaseContextMenu::Refresh:
         return action_refresh;
         break;
     default:
@@ -64,15 +64,14 @@ QAction *CustomContextMenu::action(CustomContextMenu::StandardAction which) cons
     }
 }
 
-void CustomContextMenu::setSelection(const QModelIndexList &selected)
+/*void BaseContextMenu::setSelection(const QModelIndexList &selected)
 {
     //disable edit action for more then one row selected
-    setEnabled(selected.length() == 1, CustomContextMenu::Edit);
+    setEnabled(selected.length() == 1, BaseContextMenu::Edit);
+    setEnabled(!selected.isEmpty(), BaseContextMenu::Remove);
+}*/
 
-    setEnabled(!selected.isEmpty(), CustomContextMenu::Remove);
-}
-
-void CustomContextMenu::setEnabled(bool b, CustomContextMenu::StandardAction which) {
+void BaseContextMenu::setEnabled(bool b, BaseContextMenu::StandardAction which) {
     if(action(which)) {
         action(which)->setEnabled(b);
     }

@@ -42,24 +42,24 @@ void Table::setupShortcuts()
 
 void Table::contextMenuRequested(const QPoint &)
 {
-    CustomContextMenu menu(CustomContextMenu::Insert | CustomContextMenu::Edit | CustomContextMenu::Remove | CustomContextMenu::Refresh);
+    BaseContextMenu menu(BaseContextMenu::Insert | BaseContextMenu::Edit | BaseContextMenu::Remove | BaseContextMenu::Refresh);
 
-    QAction *insertAction = menu.action(CustomContextMenu::Insert);
+    QAction *insertAction = menu.action(BaseContextMenu::Insert);
     insertAction->setShortcut(m_insertShortcut->key());
     insertAction->setEnabled(m_insertShortcut->isEnabled());
     connect(insertAction, &QAction::triggered, this, [=] { emit onInsert(); });
 
-    QAction *editAction = menu.action(CustomContextMenu::Edit);
+    QAction *editAction = menu.action(BaseContextMenu::Edit);
     editAction->setShortcut(m_editShortcut->key());
     editAction->setEnabled(m_editShortcut->isEnabled());
     connect(editAction, &QAction::triggered, this, [=] { emit onEdit(currentIndex()); });
 
-    QAction *removeAction = menu.action(CustomContextMenu::Remove);
+    QAction *removeAction = menu.action(BaseContextMenu::Remove);
     removeAction->setShortcut(m_removeShortcut->key());
     removeAction->setEnabled(m_removeShortcut->isEnabled());
     connect(removeAction, &QAction::triggered, this, [=] { emit onRemove(currentIndex()); });
 
-    QAction *refreshAction = menu.action(CustomContextMenu::Refresh);
+    QAction *refreshAction = menu.action(BaseContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
     connect(refreshAction, &QAction::triggered, this, [=]  { emit onRefresh(Qt::AscendingOrder); });
 

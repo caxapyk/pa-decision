@@ -10,7 +10,7 @@ public:
     DecisionTable();
 
 private:
-    void contextMenu(CustomContextMenu &menu) override;
+    void contextMenu(BaseContextMenu &menu) override;
 };
 
 #endif // DECISIONTABLE_H

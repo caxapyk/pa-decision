@@ -2,7 +2,7 @@
 #include "ui_treedialog.h"
 
 #include "models/recordmodel.h"
-#include "utils/customcontextmenu.h"
+#include "utils/basecontextmenu.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -40,7 +40,7 @@ QBoxLayout *TreeDialog::buttonLayout()
     return ui->vL_buttonGroup;
 }
 
-void TreeDialog::contextMenu(CustomContextMenu &menu)
+void TreeDialog::contextMenu(BaseContextMenu &menu)
 {
     QModelIndex currentIndex = m_tree->indexAt(m_tree->viewport()->mapFromGlobal(QCursor().pos()));
     m_tree->setCurrentIndex(currentIndex);

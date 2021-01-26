@@ -252,7 +252,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>CustomContextMenu</name>
+    <name>BaseContextMenu</name>
     <message>
         <location filename="../utils/customcontextmenu.cpp" line="10"/>
         <source>New</source>

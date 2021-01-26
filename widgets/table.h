@@ -4,7 +4,7 @@
 #include <QTableWidget>
 #include <QShortcut>
 
-#include "utils/customcontextmenu.h"
+#include "utils/basecontextmenu.h"
 
 class Table : public QTableWidget
 {
@@ -30,7 +30,7 @@ private slots:
     void contextMenuRequested(const QPoint &pos);
 
 protected:
-    virtual void contextMenu(CustomContextMenu &) {};
+    virtual void contextMenu(BaseContextMenu &) {};
 
 signals:
     void onInsert();

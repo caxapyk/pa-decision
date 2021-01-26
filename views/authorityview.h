@@ -6,7 +6,7 @@
 #include "views/view.h"
 #include "views/explorerview.h"
 #include "views/decisionview.h"
-#include "utils/customcontextmenu.h"
+#include "utils/basecontextmenu.h"
 #include "widgets/authoritytree.h"
 
 #include <QShortcut>

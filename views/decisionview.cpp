@@ -3,7 +3,7 @@
 
 #include "application.h"
 #include "dialogs/documentformdialog.h"
-#include "utils/customcontextmenu.h"
+#include "utils/basecontextmenu.h"
 
 #include <QDebug>
 #include <QHeaderView>
