@@ -49,6 +49,8 @@ void DecisionView::initialize()
     connect(m_table, &Table::onRemove, this,  &DecisionView::remove);
     connect(m_table, &Table::onRefresh, this, &DecisionView::refresh);
 
+    connect(m_table->horizontalHeader(), &QHeaderView::sortIndicatorChanged, this, &DecisionView::sort);
+
     refresh();
 }
 
@@ -88,8 +90,9 @@ void DecisionView::refresh()
     clear();
 
     QSqlQuery query;
-    query.prepare("select id, number, name, comment from pad_decision where authority_id=?");
+    query.prepare("select id, number, name, comment from pad_decision where authority_id=? order by ?");
     query.bindValue(0, m_authorityId);
+    query.bindValue(1, m_sortOrder);
     query.exec();
 
     if(query.isActive()) {
@@ -97,6 +100,8 @@ void DecisionView::refresh()
             return;
 
         int cols = query.record().count();
+
+        m_table->setSortingEnabled(false);
 
         while(query.next()) {
             m_table->setRowCount(m_table->rowCount() + 1);
@@ -108,6 +113,7 @@ void DecisionView::refresh()
              }
         }
 
+        m_table->setSortingEnabled(true);
         m_table->hideColumn(0); //id
     } else {
         qDebug() << query.lastError().text();
@@ -129,35 +135,11 @@ void DecisionView::edit()
     int res = dialog.exec();
 
     if(res == DecisionFormDialog::Accepted) {
-        QSqlQuery query;
-        query.prepare("update pad_decision SET authority_id=:authority_id, fund_id=:fund_id, inventory_id=:inventory_id, record_id=:record_id, doctype_id=:doctype_id, protocol_id=:protocol_id, number=:number, date=:date, name=:name, pages=:pages, protocol_page=:protocol_page, annexes=:annexes, content=:content, comment=:comment, access=:access where id=:id");
-        query.bindValue(":id", dialog.getId());
-        query.bindValue(":authority_id", dialog.getAuthority());
-        query.bindValue(":fund_id", dialog.getFund());
-        query.bindValue(":inventory_id", dialog.getInventory());
-        query.bindValue(":record_id", dialog.getRecord());
-        query.bindValue(":doctype_id", dialog.getDoctype());
-        query.bindValue(":protocol_id", dialog.getProtocol());
-        query.bindValue(":number", dialog.getNumber());
-        query.bindValue(":date", dialog.getDate());
-        query.bindValue(":name", dialog.getNumber());
-        query.bindValue(":pages", dialog.getPages());
-        query.bindValue(":protocol_page", dialog.getProtocolPage());
-        query.bindValue(":annexes", dialog.getAnnexes());
-        query.bindValue(":content", dialog.getContent());
-        query.bindValue(":comment", dialog.getComment());
-        query.bindValue(":access", dialog.getAccess());
-
-        if(query.exec()) {
-            refresh();
-        } else {
-            qDebug() << query.lastError().text();
-
-            QMessageBox::warning(this,
-                    tr("Documents"),
-                    tr("Could not save data."),
-                    QMessageBox::Ok);
-        }
+        int row = m_table->currentRow();
+        m_table->item(row, 0)->setText(dialog.getId().toString());
+        m_table->item(row, 1)->setText(dialog.getNumber().toString());
+        m_table->item(row, 2)->setText(dialog.getTitle().toString());
+        m_table->item(row, 3)->setText(dialog.getComment().toString());
     }
 }
 
@@ -167,35 +149,18 @@ void DecisionView::insert()
     int res = dialog.exec();
 
     if(res == DecisionFormDialog::Accepted) {
-        QSqlQuery query;
-        query.prepare("insert into pad_decision values (:id, :authority_id, :fund_id, :inventory_id, :record_id, :doctype_id, :protocol_id, :number, :date, :name, :pages, :protocol_page, :annexes, :content, :comment, :access)");
-        query.bindValue(":id", QVariant());
-        query.bindValue(":authority_id", dialog.getAuthority());
-        query.bindValue(":fund_id", dialog.getFund());
-        query.bindValue(":inventory_id", dialog.getInventory());
-        query.bindValue(":record_id", dialog.getRecord());
-        query.bindValue(":doctype_id", dialog.getDoctype());
-        query.bindValue(":protocol_id", dialog.getProtocol());
-        query.bindValue(":number", dialog.getNumber());
-        query.bindValue(":date", dialog.getDate());
-        query.bindValue(":name", dialog.getNumber());
-        query.bindValue(":pages", dialog.getPages());
-        query.bindValue(":protocol_page", dialog.getProtocolPage());
-        query.bindValue(":annexes", dialog.getAnnexes());
-        query.bindValue(":content", dialog.getContent());
-        query.bindValue(":comment", dialog.getComment());
-        query.bindValue(":access", dialog.getAccess());
+        m_table->setSortingEnabled(false);
+        m_table->insertRow(0);
 
-        if(query.exec()) {
-            refresh();
-        } else {
-            qDebug() << query.lastError().text();
+        m_table->setItem(0, 0, new QTableWidgetItem(dialog.getId().toString()));
+        m_table->setItem(0, 1, new QTableWidgetItem(dialog.getNumber().toString()));
+        m_table->setItem(0, 2, new QTableWidgetItem(dialog.getTitle().toString()));
+        m_table->setItem(0, 3, new QTableWidgetItem(dialog.getComment().toString()));
 
-            QMessageBox::warning(this,
-                    tr("Documents"),
-                    tr("Could not create item."),
-                    QMessageBox::Ok);
-        }
+        m_table->selectRow(0);
+        m_table->setSortingEnabled(true);
+
+        ui->lcdn_counter->display(m_total + 1);
     }
 }
 
@@ -225,6 +190,22 @@ void DecisionView::remove()
     }
 }
 
+void DecisionView::sort(int section, Qt::SortOrder order)
+{
+    QString fieldName;
+    switch (section) {
+    case 1: fieldName = "number"; break;
+    case 2: fieldName = "name"; break;
+    case 3: fieldName = "comment"; break;
+
+    default: fieldName = "id"; break;
+    }
+
+    m_sortOrder = fieldName + (order == Qt::AscendingOrder ? " asc" : " desc");
+
+    refresh();
+}
+
 void DecisionView::selected(const QItemSelection &, const QItemSelection &)
 {
     int len = m_table->selectionModel()->selectedRows().length();
@@ -232,7 +213,6 @@ void DecisionView::selected(const QItemSelection &, const QItemSelection &)
     if(!len)
         m_table->setCurrentIndex(QModelIndex());
 
-    m_table->setInsertEnabled(len == 1);
     m_table->setEditEnabled(len > 0);
     m_table->setRemoveEnabled(len > 0);
 

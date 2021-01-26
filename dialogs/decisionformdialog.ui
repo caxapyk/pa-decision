@@ -588,7 +588,11 @@ background-color:  #666;
         <number>0</number>
        </property>
        <item>
-        <widget class="QPlainTextEdit" name="pTE_content"/>
+        <widget class="QPlainTextEdit" name="pTE_content">
+         <property name="placeholderText">
+          <string>Enter content of document...</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -596,16 +600,28 @@ background-color:  #666;
       <attribute name="title">
        <string>Other</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Comment</string>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPlainTextEdit" name="pTE_comment">
+         <property name="placeholderText">
+          <string>Comment...</string>
          </property>
         </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPlainTextEdit" name="pTE_comment"/>
        </item>
       </layout>
      </widget>
@@ -642,7 +658,10 @@ background-color:  #666;
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="standardButtons">
-        <set>QDialogButtonBox::Discard|QDialogButtonBox::Save</set>
+        <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+       <property name="centerButtons">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

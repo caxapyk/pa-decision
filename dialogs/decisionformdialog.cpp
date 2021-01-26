@@ -24,12 +24,6 @@ DecisionFormDialog::DecisionFormDialog(const QVariant &authorityId, const QVaria
 
     initialize();
     restoreDialogState();
-
-    if(id.isValid())
-        setValues();
-
-    connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &DecisionFormDialog::reject);
-    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &DecisionFormDialog::accept);
 }
 
 DecisionFormDialog::~DecisionFormDialog()
@@ -63,6 +57,8 @@ void DecisionFormDialog::initialize()
     ui->dE_date->setDate(QDate::currentDate());
     ui->lE_protcolPage->setValidator(new QRegExpValidator(QRegExp("\\d+")));
 
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
+
     connect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateInventory);
     connect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateRecord);
     connect(ui->cB_record, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::updateProtocol);
@@ -79,9 +75,16 @@ void DecisionFormDialog::initialize()
 
     connect(ui->cB_access, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &DecisionFormDialog::accessStateChanged);
 
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &DecisionFormDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &DecisionFormDialog::save);
+    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &DecisionFormDialog::accept);
+
     updateAuthority();
     updateDoctype();
     updateFund();
+
+    if(m_id.isValid())
+        setValues();
 }
 
 void DecisionFormDialog::setValues()
@@ -346,6 +349,86 @@ bool DecisionFormDialog::validate()
     return true;
 }
 
+void DecisionFormDialog::save()
+{
+    if(!validate())
+        return;
+
+    QSqlDatabase db = QSqlDatabase::database();
+    db.transaction();
+    if(saveForm() && saveSubjects()) {
+        db.commit();
+    } else {
+        db.rollback();
+        QMessageBox::warning(this,
+                tr("Documents"),
+                m_id.isValid() ? tr("Could not save data.") : tr("Could not create item."),
+                QMessageBox::Ok);
+    }
+}
+
+bool DecisionFormDialog::saveForm()
+{
+    QSqlQuery query;
+
+    if(m_id.isValid()) {
+        query.prepare("update pad_decision SET authority_id=:authority_id, fund_id=:fund_id, inventory_id=:inventory_id, record_id=:record_id, doctype_id=:doctype_id, protocol_id=:protocol_id, number=:number, date=:date, name=:name, pages=:pages, protocol_page=:protocol_page, annexes=:annexes, content=:content, comment=:comment, access=:access where id=:id");
+        query.bindValue(":id", m_id);
+    } else {
+        query.prepare("insert into pad_decision values (:id, :authority_id, :fund_id, :inventory_id, :record_id, :doctype_id, :protocol_id, :number, :date, :name, :pages, :protocol_page, :annexes, :content, :comment, :access)");
+    }
+
+    query.bindValue(":authority_id", getAuthority());
+    query.bindValue(":fund_id", getFund());
+    query.bindValue(":inventory_id", getInventory());
+    query.bindValue(":record_id", getRecord());
+    query.bindValue(":doctype_id", getDoctype());
+    query.bindValue(":protocol_id", getProtocol());
+    query.bindValue(":number", getNumber());
+    query.bindValue(":date", getDate());
+    query.bindValue(":name", getTitle());
+    query.bindValue(":pages", getPages());
+    query.bindValue(":protocol_page", getProtocolPage());
+    query.bindValue(":annexes", getAnnexes());
+    query.bindValue(":content", getContent());
+    query.bindValue(":comment", getComment());
+    query.bindValue(":access", getAccess());
+
+    query.exec();
+
+    if(query.isActive()) {
+        if(m_id.isNull())
+            m_id = query.lastInsertId();
+
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+    } else {
+        qDebug() << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool DecisionFormDialog::saveSubjects()
+{
+   /* QSqlQuery query;
+
+    query.prepare("insert into pad_subjects values (:id, :authority_id, :fund_id, :inventory_id, :record_id, :doctype_id, :protocol_id, :number, :date, :name, :pages, :protocol_page, :annexes, :content, :comment, :access)");
+    query.exec();
+
+    if(query.isActive()) {
+        if(m_id.isNull())
+            m_id = query.lastInsertId();
+
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+    } else {
+        qDebug() << query.lastError().text();
+        return false;
+    }*/
+
+    return true;
+}
+
 QVariant DecisionFormDialog::getAuthority() const
 {
     return m_authorityId;
@@ -428,9 +511,6 @@ QVariant DecisionFormDialog::getAccess() const
 
 void DecisionFormDialog::accept()
 {
-    if(!validate())
-        return;
-
     QDialog::accept();
 }
 

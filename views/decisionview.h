@@ -41,6 +41,7 @@ private:
 
     QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
     QVariant m_authorityId;
+    QString m_sortOrder = "id asc";
     int m_total = -1;
 
     void initialize() override;
@@ -49,6 +50,7 @@ private:
 
 private slots:
     void selected(const QItemSelection &selected, const QItemSelection &deselected);
+    void sort(int section, Qt::SortOrder order);
 };
 
 #endif // DECISIONVIEW_H

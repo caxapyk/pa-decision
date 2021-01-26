@@ -40,6 +40,9 @@ public:
     QVariant getComment() const;
     QVariant getAccess() const;
 
+    bool validate();
+    void save();
+
 public slots:
     void accept() override;
     void reject() override;
@@ -64,7 +67,8 @@ private:
     void updateDoctype();
     void updateFund();
 
-    bool validate();
+    bool saveForm();
+    bool saveSubjects();
 
 private slots:
     void updateInventory(int fundIndex);
