@@ -180,31 +180,37 @@ void DecisionView::insert()
 
 void DecisionView::remove()
 {
-    QModelIndexList indexes = m_table->selectionModel()->selectedRows();
+
+    QList<QTableWidgetSelectionRange> ranges = m_table->selectedRanges();
 
     int res = QMessageBox::critical(this,
         tr("Documents"),
-        tr("Are you shure that you want to delete %1 item(s)?").arg(indexes.length()),
+        tr("Are you shure that you want to delete %1 item(s)?").arg(ranges.length()),
         QMessageBox::No | QMessageBox::Yes);
 
-    if (res == QMessageBox::Yes) {
-        for (int i = 0; i < indexes.length(); ++i) {
-            const QVariant id = indexes.at(i).data();
-            QSqlQuery query;
-            query.prepare("delete from pad_decision where id=?");
-            query.bindValue(0, id);
+       if (res == QMessageBox::Yes) {
+           QSqlQuery query;
+           query.prepare("delete from pad_decision where id=?");
 
-            if(query.exec()) {
-                m_table->removeRow(indexes.at(i).row() - i);
-            } else {
-                qDebug() << query.lastError().text();
-                QMessageBox::warning(this,
-                        tr("Documents"),
-                        tr("Could not remove the item."),
-                        QMessageBox::Ok);
+            for (int i = 0; i < ranges.length(); ++i) {
+                int row = ranges.at(i).topRow() - i;
+
+                query.bindValue(0, m_table->item(row, 0)->text());
+
+                if(query.exec()) {
+                    m_table->removeRow(row);
+                } else {
+                    qDebug() << query.lastError().text();
+                    QMessageBox::warning(this,
+                            tr("Documents"),
+                            tr("Could not remove the item."),
+                            QMessageBox::Ok);
+                }
+
+                query.finish();
             }
-        }
-        m_table->setCurrentIndex(QModelIndex());
+
+            m_table->setCurrentIndex(QModelIndex());
     }
 }
 
