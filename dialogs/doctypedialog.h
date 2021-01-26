@@ -23,11 +23,7 @@ private:
     DocumentTypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
 
-protected:
     bool choiceButtonEnabled() override;
-
-protected slots:
-    virtual QVariant choice(const QItemSelection &selected) const override;
 };
 
 #endif // DOCTYPEDIALOG_H

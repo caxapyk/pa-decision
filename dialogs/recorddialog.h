@@ -37,7 +37,6 @@ private:
 
     RecordModel::Levels m_choiceLevel = RecordModel::RecordLevel;
 
-protected:
     bool choiceButtonEnabled() override;
 
 protected slots:

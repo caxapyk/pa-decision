@@ -21,9 +21,6 @@ public:
 private:
     SubjtypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
-
-protected slots:
-    virtual QVariant choice(const QItemSelection &selected) const override { return 0; };
 };
 
 #endif // SUBJECTDIALOG_H

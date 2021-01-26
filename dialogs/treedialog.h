@@ -53,7 +53,7 @@ protected:
 protected slots:
     virtual void contextMenu(BaseContextMenu &menu);
     virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);
-    virtual QVariant choice(const QItemSelection &selected) const = 0;
+    virtual QVariant choice(const QItemSelection &) const { return QVariant(); };
 
 private:
     Ui::TreeDialog *ui;

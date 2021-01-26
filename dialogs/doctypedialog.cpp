@@ -61,13 +61,3 @@ bool DoctypeDialog::choiceButtonEnabled()
 {
     return !isChoiceMode() || !m_tree->selectionModel()->selection().isEmpty();
 }
-
-QVariant DoctypeDialog::choice(const QItemSelection &selected) const
-{
-    if(!selected.isEmpty()) {
-        QModelIndex current = selected.indexes().at(0).siblingAtColumn(0);
-        return m_proxyModel->mapToSource(current).data();
-    }
-
-    return QVariant();
-}
