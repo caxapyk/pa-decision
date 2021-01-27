@@ -12,7 +12,7 @@
 #include <QHeaderView>
 
 ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
-    TreeDialog(parent)
+    ChoiceDialog(parent)
 {
     restoreDialogState();
 
@@ -75,7 +75,7 @@ void ProtocolDialog::saveDialogState()
 void ProtocolDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     pB_details->setEnabled(current.isValid());
-    TreeDialog::onCurrentChanged(current, previous);
+    ChoiceDialog::onCurrentChanged(current, previous);
 }
 
 void ProtocolDialog::details()

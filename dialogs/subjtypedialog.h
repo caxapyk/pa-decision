@@ -1,13 +1,10 @@
 #ifndef SUBJECTDIALOG_H
 #define SUBJECTDIALOG_H
 
-#include "dialogs/treedialog.h"
-#include "models/subjtypemodel.h"
-#include <QDialog>
-#include <QShortcut>
-#include <QSortFilterProxyModel>
+#include "dialogs/choicedialog.h"
+#include "views/subjecttypetreeview.h"
 
-class SubjtypeDialog : public TreeDialog
+class SubjtypeDialog : public ChoiceDialog
 {
     Q_OBJECT
 
@@ -19,8 +16,7 @@ public:
     void saveDialogState() override;
 
 private:
-    SubjtypeModel *m_model;
-    QSortFilterProxyModel *m_proxyModel;
+    SubjectTypeTreeView *m_view;
 };
 
 #endif // SUBJECTDIALOG_H

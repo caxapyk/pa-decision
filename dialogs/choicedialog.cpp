@@ -1,5 +1,5 @@
-#include "treedialog.h"
-#include "ui_treedialog.h"
+#include "choicedialog.h"
+#include "ui_choicedialog.h"
 
 #include "models/recordmodel.h"
 #include "widgets/basecontextmenu.h"
@@ -10,38 +10,44 @@
 #include <QPushButton>
 #include <QSqlTableModel>
 
-TreeDialog::TreeDialog(QWidget *parent) :
+ChoiceDialog::ChoiceDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::TreeDialog)
+    ui(new Ui::ChoiceDialog)
 {
     ui->setupUi(this);
 
-    m_tree = new CustomTreeView;
-    ui->hL_body->insertWidget(0, m_tree);
+    //m_tree = new CustomTreeView;
+    //ui->hL_body->insertWidget(0, m_tree);
 
-    connect(m_tree, &CustomTreeView::onInsert, this, &TreeDialog::insert);
-    connect(m_tree, &CustomTreeView::onEdit, this,  &TreeDialog::edit);
-    connect(m_tree, &CustomTreeView::onRemove, this,  &TreeDialog::remove);
-    connect(m_tree, &CustomTreeView::onRefresh, this, &TreeDialog::refresh);
+    /*connect(m_tree, &CustomTreeView::onInsert, this, &ChoiceDialog::insert);
+    connect(m_tree, &CustomTreeView::onEdit, this,  &ChoiceDialog::edit);
+    connect(m_tree, &CustomTreeView::onRemove, this,  &ChoiceDialog::remove);
+    connect(m_tree, &CustomTreeView::onRefresh, this, &ChoiceDialog::refresh);*/
 
     setInfoIconVisible(false);
     ui->label_commentIcon->setVisible(false);
 
-    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &TreeDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ChoiceDialog::accept);
 }
 
-TreeDialog::~TreeDialog()
+ChoiceDialog::~ChoiceDialog()
 {
     delete ui;
-    delete m_tree;
+    delete m_treeView;
 }
 
-QBoxLayout *TreeDialog::buttonLayout()
+void ChoiceDialog::setTreeView(TreeView *tv)
+{
+    m_treeView = tv;
+    ui->hL_body->insertWidget(0, m_treeView);
+}
+
+QBoxLayout *ChoiceDialog::buttonLayout()
 {
     return ui->vL_buttonGroup;
 }
 
-void TreeDialog::setChoiceMode(bool ok)
+void ChoiceDialog::setChoiceMode(bool ok)
 {
     if(ok)
         ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
@@ -49,48 +55,48 @@ void TreeDialog::setChoiceMode(bool ok)
     choice_mode = ok;
 };
 
-void TreeDialog::clearInfoText()
+void ChoiceDialog::clearInfoText()
 {
     ui->label_info->clear();
 }
 
-void TreeDialog::setProxyModel(QSortFilterProxyModel *model)
+/*void ChoiceDialog::setProxyModel(QSortFilterProxyModel *model)
 {
     m_dialogProxyModel = model;
 
-    connect(m_tree->selectionModel(), &QItemSelectionModel::currentChanged, this, &TreeDialog::onCurrentChanged);
-}
+    connect(m_tree->selectionModel(), &QItemSelectionModel::currentChanged, this, &ChoiceDialog::onCurrentChanged);
+}*/
 
-void TreeDialog::setInfoText(const QString &text)
+void ChoiceDialog::setInfoText(const QString &text)
 {
     ui->label_info->setText(text);
 }
 
-void TreeDialog::setInfoIconVisible(bool ok)
+void ChoiceDialog::setInfoIconVisible(bool ok)
 {
     ui->label_infoIcon->setVisible(ok);
 }
 
-void TreeDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &)
+void ChoiceDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &)
 {
     m_choice = choice(current);
 
-    QModelIndexList selected = m_tree->selectionModel()->selectedRows();
+    QModelIndexList selected = m_treeView->selectionModel()->selectedRows();
 
-    m_tree->setInsertEnabled(true);
-    m_tree->setEditEnabled(!selected.isEmpty());
-    m_tree->setRemoveEnabled(!selected.isEmpty());
-    m_tree->setRefreshEnabled(true);
+    m_treeView->setInsertEnabled(true);
+    m_treeView->setEditEnabled(!selected.isEmpty());
+    m_treeView->setRemoveEnabled(!selected.isEmpty());
+    m_treeView->setRefreshEnabled(true);
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
 
-void TreeDialog::edit()
+/*void ChoiceDialog::edit()
 {
     m_tree->edit(m_tree->currentIndex());
-}
+}*/
 
-void TreeDialog::insert()
+/*void ChoiceDialog::insert()
 {
     bool insert = m_dialogProxyModel->sourceModel()->insertRow(0);
 
@@ -124,9 +130,9 @@ void TreeDialog::insert()
                 tr("Could not create item."),
                 QMessageBox::Ok);
     }
-}
+}*/
 
-void TreeDialog::refresh()
+/*void ChoiceDialog::refresh()
 {
     if(m_dialogProxyModel != nullptr) {
         //m_dialogProxyModel->invalidate();
@@ -141,9 +147,9 @@ void TreeDialog::refresh()
             qsqltablemodel->select();
         }
     }
-}
+}*/
 
-void TreeDialog::remove()
+/*void ChoiceDialog::remove()
 {
     if(m_dialogProxyModel != nullptr) {
         QModelIndex index = m_tree->currentIndex();
@@ -168,21 +174,21 @@ void TreeDialog::remove()
             }
         }
     }
-}
+}*/
 
-void TreeDialog::accept()
+void ChoiceDialog::accept()
 {
     saveDialogState();
     QDialog::accept();
 }
 
-void TreeDialog::reject()
+void ChoiceDialog::reject()
 {
     saveDialogState();
     QDialog::reject();
 }
 
-void TreeDialog::closeEvent(QCloseEvent *event)
+void ChoiceDialog::closeEvent(QCloseEvent *event)
 {
    saveDialogState();
    QDialog::closeEvent(event);

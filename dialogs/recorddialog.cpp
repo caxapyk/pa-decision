@@ -4,7 +4,7 @@
 #include "dialogs/funddetailsdialog.h"
 #include "dialogs/inventorydetailsdialog.h"
 #include "dialogs/recorddetailsdialog.h"
-#include "dialogs/treedialog.h"
+#include "dialogs/choicedialog.h"
 #include "dialogs/protocoldialog.h"
 #include "widgets/basecontextmenu.h"
 
@@ -15,7 +15,7 @@
 #include <QMessageBox>
 
 RecordDialog::RecordDialog(const QVariant &authorityId, const QVariant &fundId, const QVariant &inventoryId, QWidget *parent) :
-     TreeDialog(parent)
+     ChoiceDialog(parent)
 {
     restoreDialogState();
 
@@ -88,7 +88,7 @@ int RecordDialog::exec()
     if(isChoiceMode())
         treeView()->expandAll();
 
-    return TreeDialog::exec();
+    return ChoiceDialog::exec();
 }
 
 void RecordDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &)
@@ -233,5 +233,5 @@ void RecordDialog::insert()
 void RecordDialog::remove()
 {
     clearInfoText();
-    TreeDialog::remove();
+    ChoiceDialog::remove();
 }

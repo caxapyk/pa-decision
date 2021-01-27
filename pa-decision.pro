@@ -21,6 +21,7 @@ SOURCES += \
     application.cpp \
     connection.cpp \
     dialogs/authoritydetailsdialog.cpp \
+    dialogs/choicedialog.cpp \
     dialogs/connectiondialog.cpp \
     dialogs/doctypedialog.cpp \
     dialogs/documentformdialog.cpp \
@@ -31,7 +32,6 @@ SOURCES += \
     dialogs/recorddetailsdialog.cpp \
     dialogs/recorddialog.cpp \
     dialogs/subjtypedialog.cpp \
-    dialogs/treedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     models/authoritymodel.cpp \
@@ -48,10 +48,12 @@ SOURCES += \
     utils/stringsort.cpp \
     views/authoritytreeview.cpp \
     views/decisionview.cpp \
+    views/documenttypetreeview.cpp \
     views/explorerview.cpp \
+    views/referencetreeview.cpp \
+    views/subjecttypetreeview.cpp \
     views/treeview.cpp \
     views/view.cpp \
-    widgets/authoritytree.cpp \
     widgets/basecontextmenu.cpp \
     widgets/colorrect.cpp \
     widgets/customtreeview.cpp \
@@ -69,6 +71,7 @@ HEADERS += \
     application.h \
     connection.h \
     dialogs/authoritydetailsdialog.h \
+    dialogs/choicedialog.h \
     dialogs/connectiondialog.h \
     dialogs/doctypedialog.h \
     dialogs/documentformdialog.h \
@@ -79,7 +82,6 @@ HEADERS += \
     dialogs/recorddetailsdialog.h \
     dialogs/recorddialog.h \
     dialogs/subjtypedialog.h \
-    dialogs/treedialog.h \
     mainwindow.h \
     models/authoritymodel.h \
     models/authorityproxymodel.h \
@@ -95,10 +97,12 @@ HEADERS += \
     utils/stringsort.h \
     views/authoritytreeview.h \
     views/decisionview.h \
+    views/documenttypetreeview.h \
     views/explorerview.h \
+    views/referencetreeview.h \
+    views/subjecttypetreeview.h \
     views/treeview.h \
     views/view.h \
-    widgets/authoritytree.h \
     widgets/basecontextmenu.h \
     widgets/colorrect.h \
     widgets/customtreeview.h \
@@ -114,13 +118,13 @@ HEADERS += \
 
 FORMS += \
     dialogs/authoritydetailsdialog.ui \
+    dialogs/choicedialog.ui \
     dialogs/connectiondialog.ui \
     dialogs/documentformdialog.ui \
     dialogs/funddetailsdialog.ui \
     dialogs/inventorydetailsdialog.ui \
     dialogs/protocoldetailsdialog.ui \
     dialogs/recorddetailsdialog.ui \
-    dialogs/treedialog.ui \
     mainwindow.ui \
     views/decisionview.ui \
     views/explorerview.ui \

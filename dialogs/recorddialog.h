@@ -1,7 +1,7 @@
 #ifndef RECORDDIALOG_H
 #define RECORDDIALOG_H
 
-#include "dialogs/treedialog.h"
+#include "dialogs/choicedialog.h"
 #include "models/recordmodel.h"
 #include "models/recordproxymodel.h"
 
@@ -9,7 +9,7 @@
 #include <QPushButton>
 #include <QLabel>
 
-class RecordDialog : public TreeDialog
+class RecordDialog : public ChoiceDialog
 {
     Q_OBJECT
 

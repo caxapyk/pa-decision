@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TreeDialog</class>
- <widget class="QDialog" name="TreeDialog">
+ <class>ChoiceDialog</class>
+ <widget class="QDialog" name="ChoiceDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

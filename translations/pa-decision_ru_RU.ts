@@ -1267,7 +1267,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>TreeDialog</name>
+    <name>ChoiceDialog</name>
     <message>
         <location filename="../dialogs/treedialog.ui" line="14"/>
         <source>Dialog</source>

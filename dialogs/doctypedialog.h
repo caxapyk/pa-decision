@@ -1,14 +1,10 @@
 #ifndef DOCTYPEDIALOG_H
 #define DOCTYPEDIALOG_H
 
-#include "dialogs/treedialog.h"
-#include "models/documenttypemodel.h"
+#include "dialogs/choicedialog.h"
+#include "views/documenttypetreeview.h"
 
-#include <QDialog>
-#include <QShortcut>
-#include <QSortFilterProxyModel>
-
-class DoctypeDialog : public TreeDialog
+class DoctypeDialog : public ChoiceDialog
 {
     Q_OBJECT
 
@@ -20,8 +16,7 @@ public:
     void saveDialogState() override;
 
 private:
-    DocumentTypeModel *m_model;
-    QSortFilterProxyModel *m_proxyModel;
+    DocumentTypeTreeView *m_view;
 };
 
 #endif // DOCTYPEDIALOG_H

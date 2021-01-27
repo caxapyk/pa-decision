@@ -1,7 +1,7 @@
 #ifndef DECISIONBASEDIALOG_H
 #define DECISIONBASEDIALOG_H
 
-#include "dialogs/treedialog.h"
+#include "dialogs/choicedialog.h"
 #include "models/documenttypemodel.h"
 #include "widgets/subjecttable.h"
 
