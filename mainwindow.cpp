@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 #include "application.h"
-//#include "dialogs/decisionnewdialog.h"
 #include "dialogs/doctypedialog.h"
 #include "dialogs/connectiondialog.h"
 #include "dialogs/protocoldialog.h"
@@ -27,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete m_authorityView;
-    delete m_explorerView;
+    delete m_authorityTreeView;
+//    /delete m_explorerView;
     delete m_statusBarPanel;
     //delete m_searchPanel;
 
@@ -45,9 +44,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
-    m_authorityView = new AuthorityView(ui->splitter_layout);
-    m_explorerView = new ExplorerView(ui->splitter_layout);
-    m_authorityView->setExplorer(m_explorerView);
+    m_authorityTreeView = new AuthorityTreeView;
+    ui->tab_authorities->layout()->addWidget(m_authorityTreeView);
+    //m_explorerView = new ExplorerView(ui->splitter_layout);
+    //m_authorityTreeView->setExplorer(m_explorerView);
 
     ui->splitter_layout->setCollapsible(0, false);
 
@@ -66,6 +66,17 @@ void MainWindow::restoreAppState()
     restoreState(settings->value("MainWindow/windowState").toByteArray());
 
     ui->splitter_layout->restoreState(settings->value("MainWindow/splitter_layout").toByteArray());
+}
+
+void MainWindow::saveAppState()
+{
+    QSettings* settings = application->applicationSettings();
+
+    settings->beginGroup("MainWindow");
+    settings->setValue("geometry", saveGeometry());
+    settings->setValue("windowState", saveState());
+    settings->setValue("splitter_layout", ui->splitter_layout->saveState());
+    settings->endGroup();
 }
 
 void MainWindow::setupShortcuts()
@@ -89,7 +100,7 @@ void MainWindow::setupToolBar()
     action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
     action_new->setDisabled(true);
     connect(action_new, &QAction::triggered, this, [=] {
-        m_authorityView->currentDecisionView()->insert();
+        //m_authorityTreeView->currentDecisionView()->insert();
     });
 
     action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
@@ -98,19 +109,19 @@ void MainWindow::setupToolBar()
     action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
     action_edit->setDisabled(true);
     connect(action_edit, &QAction::triggered, this, [=] {
-        m_authorityView->currentDecisionView()->edit();
+        //m_authorityTreeView->currentDecisionView()->edit();
     });
 
     action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
     action_remove->setDisabled(true);
     connect(action_remove, &QAction::triggered, this, [=] {
-        m_authorityView->currentDecisionView()->remove();
+       // m_authorityTreeView->currentDecisionView()->remove();
     });
 
     action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
     action_refresh->setDisabled(true);
     connect(action_refresh, &QAction::triggered, this, [=] {
-        m_authorityView->currentDecisionView()->refresh();
+        //m_authorityTreeView->currentDecisionView()->refresh();
     });
 
     action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Left panel"));
@@ -123,7 +134,7 @@ void MainWindow::setupToolBar()
     action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
     action_record->setDisabled(true);
     connect(action_record, &QAction::triggered, this, [=] {
-        RecordDialog *dialog = new RecordDialog(m_authorityView->id());
+        RecordDialog *dialog = new RecordDialog(m_authorityTreeView->id());
         openDialog(dialog);
     });
 
@@ -148,16 +159,19 @@ void MainWindow::setupToolBar()
     //ui->toolBar->addWidget(m_searchPanel);
 }
 
+/*void Authority0View::openInNewTab(const QModelIndex &index)
+{
+    if(index.isValid() && index.parent().isValid()) {
+        DecisionTab *tab = new DecisionTab(index.data(Qt::UserRole));
+        QIcon icon(index.data(Qt::DecorationRole).toString());
+
+        explorer()->createTab(tab, index.data().toString(), icon);
+    }
+}*/
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    QSettings* settings = application->applicationSettings();
-
-    settings->beginGroup("MainWindow");
-    settings->setValue("geometry", saveGeometry());
-    settings->setValue("windowState", saveState());
-    settings->setValue("splitter_layout", ui->splitter_layout->saveState());
-    settings->endGroup();
-
+    saveAppState();
     QMainWindow::closeEvent(event);
 }
 

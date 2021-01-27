@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include "views/view.h"
-#include "views/authorityview.h"
+#include "views/authoritytreeview.h"
 #include "views/explorerview.h"
 #include "widgets/referencebutton.h"
 #include "widgets/statusbarpanel.h"
@@ -39,7 +39,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
-    AuthorityView *m_authorityView;
+    AuthorityTreeView *m_authorityTreeView;
     ExplorerView *m_explorerView;
 
     ReferenceButton *m_referenceButton;
@@ -49,7 +49,12 @@ private:
     //QShortcut *m_searchShortcut;
 
     void initialize();
+
     void restoreAppState();
+    void saveAppState();
+
+    //void openInNewTab(const QModelIndex &index);
+
     void setupShortcuts();
     void setupStatusBar();
     void setupToolBar();

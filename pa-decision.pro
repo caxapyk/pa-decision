@@ -46,9 +46,10 @@ SOURCES += \
     models/subjtypemodel.cpp \
     utils/itemcounter.cpp \
     utils/stringsort.cpp \
-    views/authorityview.cpp \
+    views/authoritytreeview.cpp \
     views/decisionview.cpp \
     views/explorerview.cpp \
+    views/treeview.cpp \
     views/view.cpp \
     widgets/authoritytree.cpp \
     widgets/basecontextmenu.cpp \
@@ -92,9 +93,10 @@ HEADERS += \
     models/subjtypemodel.h \
     utils/itemcounter.h \
     utils/stringsort.h \
-    views/authorityview.h \
+    views/authoritytreeview.h \
     views/decisionview.h \
     views/explorerview.h \
+    views/treeview.h \
     views/view.h \
     widgets/authoritytree.h \
     widgets/basecontextmenu.h \
@@ -120,7 +122,6 @@ FORMS += \
     dialogs/recorddetailsdialog.ui \
     dialogs/treedialog.ui \
     mainwindow.ui \
-    views/authorityview.ui \
     views/decisionview.ui \
     views/explorerview.ui \
     widgets/paginator.ui \

@@ -59,7 +59,7 @@ void DecisionView::initialize()
 void DecisionView::restoreViewState()
 {
     QSettings* settings = application->applicationSettings();
-    ui->splitter_data->restoreState(settings->value("Views/splitter_data").toByteArray());
+    ui->splitter_data->restoreState(settings->value("Views/splitter_document").toByteArray());
     m_table->horizontalHeader()->restoreState(settings->value("Views/document_table").toByteArray());
 
     connect(m_table->horizontalHeader(), &QHeaderView::sortIndicatorChanged, this, &DecisionView::sort);
@@ -70,7 +70,7 @@ void DecisionView::saveViewState()
     QSettings* settings = application->applicationSettings();
 
     settings->beginGroup("Views");
-    settings->setValue("splitter_data", ui->splitter_data->saveState());
+    settings->setValue("splitter_document", ui->splitter_data->saveState());
     settings->setValue("document_table", m_table->horizontalHeader()->saveState());
     settings->endGroup();
 }

@@ -161,7 +161,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>AuthorityView</name>
+    <name>Authority0View</name>
     <message>
         <location filename="../views/authorityview.ui" line="20"/>
         <source>Form</source>
