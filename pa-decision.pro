@@ -44,7 +44,6 @@ SOURCES += \
     models/recordmodel.cpp \
     models/recordproxymodel.cpp \
     models/subjtypemodel.cpp \
-    utils/basecontextmenu.cpp \
     utils/itemcounter.cpp \
     utils/stringsort.cpp \
     views/authorityview.cpp \
@@ -52,6 +51,7 @@ SOURCES += \
     views/explorerview.cpp \
     views/view.cpp \
     widgets/authoritytree.cpp \
+    widgets/basecontextmenu.cpp \
     widgets/colorrect.cpp \
     widgets/customtreeview.cpp \
     widgets/decisiontab.cpp \
@@ -90,7 +90,6 @@ HEADERS += \
     models/recordmodel.h \
     models/recordproxymodel.h \
     models/subjtypemodel.h \
-    utils/basecontextmenu.h \
     utils/itemcounter.h \
     utils/stringsort.h \
     views/authorityview.h \
@@ -98,6 +97,7 @@ HEADERS += \
     views/explorerview.h \
     views/view.h \
     widgets/authoritytree.h \
+    widgets/basecontextmenu.h \
     widgets/colorrect.h \
     widgets/customtreeview.h \
     widgets/decisiontab.h \

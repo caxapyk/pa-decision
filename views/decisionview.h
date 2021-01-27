@@ -3,7 +3,7 @@
 
 #include "models/decisionmodel.h"
 #include "models/decisionproxymodel.h"
-#include "utils/basecontextmenu.h"
+#include "widgets/basecontextmenu.h"
 #include "views/view.h"
 #include "widgets/documenttable.h"
 #include "widgets/paginator.h"

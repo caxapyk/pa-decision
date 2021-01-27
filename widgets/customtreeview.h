@@ -1,7 +1,7 @@
 #ifndef TREECONTROL_H
 #define TREECONTROL_H
 
-#include "utils/basecontextmenu.h"
+#include "widgets/basecontextmenu.h"
 
 #include <QTreeView>
 #include <QShortcut>

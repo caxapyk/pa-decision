@@ -1,9 +1,7 @@
 #ifndef CUSTOMCONTEXMENU_H
 #define CUSTOMCONTEXMENU_H
 
-#include <QObject>
 #include <QMenu>
-#include <QModelIndexList>
 
 class BaseContextMenu : public QMenu
 {

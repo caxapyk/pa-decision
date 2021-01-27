@@ -2,7 +2,7 @@
 #include "ui_treedialog.h"
 
 #include "models/recordmodel.h"
-#include "utils/basecontextmenu.h"
+#include "widgets/basecontextmenu.h"
 
 #include <QDebug>
 #include <QInputDialog>

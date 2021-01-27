@@ -4,7 +4,7 @@
 #include <QTableWidget>
 #include <QShortcut>
 
-#include "utils/basecontextmenu.h"
+#include "widgets/basecontextmenu.h"
 
 class Table : public QTableWidget
 {

@@ -1,7 +1,7 @@
 #ifndef REFERENCEDIALOG_H
 #define REFERENCEDIALOG_H
 
-#include "utils/basecontextmenu.h"
+#include "widgets/basecontextmenu.h"
 #include "widgets/customtreeview.h"
 
 #include <QDialog>
