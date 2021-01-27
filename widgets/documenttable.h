@@ -3,13 +3,17 @@
 
 #include "table.h"
 
-class DecisionTable : public Table
+class DocumentTable : public Table
 {
     Q_OBJECT
 public:
-    DecisionTable();
+    DocumentTable();
+
+    void clear();
 
 private:
+    QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
+
     void contextMenu(BaseContextMenu &menu) override;
 };
 

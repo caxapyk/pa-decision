@@ -50,8 +50,10 @@ private:
     QVariant m_authorityId;
 
 private slots:
-    void selected(const QItemSelection &selected, const QItemSelection &deselected);
+    void onCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+
     void openInNewTab(const QModelIndex &index);
+
     void insert();
     void edit();
     void remove();

@@ -24,10 +24,10 @@ DoctypeDialog::DoctypeDialog(QWidget *parent) :
     m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
-    m_tree->setModel(m_proxyModel);
-    m_tree->hideColumn(0);
-    m_tree->resizeColumnToContents(1);
-    m_tree->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
+    treeView()->setModel(m_proxyModel);
+    treeView()->hideColumn(0);
+    treeView()->resizeColumnToContents(1);
+    treeView()->setItemDelegateForColumn(2, new ColorPickerItemDelegate);
 
     setProxyModel(m_proxyModel);
 }
@@ -44,7 +44,7 @@ void DoctypeDialog::restoreDialogState()
 {
     QSettings* settings = application->applicationSettings();
     restoreGeometry(settings->value("DoctypeDialog/geometry").toByteArray());
-    m_tree->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
+    treeView()->header()->restoreState(settings->value("DoctypeDialog/tV_itemView").toByteArray());
 }
 
 void DoctypeDialog::saveDialogState()
@@ -53,11 +53,6 @@ void DoctypeDialog::saveDialogState()
 
     settings->beginGroup("DoctypeDialog");
     settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_itemView", m_tree->header()->saveState());
+    settings->setValue("tV_itemView", treeView()->header()->saveState());
     settings->endGroup();
-}
-
-bool DoctypeDialog::choiceButtonEnabled()
-{
-    return !isChoiceMode() || !m_tree->selectionModel()->selection().isEmpty();
 }

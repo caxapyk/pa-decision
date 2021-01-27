@@ -55,7 +55,7 @@ void AuthorityView::initialize()
     connect(m_tree, &AuthorityTree::detailsRequested, this,  &AuthorityView::details);
 
     connect(m_tree, &QTreeView::doubleClicked, this, &AuthorityView::openInNewTab);
-    connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AuthorityView::selected);
+    connect(m_tree->selectionModel(), &QItemSelectionModel::currentChanged, this, &AuthorityView::onCurrentChanged);
 
     connect(m_tree, &AuthorityTree::onInsert, this, &AuthorityView::insert);
     connect(m_tree, &AuthorityTree::onEdit, this,  &AuthorityView::edit);
@@ -78,17 +78,16 @@ void AuthorityView::saveViewState()
     settings->endGroup();
 }
 
-void AuthorityView::selected(const QItemSelection &selected, const QItemSelection &)
+void AuthorityView::onCurrentChanged(const QModelIndex &current, const QModelIndex &)
 {
-    QModelIndex current = !selected.isEmpty() ? selected.indexes().at(0) : QModelIndex();
     QModelIndex root = m_authorityProxyModel->mapFromSource(m_authorityModel->rootItem());
 
-    m_tree->setInsertEnabled(selected.isEmpty() || current == root);
-    m_tree->setEditEnabled(!selected.isEmpty() && current !=root);
-    m_tree->setRemoveEnabled(!selected.isEmpty() && current != root);
+    m_tree->setInsertEnabled(!current.isValid() || current == root);
+    m_tree->setEditEnabled(current.isValid() && current !=root);
+    m_tree->setRemoveEnabled(current.isValid() && current != root);
     m_tree->setRefreshEnabled(true);
 
-    application->mainWindow()->action_record->setEnabled(!selected.isEmpty() && current != root);
+    application->mainWindow()->action_record->setEnabled(current.isValid() && current != root);
 
     // set authority id
     m_authorityId = current.siblingAtColumn(0).data(Qt::UserRole);
@@ -169,7 +168,8 @@ void AuthorityView::remove()
     if (res == QMessageBox::Yes) {
         bool remove = m_authorityProxyModel->removeRow(index.row(), parent);
         if (remove) {
-            m_tree->setCurrentIndex(QModelIndex());
+            m_tree->selectionModel()->clearCurrentIndex();
+            m_tree->selectionModel()->clearSelection();
         } else {
             QMessageBox::warning(this,
                     tr("Public authorities"),
@@ -183,7 +183,6 @@ void AuthorityView::refresh()
 {
     m_authorityModel->select();
     m_tree->expandAll();
-    selected(QItemSelection(), QItemSelection());
 }
 
 void AuthorityView::openIndexTab() {

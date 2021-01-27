@@ -540,7 +540,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>DecisionTable</name>
+    <name>DocumentTable</name>
     <message>
         <source>Number</source>
         <translation type="vanished">№ док.-та</translation>

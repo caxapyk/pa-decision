@@ -28,15 +28,13 @@ private:
 
     QPushButton *pB_details;
 
-private slots:
-    void details();
-
-protected:
     bool choiceButtonEnabled() override;
 
-protected slots:
-    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
-    virtual QVariant choice(const QItemSelection &selected) const override;
+private slots:
+    void onCurrentChanged(const QModelIndex &current, const QModelIndex &previous) override;
+    QVariant choice(const QModelIndex &current) const override;
+
+    void details();
 };
 
 #endif // PROTOCOLDIALOG_H

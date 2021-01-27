@@ -3,7 +3,7 @@
 
 #include "dialogs/treedialog.h"
 #include "models/documenttypemodel.h"
-#include "widgets/table.h"
+#include "widgets/subjecttable.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -49,7 +49,7 @@ public slots:
 
 private:
     Ui::DocumentFormDialog *ui;
-    QTableWidget *m_subjectsTable;
+    SubjectTable *m_subjectsTable;
 
     QVariant m_authorityId;
     QVariant m_id;
@@ -60,8 +60,6 @@ private:
     QVector<QVariant> m_inventoryIds;
     QVector<QVariant> m_recordIds;
     QVector<QVariant> m_protocolIds;
-
-    QStringList m_subjectHeaderLabels = {tr("ID"), tr("Type"), tr("Name"), tr("Address"), tr("Description")};
 
     void initialize();
     void setValues();
@@ -81,9 +79,6 @@ private slots:
     void chooseRecord();
     void chooseInventory();
     void chooseProtocol();
-
-    void insertSubject();
-    void removeSubject(const QModelIndex &index);
 
     void useProtocolStateChanged(bool checked);
     void accessStateChanged(int index);

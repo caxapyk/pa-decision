@@ -43,9 +43,6 @@ void Table::setupShortcuts()
 
 void Table::contextMenuRequested(const QPoint &)
 {
-    if(itemAt(viewport()->mapFromGlobal(QCursor().pos())) == nullptr)
-        clearSelection();
-
     BaseContextMenu menu(BaseContextMenu::Insert | BaseContextMenu::Edit | BaseContextMenu::Remove | BaseContextMenu::Refresh);
 
     QAction *insertAction = menu.action(BaseContextMenu::Insert);
@@ -85,41 +82,46 @@ void Table::onSelectionChanged()
 
 void Table::setInsertEnabled(bool ok)
 {
-    m_insertShortcut->setEnabled(ok);
+    m_insertEnabled = ok;
+    if(isShortcutsEnabled())
+        m_insertShortcut->setEnabled(ok);
 }
 
 void Table::setEditEnabled(bool ok)
 {
-    m_editShortcut->setEnabled(ok);
+    m_editEnabled = ok;
+    if(isShortcutsEnabled())
+        m_editShortcut->setEnabled(ok);
 }
 
 void Table::setRemoveEnabled(bool ok)
 {
-    m_removeShortcut->setEnabled(ok);
+    m_removeEnabled = ok;
+    if(isShortcutsEnabled())
+        m_removeShortcut->setEnabled(ok);
 }
 
 void Table::setRefreshEnabled(bool ok)
 {
-    m_refreshShortcut->setEnabled(ok);
+    m_refreshEnabled = ok;
+    if(isShortcutsEnabled())
+        m_refreshShortcut->setEnabled(ok);
 }
 
-bool Table::isInsertEnabled() const
+void Table::setContextMenuEnabled(bool ok)
 {
-    return m_insertShortcut->isEnabled();
+    m_contextMenuEnabled = ok;
+    if(!ok)
+        disconnect(this, &QMenu::customContextMenuRequested, this, &Table::contextMenuRequested);
 }
 
-bool Table::isEditEnabled() const
+void Table::setShortcutsEnabled(bool ok)
 {
-    return m_editShortcut->isEnabled();
+    m_contextMenuEnabled = ok;
+    if(!ok) {
+        m_insertShortcut->setEnabled(false);
+        m_editShortcut->setEnabled(false);
+        m_removeShortcut->setEnabled(false);
+        m_refreshShortcut->setEnabled(false);
+    }
 }
-
-bool Table::isRemoveEnabled() const
-{
-    return m_removeShortcut->isEnabled();
-}
-
-bool Table::isRefreshEnabled() const
-{
-    return m_refreshShortcut->isEnabled();
-}
-

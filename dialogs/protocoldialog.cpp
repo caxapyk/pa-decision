@@ -35,11 +35,11 @@ ProtocolDialog::ProtocolDialog(const QVariant &recordId, QWidget *parent) :
     m_proxyModel = new QSortFilterProxyModel;
     m_proxyModel->setSourceModel(m_model);
 
-    m_tree->setModel(m_proxyModel);
-    m_tree->hideColumn(0);
-    m_tree->hideColumn(1);
-    m_tree->hideColumn(3);
-    m_tree->hideColumn(6);
+    treeView()->setModel(m_proxyModel);
+    treeView()->hideColumn(0);
+    treeView()->hideColumn(1);
+    treeView()->hideColumn(3);
+    treeView()->hideColumn(6);
 
     setProxyModel(m_proxyModel);
 }
@@ -59,7 +59,7 @@ void ProtocolDialog::restoreDialogState()
     QSettings* settings = application->applicationSettings();
 
     restoreGeometry(settings->value("ProtocolDialog/geometry").toByteArray());
-    m_tree->header()->restoreState(settings->value("ProtocolDialog/tV_itemView").toByteArray());
+    treeView()->header()->restoreState(settings->value("ProtocolDialog/tV_itemView").toByteArray());
 }
 
 void ProtocolDialog::saveDialogState()
@@ -68,19 +68,19 @@ void ProtocolDialog::saveDialogState()
 
     settings->beginGroup("ProtocolDialog");
     settings->setValue("geometry", saveGeometry());
-    settings->setValue("tV_itemView", m_tree->header()->saveState());
+    settings->setValue("tV_itemView", treeView()->header()->saveState());
     settings->endGroup();
 }
 
-void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
+void ProtocolDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
-    pB_details->setEnabled(!selected.isEmpty());
-    TreeDialog::selected(selected, deselected);
+    pB_details->setEnabled(current.isValid());
+    TreeDialog::onCurrentChanged(current, previous);
 }
 
 void ProtocolDialog::details()
 {
-    QModelIndex index = m_tree->currentIndex();
+    QModelIndex index = treeView()->currentIndex();
     QVariant id = index.siblingAtColumn(0).data();
 
     ProtocolDetailsDialog dialog(id);
@@ -97,14 +97,13 @@ void ProtocolDialog::details()
 
 bool ProtocolDialog::choiceButtonEnabled()
 {
-    return !isChoiceMode() || !m_tree->selectionModel()->selection().isEmpty();
+    return !isChoiceMode() || !treeView()->selectionModel()->selection().isEmpty();
 }
 
-QVariant ProtocolDialog::choice(const QItemSelection &selected) const
+QVariant ProtocolDialog::choice(const QModelIndex &current) const
 {
-    if(!selected.isEmpty()) {
-        QModelIndex current = selected.indexes().at(0).siblingAtColumn(0);
-        return m_proxyModel->mapToSource(current).data();
+    if(current.isValid()) {
+        return m_proxyModel->mapToSource(current.siblingAtColumn(0)).data();
     }
 
     return QVariant();
@@ -139,8 +138,10 @@ void ProtocolDialog::insert()
                         m_proxyModel->sourceModel()->index(0, m_proxyModel->columnCount() - 1));
 
             QItemSelection selection(topLeft, bottomRight);
-            m_tree->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
-            m_tree->scrollTo(topLeft);
+
+            treeView()->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+            treeView()->setCurrentIndex(topLeft);
+            treeView()->scrollTo(topLeft);
         } else {
             QMessageBox::critical(this,
                     tr("Protocols"),

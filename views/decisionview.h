@@ -5,7 +5,7 @@
 #include "models/decisionproxymodel.h"
 #include "utils/basecontextmenu.h"
 #include "views/view.h"
-#include "widgets/decisiontable.h"
+#include "widgets/documenttable.h"
 #include "widgets/paginator.h"
 
 #include <QShortcut>
@@ -36,15 +36,13 @@ public slots:
 
 private:
     Ui::DecisionView *ui;
-    DecisionTable *m_table;
+    DocumentTable *m_table;
     Paginator *m_paginator;
 
-    QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
     QVariant m_authorityId;
     int m_total = -1;
 
     void initialize() override;
-    void clear();
     void updateTotal();
 
 private slots:

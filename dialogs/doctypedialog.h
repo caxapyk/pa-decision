@@ -22,8 +22,6 @@ public:
 private:
     DocumentTypeModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
-
-    bool choiceButtonEnabled() override;
 };
 
 #endif // DOCTYPEDIALOG_H

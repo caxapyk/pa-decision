@@ -21,6 +21,7 @@ public:
     void saveDialogState() override;
 
     void setChoiceLevel(RecordModel::Levels level);
+    RecordModel::Levels choiceLevel() const { return m_choiceLevel; };
 
     int exec() override;
 
@@ -39,12 +40,10 @@ private:
 
     bool choiceButtonEnabled() override;
 
-protected slots:
-    void contextMenu(BaseContextMenu &menu) override;
-    void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
-    QVariant choice(const QItemSelection &selected) const override;
-
 private slots:
+    void onCurrentChanged(const QModelIndex &current, const QModelIndex &previous) override;
+    QVariant choice(const QModelIndex &current) const override;
+
     void details();
     void protocols();
 };

@@ -27,13 +27,15 @@ public:
     virtual bool choiceButtonEnabled() { return true; };
 
     void clearInfoText();
-    void clearSelection();
+    void setProxyModel(QSortFilterProxyModel *model);
+    //void clearSelection();
+
+    CustomTreeView *treeView() { return m_tree; };
 
     QVariant currentChoice() const { return m_choice; };
     bool isChoiceMode() { return choice_mode; };
-    QVariant inputDialog(const QString &title, const QString &label = QString(), const QVariant &value = QVariant());
-
     void setChoiceMode(bool ok = true);
+
     void setInfoText(const QString &text);
     void setInfoIconVisible(bool ok = true);
 
@@ -45,18 +47,13 @@ public slots:
     virtual void refresh();
     virtual void remove();
 
-protected:
-    CustomTreeView *m_tree;
-
-    void setProxyModel(QSortFilterProxyModel *model);
-
 protected slots:
-    virtual void contextMenu(BaseContextMenu &menu);
-    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);
-    virtual QVariant choice(const QItemSelection &) const { return QVariant(); };
+    virtual void onCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    virtual QVariant choice(const QModelIndex &) const { return QVariant(); };
 
 private:
     Ui::TreeDialog *ui;
+    CustomTreeView *m_tree;
 
     QSortFilterProxyModel *m_dialogProxyModel = nullptr;
 
@@ -64,8 +61,6 @@ private:
     QVariant m_choice;
 
 private slots:
-    void _selected(const QItemSelection &selected, const QItemSelection &deselected);
-
     void accept() override;
     void reject() override;
     void closeEvent(QCloseEvent *event) override;

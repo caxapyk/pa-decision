@@ -33,44 +33,12 @@ TreeDialog::TreeDialog(QWidget *parent) :
 TreeDialog::~TreeDialog()
 {
     delete ui;
+    delete m_tree;
 }
 
 QBoxLayout *TreeDialog::buttonLayout()
 {
     return ui->vL_buttonGroup;
-}
-
-void TreeDialog::contextMenu(BaseContextMenu &menu)
-{
-    QModelIndex currentIndex = m_tree->indexAt(m_tree->viewport()->mapFromGlobal(QCursor().pos()));
-    m_tree->setCurrentIndex(currentIndex);
-
-    menu.exec(QCursor().pos());
-}
-
-void TreeDialog::clearSelection()
-{
-    _selected(QItemSelection(), QItemSelection());
-    selected(QItemSelection(), QItemSelection());
-
-    m_tree->setCurrentIndex(QModelIndex());
-}
-
-
-QVariant TreeDialog::inputDialog(const QString &title, const QString &label, const QVariant &value)
-{
-    QInputDialog inputDialog;
-    inputDialog.setWindowTitle(title);
-    inputDialog.setLabelText(label);
-    inputDialog.setTextValue(value.toString());
-    inputDialog.setTextEchoMode(QLineEdit::Normal);
-
-    inputDialog.setMinimumWidth(480);
-    inputDialog.resize(inputDialog.size());
-
-    inputDialog.exec();
-
-    return QVariant(inputDialog.textValue());
 }
 
 void TreeDialog::setChoiceMode(bool ok)
@@ -90,10 +58,7 @@ void TreeDialog::setProxyModel(QSortFilterProxyModel *model)
 {
     m_dialogProxyModel = model;
 
-    connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TreeDialog::_selected);
-    connect(m_tree->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TreeDialog::selected);
-
-    clearSelection();
+    connect(m_tree->selectionModel(), &QItemSelectionModel::currentChanged, this, &TreeDialog::onCurrentChanged);
 }
 
 void TreeDialog::setInfoText(const QString &text)
@@ -106,18 +71,18 @@ void TreeDialog::setInfoIconVisible(bool ok)
     ui->label_infoIcon->setVisible(ok);
 }
 
-void TreeDialog::_selected(const QItemSelection &selected, const QItemSelection &)
+void TreeDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &)
 {
-    m_choice = choice(selected);
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
-}
+    m_choice = choice(current);
 
-void TreeDialog::selected(const QItemSelection &selected, const QItemSelection &)
-{
+    QModelIndexList selected = m_tree->selectionModel()->selectedRows();
+
     m_tree->setInsertEnabled(true);
     m_tree->setEditEnabled(!selected.isEmpty());
     m_tree->setRemoveEnabled(!selected.isEmpty());
     m_tree->setRefreshEnabled(true);
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
 
 void TreeDialog::edit()
@@ -135,7 +100,7 @@ void TreeDialog::insert()
             m_tree->resizeColumnToContents(i);
         }
 
-        clearSelection();
+        m_tree->selectionModel()->clearCurrentIndex();
 
         QModelIndex topLeft = m_dialogProxyModel->mapFromSource(
                     m_dialogProxyModel->sourceModel()->index(0, 0));
@@ -144,6 +109,7 @@ void TreeDialog::insert()
 
         QItemSelection selection(topLeft, bottomRight);
         m_tree->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+        m_tree->setCurrentIndex(topLeft);
         m_tree->scrollTo(topLeft);
 
         for (int i=0; i < m_dialogProxyModel->columnCount(); ++i) {
@@ -163,7 +129,7 @@ void TreeDialog::insert()
 void TreeDialog::refresh()
 {
     if(m_dialogProxyModel != nullptr) {
-        m_dialogProxyModel->invalidate();
+        //m_dialogProxyModel->invalidate();
         //m_tree->sortByColumn(-1, Qt::AscendingOrder);
 
         RecordModel *recordmodel = dynamic_cast<RecordModel*>(m_dialogProxyModel->sourceModel());
@@ -174,9 +140,6 @@ void TreeDialog::refresh()
         } else if(qsqltablemodel) {
             qsqltablemodel->select();
         }
-
-        m_tree->selectionModel()->clearCurrentIndex();
-        clearSelection();
     }
 }
 

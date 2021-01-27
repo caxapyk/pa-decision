@@ -4,8 +4,11 @@
 
 CustomTreeView::CustomTreeView(QWidget *parent) : QTreeView(parent)
 {
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
     setContextMenuPolicy(Qt::CustomContextMenu);
     setEditTriggers(QTreeView::EditKeyPressed);
+
     setSortingEnabled(true);
 
     setupShortcuts();
@@ -42,9 +45,9 @@ void CustomTreeView::setupShortcuts()
 
 void CustomTreeView::contextMenuRequested(const QPoint &)
 {
-    setCurrentIndex(indexAtCursor());
-
     BaseContextMenu menu(BaseContextMenu::Insert | BaseContextMenu::Edit | BaseContextMenu::Remove | BaseContextMenu::Refresh);
+
+    emit(selectionModel()->currentChanged(currentIndex(), QModelIndex()));
 
     QAction *insertAction = menu.action(BaseContextMenu::Insert);
     insertAction->setShortcut(m_insertShortcut->key());
@@ -66,7 +69,6 @@ void CustomTreeView::contextMenuRequested(const QPoint &)
     connect(refreshAction, &QAction::triggered, this, [=]  { emit onRefresh(); });
 
     contextMenu(menu);
-
     menu.exec(QCursor().pos());
 }
 
@@ -89,9 +91,3 @@ void CustomTreeView::setRefreshEnabled(bool ok)
 {
     m_refreshShortcut->setEnabled(ok);
 }
-
-QModelIndex CustomTreeView::indexAtCursor() const
-{
-    return indexAt(viewport()->mapFromGlobal(QCursor().pos()));
-}
-

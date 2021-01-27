@@ -55,11 +55,12 @@ SOURCES += \
     widgets/colorrect.cpp \
     widgets/customtreeview.cpp \
     widgets/decisiontab.cpp \
-    widgets/decisiontable.cpp \
+    widgets/documenttable.cpp \
     widgets/paginator.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp \
+    widgets/subjecttable.cpp \
     widgets/tab.cpp \
     widgets/table.cpp
 
@@ -100,11 +101,12 @@ HEADERS += \
     widgets/colorrect.h \
     widgets/customtreeview.h \
     widgets/decisiontab.h \
-    widgets/decisiontable.h \
+    widgets/documenttable.h \
     widgets/paginator.h \
     widgets/referencebutton.h \
     widgets/searchpanel.h \
     widgets/statusbarpanel.h \
+    widgets/subjecttable.h \
     widgets/tab.h \
     widgets/table.h
 

@@ -21,7 +21,7 @@ DecisionView::DecisionView(const QVariant &authorityId, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_table = new DecisionTable;
+    m_table = new DocumentTable;
     m_paginator = new Paginator;
 
     initialize();
@@ -41,14 +41,7 @@ DecisionView::~DecisionView()
 
 void DecisionView::initialize()
 {
-    m_table->setSortingEnabled(false);
-    m_table->horizontalHeader()->setSortIndicatorShown(true);
-    m_table->setColumnCount(m_headerLabels.length());
-    m_table->setHorizontalHeaderLabels(m_headerLabels);
-    m_table->hideColumn(0);
-
     ui->vL_data->insertWidget(0, m_table);
-
     ui->vL_paginator->addWidget(m_paginator);
 
     connect(m_table, &Table::itemSelectionChanged, this, &DecisionView::onSelectionChanged);
@@ -82,21 +75,12 @@ void DecisionView::saveViewState()
     settings->endGroup();
 }
 
-void DecisionView::clear()
-{
-    m_table->clearContents();
-    m_table->setRowCount(0);
-
-    // stretch last item
-    m_table->horizontalHeader()->setSectionResizeMode(m_headerLabels.length() - 1, QHeaderView::Stretch);
-}
-
 void DecisionView::refresh(Qt::SortOrder order)
 {
     if (!m_authorityId.isValid())
         return;
 
-    clear();
+    m_table->clear();
 
     QString fieldName;
     switch (m_table->horizontalHeader()->sortIndicatorSection()) {
@@ -180,7 +164,6 @@ void DecisionView::insert()
 
 void DecisionView::remove()
 {
-
     QList<QTableWidgetSelectionRange> ranges = m_table->selectedRanges();
 
     int res = QMessageBox::critical(this,

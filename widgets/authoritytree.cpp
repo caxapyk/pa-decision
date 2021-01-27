@@ -8,7 +8,7 @@ AuthorityTree::AuthorityTree(QWidget *parent) : CustomTreeView(parent)
     detailsAction = new QAction(tr("Details"));
 
     connect(openInNTAction, &QAction::triggered, this, [=] {
-            emit openInNewTabRequested(indexAtCursor());
+            emit openInNewTabRequested(currentIndex());
     });
 
     connect(detailsAction, &QAction::triggered, this, [=] {
@@ -24,13 +24,13 @@ AuthorityTree::~AuthorityTree()
 
 void AuthorityTree::contextMenu(BaseContextMenu &menu)
 {
-    QModelIndex currentIndex = indexAtCursor();
+    QModelIndex index = currentIndex();
 
-    openInNTAction->setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
+    openInNTAction->setEnabled(index.isValid() && index.parent().isValid());
     menu.insertAction(menu.action(BaseContextMenu::Insert), openInNTAction);
 
     menu.insertSeparator(menu.action(BaseContextMenu::Insert));
 
-    detailsAction->setEnabled(currentIndex.isValid() && currentIndex.parent().isValid());
+    detailsAction->setEnabled(index.isValid() && index.parent().isValid());
     menu.addAction(detailsAction);
 }
