@@ -1,14 +1,10 @@
-#ifndef REFERENCEDIALOG_H
-#define REFERENCEDIALOG_H
+#ifndef CHOICEDIALOG_H
+#define CHOICEDIALOG_H
 
-//#include "widgets/basecontextmenu.h"
-//#include "widgets/customtreeview.h"
 #include "views/treeview.h"
 
 #include <QDialog>
-#include <QShortcut>
 #include <QPushButton>
-#include <QSortFilterProxyModel>
 #include <QBoxLayout>
 
 namespace Ui {
@@ -23,16 +19,7 @@ public:
     explicit ChoiceDialog(QWidget *parent = nullptr);
     ~ChoiceDialog();
 
-    virtual void restoreDialogState() {};
-    virtual void saveDialogState() {};
-    virtual bool choiceButtonEnabled() { return true; };
-
-    void clearInfoText();
-    //void setProxyModel(QSortFilterProxyModel *model);
-    //void clearSelection();
-
-    //CustomTreeView *treeView() { return m_tree; };
-    TreeView *treeView() { return m_treeView; };
+    TreeView *treeView() { return m_view; };
     void setTreeView(TreeView *tv);
 
     QVariant currentChoice() const { return m_choice; };
@@ -40,15 +27,15 @@ public:
     void setChoiceMode(bool ok = true);
 
     void setInfoText(const QString &text);
+    void clearInfoText();
+
     void setInfoIconVisible(bool ok = true);
 
     QBoxLayout *buttonLayout();
 
-/*public slots:
-    virtual void edit();
-    virtual void insert();
-    virtual void refresh();
-    virtual void remove();*/
+    virtual void restoreDialogState() {};
+    virtual void saveDialogState() {};
+    virtual bool choiceButtonEnabled() { return true; };
 
 protected slots:
     virtual void onCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
@@ -56,10 +43,7 @@ protected slots:
 
 private:
     Ui::ChoiceDialog *ui;
-    //CustomTreeView *m_tree;
-    TreeView *m_treeView;
-
-    //QSortFilterProxyModel *m_dialogProxyModel = nullptr;
+    TreeView *m_view;
 
     bool choice_mode = false;
     QVariant m_choice;
@@ -70,4 +54,4 @@ private slots:
     void closeEvent(QCloseEvent *event) override;
 };
 
-#endif // REFERENCEDIALOG_H
+#endif // CHOICEDIALOG_H

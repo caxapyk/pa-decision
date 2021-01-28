@@ -1,9 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "views/view.h"
-#include "views/authoritytreeview.h"
-#include "views/explorerview.h"
+#include "views/authorityview.h"
+#include "widgets/explorer.h"
 #include "widgets/referencebutton.h"
 #include "widgets/statusbarpanel.h"
 #include "widgets/searchpanel.h"
@@ -23,8 +22,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    ExplorerView *explorer() { return m_explorerView; };
-
     QAction *action_edit;
     QAction *action_new;
     QAction *action_print;
@@ -39,8 +36,8 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
-    AuthorityTreeView *m_authorityTreeView;
-    ExplorerView *m_explorerView;
+    AuthorityView *m_authorityView;
+    Explorer *m_explorer;
 
     ReferenceButton *m_referenceButton;
     StatusBarPanel *m_statusBarPanel;
@@ -53,11 +50,13 @@ private:
     void restoreAppState();
     void saveAppState();
 
-    //void openInNewTab(const QModelIndex &index);
-
     void setupShortcuts();
     void setupStatusBar();
     void setupToolBar();
+
+private slots:
+    void openAF();
+    void openAuthorityInNewTab(const QVariant &id);
 
 protected:
     void closeEvent(QCloseEvent *event) override;

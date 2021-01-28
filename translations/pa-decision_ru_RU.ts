@@ -618,7 +618,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>DoctypeDialog</name>
+    <name>DocumentTypeDialog</name>
     <message>
         <location filename="../dialogs/doctypedialog.cpp" line="14"/>
         <source>Document types</source>
@@ -1085,7 +1085,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>RecordDialog</name>
+    <name>AFDialog</name>
     <message>
         <location filename="../dialogs/recorddialog.cpp" line="22"/>
         <location filename="../dialogs/recorddialog.cpp" line="243"/>
@@ -1109,7 +1109,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>RecordModel</name>
+    <name>AFTreeModel</name>
     <message>
         <location filename="../models/recordmodel.cpp" line="12"/>
         <source>Archive records</source>
@@ -1236,7 +1236,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>SubjtypeDialog</name>
+    <name>SubjectTypeDialog</name>
     <message>
         <location filename="../dialogs/subjtypedialog.cpp" line="14"/>
         <source>Subjects</source>
@@ -1249,7 +1249,7 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
-    <name>SubjtypeModel</name>
+    <name>SubjectTypeModel</name>
     <message>
         <location filename="../models/subjtypemodel.cpp" line="14"/>
         <source>ID</source>

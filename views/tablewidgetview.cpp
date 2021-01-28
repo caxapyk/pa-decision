@@ -1,22 +1,17 @@
-#include "treeview.h"
+#include "tablewidgetview.h"
 
-#include <QDebug>
-
-TreeView::TreeView(QWidget *parent) : QTreeView(parent)
+TableWidgetView::TableWidgetView(QWidget *parent) : QTableWidget(parent)
 {
-    setSelectionMode(QAbstractItemView::SingleSelection);
-    setSelectionBehavior(QAbstractItemView::SelectRows);
     setContextMenuPolicy(Qt::CustomContextMenu);
-    setEditTriggers(QTreeView::EditKeyPressed);
-
+    setEditTriggers(QTableWidget::NoEditTriggers);
     setSortingEnabled(true);
 
     setupShortcuts();
 
-    connect(this, &QMenu::customContextMenuRequested, this, &TreeView::contextMenuRequested);
+    connect(this, &QMenu::customContextMenuRequested, this, &TableWidgetView::contextMenuRequested);
 }
 
-TreeView::~TreeView()
+TableWidgetView::~TableWidgetView()
 {
     delete m_insertShortcut;
     delete m_editShortcut;
@@ -24,45 +19,46 @@ TreeView::~TreeView()
     delete m_refreshShortcut;
 }
 
-void TreeView::setupShortcuts()
+void TableWidgetView::setupShortcuts()
 {
     m_insertShortcut = new QShortcut(QKeySequence::New, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_insertShortcut->setEnabled(true);
-    connect(m_insertShortcut, &QShortcut::activated, this, [=] { insertRow(currentIndex()); });
+    connect(m_insertShortcut, &QShortcut::activated, this, [=] { insertRow(currentRow()); });
 
     m_editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this, nullptr, nullptr, Qt::WidgetShortcut);
     m_editShortcut->setEnabled(false);
-    connect(m_editShortcut, &QShortcut::activated, this, [=] { editRow(currentIndex()); });
+    connect(m_editShortcut, &QShortcut::activated, this, [=] { editRow(currentRow()); });
 
     m_removeShortcut = new QShortcut(QKeySequence::Delete, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_removeShortcut->setEnabled(false);
-    connect(m_removeShortcut, &QShortcut::activated, this, [=] { removeRow(currentIndex()); });
+    connect(m_removeShortcut, &QShortcut::activated, this, [=] { removeRow(currentRow()); });
 
     m_refreshShortcut = new QShortcut(QKeySequence::Refresh, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_refreshShortcut->setEnabled(true);
     connect(m_refreshShortcut, &QShortcut::activated, this, [=] { refresh(); });
 }
 
-void TreeView::contextMenuRequested(const QPoint &)
+void TableWidgetView::contextMenuRequested(const QPoint &)
 {
     BaseContextMenu menu(BaseContextMenu::Insert | BaseContextMenu::Edit | BaseContextMenu::Remove | BaseContextMenu::Refresh);
-
-    emit(selectionModel()->currentChanged(currentIndex(), QModelIndex()));
 
     QAction *insertAction = menu.action(BaseContextMenu::Insert);
     insertAction->setShortcut(m_insertShortcut->key());
     insertAction->setEnabled(m_insertShortcut->isEnabled());
-    connect(insertAction, &QAction::triggered, this, [=] { insertRow(currentIndex()); });
+    connect(insertAction, &QAction::triggered, this, [=] { insertRow(0); });
 
     QAction *editAction = menu.action(BaseContextMenu::Edit);
     editAction->setShortcut(m_editShortcut->key());
     editAction->setEnabled(m_editShortcut->isEnabled());
-    connect(editAction, &QAction::triggered, this, [=] { editRow(currentIndex()); });
+    connect(editAction, &QAction::triggered, this, [=] { editRow(currentRow()); });
 
     QAction *removeAction = menu.action(BaseContextMenu::Remove);
     removeAction->setShortcut(m_removeShortcut->key());
     removeAction->setEnabled(m_removeShortcut->isEnabled());
-    connect(removeAction, &QAction::triggered, this, [=] { removeRow(currentIndex());  });
+    connect(removeAction, &QAction::triggered, this, [=] {
+        removeRow(currentRow());
+        removeRows(selectedRanges());
+    });
 
     QAction *refreshAction = menu.action(BaseContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
@@ -72,57 +68,59 @@ void TreeView::contextMenuRequested(const QPoint &)
     menu.exec(QCursor().pos());
 }
 
-void TreeView::currentChanged(const QModelIndex &, const QModelIndex &)
+void TableWidgetView::clear()
 {
-    QModelIndexList selected = selectionModel()->selectedRows();
-
-    setInsertEnabled(true);
-    setEditEnabled(!selected.isEmpty());
-    setRemoveEnabled(!selected.isEmpty());
-    setRefreshEnabled(true);
+    clearContents();
+    setRowCount(0);
 }
 
-void TreeView::editRow(const QModelIndex &index)
+void TableWidgetView::currentChanged(const QModelIndex &, const QModelIndex &)
 {
-    edit(index);
+    QList<QTableWidgetSelectionRange> ranges = selectedRanges();
+
+    if(ranges.length() == 0)
+        setCurrentIndex(QModelIndex());
+
+    setEditEnabled(ranges.length() > 0);
+    setRemoveEnabled(ranges.length() > 0);
 }
 
-void TreeView::setInsertEnabled(bool ok)
+void TableWidgetView::setInsertEnabled(bool ok)
 {
     m_insertEnabled = ok;
     if(isShortcutsEnabled())
         m_insertShortcut->setEnabled(ok);
 }
 
-void TreeView::setEditEnabled(bool ok)
+void TableWidgetView::setEditEnabled(bool ok)
 {
     m_editEnabled = ok;
     if(isShortcutsEnabled())
         m_editShortcut->setEnabled(ok);
 }
 
-void TreeView::setRemoveEnabled(bool ok)
+void TableWidgetView::setRemoveEnabled(bool ok)
 {
     m_removeEnabled = ok;
     if(isShortcutsEnabled())
         m_removeShortcut->setEnabled(ok);
 }
 
-void TreeView::setRefreshEnabled(bool ok)
+void TableWidgetView::setRefreshEnabled(bool ok)
 {
     m_refreshEnabled = ok;
     if(isShortcutsEnabled())
         m_refreshShortcut->setEnabled(ok);
 }
 
-void TreeView::setContextMenuEnabled(bool ok)
+void TableWidgetView::setContextMenuEnabled(bool ok)
 {
     m_contextMenuEnabled = ok;
     if(!ok)
-        disconnect(this, &QMenu::customContextMenuRequested, this, &TreeView::contextMenuRequested);
+        disconnect(this, &QMenu::customContextMenuRequested, this, &TableWidgetView::contextMenuRequested);
 }
 
-void TreeView::setShortcutsEnabled(bool ok)
+void TableWidgetView::setShortcutsEnabled(bool ok)
 {
     m_contextMenuEnabled = ok;
     if(!ok) {

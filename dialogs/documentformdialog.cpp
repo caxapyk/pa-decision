@@ -2,8 +2,8 @@
 #include "ui_documentformdialog.h"
 
 #include "application.h"
-#include "dialogs/doctypedialog.h"
-#include "dialogs/recorddialog.h"
+#include "dialogs/documenttypedialog.h"
+#include "dialogs/afdialog.h"
 #include "dialogs/protocoldialog.h"
 
 #include <QDebug>
@@ -14,17 +14,14 @@
 #include <QStringListModel>
 #include <QComboBox>
 
-DocumentFormDialog::DocumentFormDialog(const QVariant &authorityId, const QVariant &id, QWidget *parent) :
+DocumentFormDialog::DocumentFormDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DocumentFormDialog),
-    m_authorityId(authorityId),
-    m_id(id)
+    ui(new Ui::DocumentFormDialog)
 {
     ui->setupUi(this);
 
-    m_subjectsTable = new SubjectTable;
+    m_subjectView = new SubjectView;
 
-    initialize();
     restoreDialogState();
 }
 
@@ -33,7 +30,7 @@ DocumentFormDialog::~DocumentFormDialog()
     saveDialogState();
 
     delete ui;
-    delete m_subjectsTable;
+    delete m_subjectView;
 }
 
 void DocumentFormDialog::restoreDialogState()
@@ -51,9 +48,15 @@ void DocumentFormDialog::saveDialogState()
     settings->endGroup();
 }
 
+int DocumentFormDialog::exec()
+{
+    initialize();
+    return QDialog::exec();
+}
+
 void DocumentFormDialog::initialize()
 {
-    ui->tab_subject->layout()->addWidget(m_subjectsTable);
+    ui->tab_subject->layout()->addWidget(m_subjectView);
 
     ui->dE_date->setDate(QDate::currentDate());
     ui->lE_protcolPage->setValidator(new QRegExpValidator(QRegExp("\\d+")));
@@ -248,49 +251,68 @@ void DocumentFormDialog::updateProtocol(int recordIndex)
 
 void DocumentFormDialog::chooseFund()
 {
-    RecordDialog dialog(m_authorityId);
+    AFDialog dialog;
+
+    AFView *view = dynamic_cast<AFView*>(dialog.treeView());
+    view->model()->setAuthorityId(m_authorityId);
+
     dialog.setChoiceMode();
-    dialog.setChoiceLevel(RecordModel::FundLevel);
+    dialog.setChoiceLevel(AFTreeModel::FundLevel);
 
     int res = dialog.exec();
 
     updateFund();
-    if(res == RecordDialog::Accepted) {
+    if(res == AFDialog::Accepted) {
         ui->cB_fund->setCurrentIndex(m_fundIds.indexOf(dialog.currentChoice()));
     }
 }
 
 void DocumentFormDialog::chooseInventory()
 {
-    RecordDialog dialog(m_authorityId, m_fundIds.at(ui->cB_fund->currentIndex()));
+    AFDialog dialog;
+
+    AFView *view = dynamic_cast<AFView*>(dialog.treeView());
+    view->model()->setAuthorityId(m_authorityId);
+    view->model()->setFundId(m_fundIds.at(ui->cB_fund->currentIndex()));
+
     dialog.setChoiceMode();
-    dialog.setChoiceLevel(RecordModel::InventoryLevel);
+    dialog.setChoiceLevel(AFTreeModel::InventoryLevel);
 
     int res = dialog.exec();
 
     updateInventory(ui->cB_fund->currentIndex());
-    if(res == RecordDialog::Accepted) {
+    if(res == AFDialog::Accepted) {
         ui->cB_inventory->setCurrentIndex(m_inventoryIds.indexOf(dialog.currentChoice()));
     }
 }
 
 void DocumentFormDialog::chooseRecord()
 {
-    RecordDialog dialog(m_authorityId, m_fundIds.at(ui->cB_fund->currentIndex()), m_inventoryIds.at(ui->cB_inventory->currentIndex()));
+    AFDialog dialog;
+
+    AFView *view = dynamic_cast<AFView*>(dialog.treeView());
+    view->model()->setAuthorityId(m_authorityId);
+    view->model()->setFundId(m_fundIds.at(ui->cB_fund->currentIndex()));
+    view->model()->setInventoryId(m_inventoryIds.at(ui->cB_inventory->currentIndex()));
+
     dialog.setChoiceMode();
-    dialog.setChoiceLevel(RecordModel::RecordLevel);
+    dialog.setChoiceLevel(AFTreeModel::RecordLevel);
 
     int res = dialog.exec();
 
     updateRecord(ui->cB_inventory->currentIndex());
-    if(res == RecordDialog::Accepted) {
+    if(res == AFDialog::Accepted) {
         ui->cB_record->setCurrentIndex(m_recordIds.indexOf(dialog.currentChoice()));
     }
 }
 
 void DocumentFormDialog::chooseProtocol()
 {
-    ProtocolDialog dialog(m_recordIds.at(ui->cB_record->currentIndex()));
+    ProtocolDialog dialog;
+
+    ProtocolView *view = dynamic_cast<ProtocolView*>(dialog.treeView());
+    view->model()->setRecordId(m_recordIds.at(ui->cB_record->currentIndex()));
+
     dialog.setChoiceMode();
 
     int res = dialog.exec();

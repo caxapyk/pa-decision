@@ -1,0 +1,45 @@
+#ifndef AUTHORITYVIEW_H
+#define AUTHORITYVIEW_H
+
+#include "treeview.h"
+#include "models/authoritymodel.h"
+#include "models/authoritysortmodel.h"
+
+class AuthorityView : public TreeView
+{
+    Q_OBJECT
+
+public:
+    AuthorityView(QWidget *parent = nullptr);
+    ~AuthorityView();
+
+    QVariant id() const { return m_authorityId; };
+
+    void insertRow(const QModelIndex &index) override;
+    void removeRow(const QModelIndex &index) override;
+    void refresh() override;
+
+private:
+    QAction *openInNTAction;
+    QAction *detailsAction;
+
+    AuthorityModel *m_model;
+    AuthoritySortModel *m_proxyModel;
+
+    QVariant m_authorityId;
+
+    void initialize();
+
+    void contextMenu(BaseContextMenu &menu) override;
+    void restoreViewState() override;
+    void saveViewState() override;
+
+private slots:
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
+    void details();
+
+signals:
+    void openInNewTabRequested(const QVariant &id);
+};
+
+#endif // AUTHORITYVIEW_H

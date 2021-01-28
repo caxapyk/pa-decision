@@ -20,6 +20,12 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_9">
    <property name="spacing">
     <number>9</number>

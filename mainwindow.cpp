@@ -2,11 +2,13 @@
 #include "ui_mainwindow.h"
 
 #include "application.h"
-#include "dialogs/doctypedialog.h"
+#include "dialogs/afdialog.h"
 #include "dialogs/connectiondialog.h"
+#include "dialogs/documenttypedialog.h"
 #include "dialogs/protocoldialog.h"
-#include "dialogs/recorddialog.h"
-#include "dialogs/subjtypedialog.h"
+#include "dialogs/subjecttypedialog.h"
+#include "views/afview.h"
+#include "widgets/documenttab.h"
 
 #include <QDebug>
 
@@ -26,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete m_authorityTreeView;
-//    /delete m_explorerView;
+    delete m_authorityView;
+    delete m_explorer;
     delete m_statusBarPanel;
     //delete m_searchPanel;
 
@@ -44,17 +46,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
-    m_authorityTreeView = new AuthorityTreeView;
-    ui->tab_authorities->layout()->addWidget(m_authorityTreeView);
-    //m_explorerView = new ExplorerView(ui->splitter_layout);
-    //m_authorityTreeView->setExplorer(m_explorerView);
-
-    ui->splitter_layout->setCollapsible(0, false);
-
     setupShortcuts();
     setupToolBar();
     setupStatusBar();
     restoreAppState();
+
+    m_authorityView = new AuthorityView;
+    ui->tab_authorities->layout()->addWidget(m_authorityView);
+
+    connect(m_authorityView, &AuthorityView::openInNewTabRequested, this, &MainWindow::openAuthorityInNewTab);
+
+    m_explorer = new Explorer;
+    ui->vL_data->insertWidget(0, m_explorer);
+    //m_explorerView = new ExplorerView(ui->splitter_layout);
+    //m_authorityTreeView->setExplorer(m_explorerView);
+
+    ui->splitter_layout->setCollapsible(0, false);
 }
 
 void MainWindow::restoreAppState()
@@ -66,6 +73,7 @@ void MainWindow::restoreAppState()
     restoreState(settings->value("MainWindow/windowState").toByteArray());
 
     ui->splitter_layout->restoreState(settings->value("MainWindow/splitter_layout").toByteArray());
+    ui->splitter_document->restoreState(settings->value("MainWindow/splitter_document").toByteArray());
 }
 
 void MainWindow::saveAppState()
@@ -76,6 +84,7 @@ void MainWindow::saveAppState()
     settings->setValue("geometry", saveGeometry());
     settings->setValue("windowState", saveState());
     settings->setValue("splitter_layout", ui->splitter_layout->saveState());
+    settings->setValue("splitter_document", ui->splitter_document->saveState());
     settings->endGroup();
 }
 
@@ -133,10 +142,7 @@ void MainWindow::setupToolBar()
 
     action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
     action_record->setDisabled(true);
-    connect(action_record, &QAction::triggered, this, [=] {
-        RecordDialog *dialog = new RecordDialog(m_authorityTreeView->id());
-        openDialog(dialog);
-    });
+    connect(action_record, &QAction::triggered, this, &MainWindow::openAF);
 
     ui->toolBar->addAction(action_new);
     ui->toolBar->addAction(action_edit);
@@ -151,23 +157,34 @@ void MainWindow::setupToolBar()
     ui->toolBar->addAction(action_record);
 
     m_referenceButton = new ReferenceButton;
-    connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, [=] { openDialog(new DoctypeDialog); });
-    connect(m_referenceButton->actionSubjtype(), &QAction::triggered, this, [=] { openDialog(new SubjtypeDialog); });
+    connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, [=] { openDialog(new DocumentTypeDialog); });
+    connect(m_referenceButton->actionSubjtype(), &QAction::triggered, this, [=] { openDialog(new SubjectTypeDialog); });
     ui->toolBar->addWidget(m_referenceButton);
 
     //m_searchPanel = new SearchPanel;
     //ui->toolBar->addWidget(m_searchPanel);
 }
 
-/*void Authority0View::openInNewTab(const QModelIndex &index)
+void MainWindow::openAF()
 {
-    if(index.isValid() && index.parent().isValid()) {
-        DecisionTab *tab = new DecisionTab(index.data(Qt::UserRole));
-        QIcon icon(index.data(Qt::DecorationRole).toString());
+    AFDialog dialog;
 
-        explorer()->createTab(tab, index.data().toString(), icon);
+    AFView *view = dynamic_cast<AFView*>(dialog.treeView());
+    view->model()->setAuthorityId(m_authorityView->id());
+
+    dialog.exec();
+}
+
+void MainWindow::openAuthorityInNewTab(const QVariant &id)
+{
+    if(id.isValid()) {
+        const QModelIndex v = m_authorityView->currentIndex();
+        DocumentTab *tab = new DocumentTab(id);
+        QIcon icon(v.data(Qt::DecorationRole).toString());
+
+        m_explorer->createTab(tab, v.data().toString(), icon);
     }
-}*/
+}
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {

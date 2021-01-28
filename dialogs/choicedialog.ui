@@ -17,6 +17,12 @@
    <iconset resource="../resources.qrc">
     <normaloff>:/icons/icons/references-24.png</normaloff>:/icons/icons/references-24.png</iconset>
   </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <layout class="QHBoxLayout" name="hL_header">

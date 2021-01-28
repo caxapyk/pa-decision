@@ -1,9 +1,9 @@
-#ifndef DECISIONBASEDIALOG_H
-#define DECISIONBASEDIALOG_H
+#ifndef DOCUMENTFORMDIALOG_H
+#define DOCUMENTFORMDIALOG_H
 
 #include "dialogs/choicedialog.h"
 #include "models/documenttypemodel.h"
-#include "widgets/subjecttable.h"
+#include "views/subjectview.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -17,11 +17,17 @@ class DocumentFormDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DocumentFormDialog(const QVariant &authorityId, const QVariant &id = QVariant(), QWidget *parent = nullptr);
+    explicit DocumentFormDialog(QWidget *parent = nullptr);
     ~DocumentFormDialog();
 
     void restoreDialogState();
     void saveDialogState();
+
+    QVariant authorityId() const { return m_authorityId; };
+    void setAuthorityId(const QVariant &id) { m_authorityId = id; };
+
+    QVariant id() const { return m_id; };
+    void setId(const QVariant &id) { m_id = id; };
 
     QVariant getId() const { return m_id; };
     QVariant getAuthority() const;
@@ -43,13 +49,15 @@ public:
     bool validate();
     void save();
 
+    int exec() override;
+
 public slots:
     void accept() override;
     void reject() override;
 
 private:
     Ui::DocumentFormDialog *ui;
-    SubjectTable *m_subjectsTable;
+    SubjectView *m_subjectView;
 
     QVariant m_authorityId;
     QVariant m_id;
@@ -84,4 +92,4 @@ private slots:
     void accessStateChanged(int index);
 };
 
-#endif // DECISIONBASEDIALOG_H
+#endif // DOCUMENTFORMDIALOG_H
