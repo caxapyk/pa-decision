@@ -53,9 +53,9 @@ void AFView::saveViewState()
 void AFView::contextMenu(BaseContextMenu &menu)
 {
     if(selectionModel()->selection().isEmpty()) {
-        menu.action(BaseContextMenu::Insert)->setDisabled(true);
-        menu.action(BaseContextMenu::Edit)->setDisabled(true);
-        menu.action(BaseContextMenu::Remove)->setDisabled(true);
+        menu.removeAction(menu.action(BaseContextMenu::Insert));
+        menu.removeAction(menu.action(BaseContextMenu::Edit));
+        menu.removeAction(menu.action(BaseContextMenu::Remove));
     }
 }
 
@@ -196,4 +196,6 @@ void AFView::refresh()
     AFTreeModel *model = dynamic_cast<AFTreeModel*>(m_proxyModel->sourceModel());
     if(model)
         model->select();
+
+    clearSelection();
 }
