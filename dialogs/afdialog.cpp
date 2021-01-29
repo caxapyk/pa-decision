@@ -86,8 +86,11 @@ int AFDialog::exec()
     if(isChoiceMode()) {
         if(choiceLevel() != AFTreeModel::FundLevel)
             pB_fund->hide();
+        pB_protocol->hide();
 
         m_view->expandAll();
+
+        connect(m_view, &TreeView::doubleClicked, this, &AFDialog::accept);
     }
 
     return ChoiceDialog::exec();
@@ -119,7 +122,6 @@ void AFDialog::selectionChanged(const QItemSelection &selected, const QItemSelec
         }
 
         pB_details->setEnabled(current.isValid());
-
     }
 }
 
@@ -137,7 +139,6 @@ void AFDialog::setChoiceLevel(AFTreeModel::Levels level)
 bool AFDialog::choiceButtonEnabled()
 {
     AFTreeModel::RecordNode *node = static_cast<AFTreeModel::RecordNode*>(m_view->proxyModel()->mapToSource(m_view->currentIndex()).internalPointer());
-
     return !isChoiceMode() || (node && node->level == choiceLevel());
 }
 

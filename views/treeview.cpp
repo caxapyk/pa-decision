@@ -79,6 +79,7 @@ void TreeView::selectionChanged(const QItemSelection &selected, const QItemSelec
     setRefreshEnabled(true);
 
     QTreeView::selectionChanged(selected, diselected);
+    emit _selected(selected, diselected);
 }
 
 void TreeView::editRow()

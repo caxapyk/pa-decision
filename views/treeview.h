@@ -64,6 +64,9 @@ protected:
     void virtual saveViewState() {};
 
     virtual void contextMenu(BaseContextMenu &) {};
+
+signals:
+    void _selected(const QItemSelection &selected, const QItemSelection &deselected);
 };
 
 #endif // TREEVIEW_H

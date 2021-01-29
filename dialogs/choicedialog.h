@@ -37,6 +37,10 @@ public:
     virtual void saveDialogState() {};
     virtual bool choiceButtonEnabled() { return true; };
 
+public slots:
+    void accept() override;
+    void reject() override;
+
 protected slots:
     virtual void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     virtual QVariant choice(const QModelIndex &) const { return QVariant(); };
@@ -49,8 +53,6 @@ private:
     QVariant m_choice;
 
 private slots:
-    void accept() override;
-    void reject() override;
     void closeEvent(QCloseEvent *event) override;
 };
 

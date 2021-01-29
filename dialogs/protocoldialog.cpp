@@ -58,6 +58,11 @@ void ProtocolDialog::saveDialogState()
 int ProtocolDialog::exec()
 {
     m_view->refresh();
+
+    if(isChoiceMode()) {
+        connect(m_view, &TreeView::doubleClicked, this, &ProtocolDialog::accept);
+    }
+
     return ChoiceDialog::exec();
 }
 

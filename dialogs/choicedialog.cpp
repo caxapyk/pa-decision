@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSortFilterProxyModel>
 #include <QSqlTableModel>
 
 ChoiceDialog::ChoiceDialog(QWidget *parent) :
@@ -28,7 +29,7 @@ void ChoiceDialog::setTreeView(TreeView *tv)
     m_view = tv;
     ui->hL_body->insertWidget(0, m_view);
 
-    connect(m_view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ChoiceDialog::selectionChanged, Qt::UniqueConnection);
+    connect(m_view, &TreeView::_selected, this, &ChoiceDialog::selectionChanged, Qt::UniqueConnection);
 }
 
 QBoxLayout *ChoiceDialog::buttonLayout()
@@ -67,8 +68,10 @@ void ChoiceDialog::selectionChanged(const QItemSelection &selected, const QItemS
 
 void ChoiceDialog::accept()
 {
-    saveDialogState();
-    QDialog::accept();
+    if(!isChoiceMode() || (isChoiceMode() && choiceButtonEnabled())) {
+        saveDialogState();
+        QDialog::accept();
+    }
 }
 
 void ChoiceDialog::reject()
