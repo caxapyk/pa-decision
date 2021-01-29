@@ -42,7 +42,7 @@ void ChoiceDialog::setChoiceMode(bool ok)
         ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
 
     choice_mode = ok;
-};
+}
 
 void ChoiceDialog::clearInfoText()
 {

@@ -31,6 +31,7 @@ SOURCES += \
     dialogs/protocoldetailsdialog.cpp \
     dialogs/protocoldialog.cpp \
     dialogs/recorddetailsdialog.cpp \
+    dialogs/referencedialog.cpp \
     dialogs/subjecttypedialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     dialogs/protocoldetailsdialog.h \
     dialogs/protocoldialog.h \
     dialogs/recorddetailsdialog.h \
+    dialogs/referencedialog.h \
     dialogs/subjecttypedialog.h \
     mainwindow.h \
     models/afsortmodel.h \

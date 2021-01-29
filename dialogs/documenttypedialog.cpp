@@ -7,18 +7,15 @@
 #include <QHeaderView>
 
 DocumentTypeDialog::DocumentTypeDialog(QWidget *parent) :
-    ChoiceDialog(parent)
+    ReferenceDialog(parent)
 {
     m_view = new DocumentTypeView;
-    setTreeView(m_view);
+    _layout()->insertWidget(0, m_view);
 
     restoreDialogState();
 
     setWindowTitle(tr("Document types"));
     setWindowIcon(QIcon(":/icons/icons/doctype-16.png"));
-
-    setInfoIconVisible();
-    setInfoText(tr("Use color to highlight documents!"));
 }
 
 DocumentTypeDialog::~DocumentTypeDialog()

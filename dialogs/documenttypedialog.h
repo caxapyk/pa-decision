@@ -1,10 +1,10 @@
 #ifndef DOCUMENTTYPEDIALOG_H
 #define DOCUMENTTYPEDIALOG_H
 
-#include "dialogs/choicedialog.h"
+#include "dialogs/referencedialog.h"
 #include "views/documenttypeview.h"
 
-class DocumentTypeDialog : public ChoiceDialog
+class DocumentTypeDialog : public ReferenceDialog
 {
     Q_OBJECT
 

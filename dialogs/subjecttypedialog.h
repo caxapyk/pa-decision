@@ -1,10 +1,10 @@
 #ifndef SUBJECTTYPEDIALOG_H
 #define SUBJECTTYPEDIALOG_H
 
-#include "dialogs/choicedialog.h"
+#include "dialogs/referencedialog.h"
 #include "views/subjecttypeview.h"
 
-class SubjectTypeDialog : public ChoiceDialog
+class SubjectTypeDialog : public ReferenceDialog
 {
     Q_OBJECT
 
