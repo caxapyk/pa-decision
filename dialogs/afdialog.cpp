@@ -84,8 +84,10 @@ int AFDialog::exec()
     m_view->refresh();
 
     if(isChoiceMode()) {
+        if(choiceLevel() != AFTreeModel::FundLevel)
+            pB_fund->hide();
+
         m_view->expandAll();
-        pB_fund->setEnabled(choiceLevel() == AFTreeModel::FundLevel);
     }
 
     return ChoiceDialog::exec();

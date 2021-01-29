@@ -40,7 +40,10 @@ int AuthorityDetailsDialog::exec()
         m_mapper->toFirst();
 
         connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
-            if(ui->lE_name->text().length() > 0 && m_mapper->submit()) {
+            if(!validate())
+                return;
+
+            if(m_mapper->submit()) {
                 accept();
             } else {
                 QMessageBox::warning(this,
@@ -52,6 +55,25 @@ int AuthorityDetailsDialog::exec()
     }
 
     return QDialog::exec();
+}
+
+bool AuthorityDetailsDialog::validate()
+{
+    if(ui->lE_name->text().isEmpty()) {
+        QMessageBox::critical(this,
+                              tr("Public authority"),
+                              tr("Fill all required fields (*)."),
+                              QMessageBox::Ok);
+        return false;
+    } else if(ui->pTE_geo->toPlainText().length() > 255) {
+        QMessageBox::critical(this,
+                               tr("Public authority"),
+                              tr("Geo field is too long."),
+                              QMessageBox::Ok);
+        return false;
+    }
+
+    return true;
 }
 
 QString AuthorityDetailsDialog::getName() const

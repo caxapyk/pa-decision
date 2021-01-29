@@ -42,6 +42,9 @@ int FundDetailsDialog::exec()
         m_mapper->setCurrentIndex(0);
 
         connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
+            if(!validate())
+                return;
+
             if(m_mapper->submit()) {
                 accept();
             } else {
@@ -55,6 +58,19 @@ int FundDetailsDialog::exec()
     }
 
     return QDialog::exec();
+}
+
+bool FundDetailsDialog::validate()
+{
+    if(ui->lE_number->text().isEmpty() || ui->lE_title->text().isEmpty()) {
+        QMessageBox::critical(this,
+                              tr("Inventory details"),
+                              tr("Fill all required fields (*)."),
+                              QMessageBox::Ok);
+        return false;
+    }
+
+    return true;
 }
 
 QString FundDetailsDialog::getNumber() const

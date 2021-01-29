@@ -45,12 +45,16 @@
       <item>
        <widget class="QLabel" name="label_1">
         <property name="text">
-         <string>Name</string>
+         <string>Name*</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lE_name"/>
+       <widget class="QLineEdit" name="lE_name">
+        <property name="maxLength">
+         <number>255</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_3">
@@ -60,7 +64,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lE_shortName"/>
+       <widget class="QLineEdit" name="lE_shortName">
+        <property name="maxLength">
+         <number>50</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_2">
@@ -80,7 +88,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lE_comment"/>
+       <widget class="QLineEdit" name="lE_comment">
+        <property name="maxLength">
+         <number>255</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

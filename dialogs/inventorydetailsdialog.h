@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QDataWidgetMapper>
 #include <QVariant>
+#include <QSqlTableModel>
 
 namespace Ui {
 class InventoryDetailsDialog;
@@ -30,6 +31,9 @@ private:
     QDataWidgetMapper *m_mapper = nullptr;
 
     QVariant m_id;
+    QSqlTableModel m_model;
+
+    bool validate();
 };
 
 #endif // INVENTORYDETAILSDIALOG_H

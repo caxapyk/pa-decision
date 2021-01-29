@@ -30,6 +30,8 @@ private:
     QDataWidgetMapper *m_mapper = nullptr;
 
     QVariant m_id;
+
+    bool validate();
 };
 
 #endif // FUNDDETAILSDIALOG_H

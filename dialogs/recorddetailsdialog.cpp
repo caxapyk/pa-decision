@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QMessageBox>
-#include <QSqlTableModel>
+#include <QRegExpValidator>
 
 RecordDetailsDialog::RecordDetailsDialog(const QVariant &id, QWidget *parent) :
     QDialog(parent),
@@ -12,6 +12,8 @@ RecordDetailsDialog::RecordDetailsDialog(const QVariant &id, QWidget *parent) :
 {
     m_id = id;
     ui->setupUi(this);
+
+     ui->lE_pages->setValidator(new QRegExpValidator(QRegExp("\\d+")));
 
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &
             RecordDetailsDialog::reject);
@@ -25,16 +27,15 @@ RecordDetailsDialog::~RecordDetailsDialog()
 
 int RecordDetailsDialog::exec()
 {
-    QSqlTableModel model;
-    model.setTable("pad_record");
-    model.setFilter("id=" + m_id.toString());
-    model.select();
+    m_model.setTable("pad_record");
+    m_model.setFilter("id=" + m_id.toString());
+    m_model.select();
 
-    if (model.rowCount() > 0) {
+    if (m_model.rowCount() > 0) {
         setWindowTitle(tr("Record details"));
 
         m_mapper = new QDataWidgetMapper;
-        m_mapper->setModel(&model);
+        m_mapper->setModel(&m_model);
         m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
         m_mapper->addMapping(ui->lE_number, 2);
@@ -44,6 +45,9 @@ int RecordDetailsDialog::exec()
         m_mapper->setCurrentIndex(0);
 
         connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
+            if(!validate())
+                return;
+
             if(m_mapper->submit()) {
                 accept();
             } else {
@@ -57,6 +61,24 @@ int RecordDetailsDialog::exec()
     }
 
     return QDialog::exec();
+}
+
+bool RecordDetailsDialog::validate()
+{
+    if(ui->lE_pages->text().isEmpty()) {
+        m_mapper->removeMapping(ui->lE_pages);
+        m_model.setData(m_model.index(0, 3), QVariant());
+    }
+
+    if(ui->lE_number->text().isEmpty() || ui->lE_title->text().isEmpty()) {
+        QMessageBox::critical(this,
+                              tr("Record details"),
+                              tr("Fill all required fields (*)."),
+                              QMessageBox::Ok);
+        return false;
+    }
+
+    return true;
 }
 
 QString RecordDetailsDialog::getNumber() const

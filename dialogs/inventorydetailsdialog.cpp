@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QMessageBox>
-#include <QSqlTableModel>
+#include <QRegExpValidator>
 
 InventoryDetailsDialog::InventoryDetailsDialog(const QVariant &id, QWidget *parent) :
     QDialog(parent),
@@ -12,6 +12,8 @@ InventoryDetailsDialog::InventoryDetailsDialog(const QVariant &id, QWidget *pare
 {
     m_id = id;
     ui->setupUi(this);
+
+    ui->lE_volume->setValidator(new QRegExpValidator(QRegExp("\\d+")));
 
     connect(ui->buttonBox->button(QDialogButtonBox::Discard), &QPushButton::clicked, this, &InventoryDetailsDialog::reject);
 }
@@ -24,16 +26,16 @@ InventoryDetailsDialog::~InventoryDetailsDialog()
 
 int InventoryDetailsDialog::exec()
 {
-    QSqlTableModel model;
-    model.setTable("pad_inventory");
-    model.setFilter("id=" + m_id.toString());
-    model.select();
 
-    if (model.rowCount() > 0) {
+    m_model.setTable("pad_inventory");
+    m_model.setFilter("id=" + m_id.toString());
+    m_model.select();
+
+    if (m_model.rowCount() > 0) {
         setWindowTitle(tr("Inventory details"));
 
         m_mapper = new QDataWidgetMapper;
-        m_mapper->setModel(&model);
+        m_mapper->setModel(&m_model);
         m_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
         m_mapper->addMapping(ui->lE_number, 2);
@@ -43,6 +45,9 @@ int InventoryDetailsDialog::exec()
         m_mapper->setCurrentIndex(0);
 
         connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, [=] {
+            if(!validate())
+                return;
+
             if(m_mapper->submit()) {
                 accept();
             } else {
@@ -56,6 +61,24 @@ int InventoryDetailsDialog::exec()
     }
 
     return QDialog::exec();
+}
+
+bool InventoryDetailsDialog::validate()
+{
+    if(ui->lE_volume->text().isEmpty()) {
+        m_mapper->removeMapping(ui->lE_volume);
+        m_model.setData(m_model.index(0, 3), QVariant());
+    }
+
+    if(ui->lE_number->text().isEmpty() || ui->lE_title->text().isEmpty()) {
+        QMessageBox::critical(this,
+                              tr("Inventory details"),
+                              tr("Fill all required fields (*)."),
+                              QMessageBox::Ok);
+        return false;
+    }
+
+    return true;
 }
 
 QString InventoryDetailsDialog::getNumber() const

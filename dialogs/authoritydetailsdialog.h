@@ -29,6 +29,8 @@ private:
     QDataWidgetMapper *m_mapper;
 
     QVariant m_id;
+
+    bool validate();
 };
 
 #endif // AUTHORITYDETAILSDIALOG_H

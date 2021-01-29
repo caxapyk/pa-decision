@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QDataWidgetMapper>
 #include <QVariant>
+#include <QSqlTableModel>
 
 namespace Ui {
 class RecordDetailsDialog;
@@ -29,7 +30,10 @@ private:
     Ui::RecordDetailsDialog *ui;
     QDataWidgetMapper *m_mapper = nullptr;
 
+    QSqlTableModel m_model;
     QVariant m_id;
+
+    bool validate();
 };
 
 #endif // RECORDDETAILSDIALOG_H
