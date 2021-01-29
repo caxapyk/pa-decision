@@ -2,10 +2,11 @@
 
 #include <QDebug>
 #include <QHeaderView>
+#include <QMessageBox>
 
 SubjectView::SubjectView(QWidget *parent) : TableWidgetView(parent)
 {
-    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
     setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::DoubleClicked);
@@ -26,32 +27,40 @@ void SubjectView::contextMenu(BaseContextMenu &menu)
     menu.removeAction(menu.action(BaseContextMenu::Refresh));
 }
 
-void SubjectView::insertRow(int)
+void SubjectView::_insertRow()
 {
-    int row = rowCount();
-
     setSortingEnabled(false);
 
-    TableWidgetView::insertRow(row);
+    insertRow(0);
 
     QTableWidgetItem *action_item = new QTableWidgetItem("I");
     action_item->setFlags(Qt::NoItemFlags);
-    setItem(row, 0, action_item);
+    setItem(0, 0, action_item);
 
-    selectRow(row);
+    selectRow(0);
     setSortingEnabled(true);
 }
 
-void SubjectView::removeRow(int)
+void SubjectView::removeRows()
 {
-    int row = currentRow();
+    const QList<QTableWidgetSelectionRange> range = selectedRanges();
 
-    QString action = item(row, 0)->text();
+    int res = QMessageBox::critical(this,
+        tr("Documents"),
+        tr("Are you shure that you want to delete %1 item(s)?").arg(range.length()),
+        QMessageBox::No | QMessageBox::Yes);
 
-    if(action == "I") {
-        removeRow(row);
-    } else {
-        item(currentRow(), 0)->setText("R");
-        hideRow(row);
+    if (res == QMessageBox::Yes) {
+        for (int i = 0; i < range.length(); ++i) {
+            int row = range.at(i).topRow() - i;
+            QString action = item(row, 0)->text();
+
+            if(action == "I") {
+                removeRow(row);
+            } else {
+                item(currentRow(), 0)->setText("R");
+                hideRow(row);
+            }
+        }
     }
 }

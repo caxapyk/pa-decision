@@ -83,19 +83,22 @@ void AuthorityView::contextMenu(BaseContextMenu &menu)
     menu.addAction(detailsAction);
 }
 
-void AuthorityView::currentChanged(const QModelIndex &current, const QModelIndex &)
+void AuthorityView::selectionChanged(const QItemSelection &selected, const QItemSelection &diselected)
 {
     QModelIndex root = m_proxyModel->mapFromSource(m_model->rootItem());
 
-    setInsertEnabled(!current.isValid() || current == root);
-    setEditEnabled(current.isValid() && current !=root);
-    setRemoveEnabled(current.isValid() && current != root);
+    setInsertEnabled(selected.isEmpty() || selected.contains(root));
+    setEditEnabled(!selected.isEmpty() && !selected.contains(root));
+    setRemoveEnabled(!selected.isEmpty() && !selected.contains(root));
     setRefreshEnabled(true);
 
     //application->mainWindow()->action_record->setEnabled(current.isValid() && current != root);
 
     // set authority id
-    m_authorityId = current.siblingAtColumn(0).data(Qt::UserRole);
+    if(!selected.isEmpty())
+        m_authorityId = selected.indexes().at(0).siblingAtColumn(0).data(Qt::UserRole);
+
+    QTreeView::selectionChanged(selected, diselected);
 }
 
 void AuthorityView::details()
@@ -111,7 +114,7 @@ void AuthorityView::details()
     }
 }
 
-void AuthorityView::insertRow(const QModelIndex &)
+void AuthorityView::insertRow()
 {
     QModelIndex sourceRoot = m_model->rootItem();
     QModelIndex proxyRoot = m_proxyModel->mapFromSource(sourceRoot);
@@ -130,7 +133,7 @@ void AuthorityView::insertRow(const QModelIndex &)
 
         setCurrentIndex(currentIndex);
         scrollTo(currentIndex);
-        editRow(currentIndex);
+        edit(currentIndex);
     } else {
         QMessageBox::warning(this,
                 tr("Public authorities"),
@@ -139,25 +142,30 @@ void AuthorityView::insertRow(const QModelIndex &)
     }
 }
 
-void AuthorityView::removeRow(const QModelIndex &index)
+void AuthorityView::removeRows()
 {
-    QModelIndex parent = m_proxyModel->parent(index);
-
     int res = QMessageBox::critical(this,
         tr("Public authorities"),
-        tr("Are you shure that you want to delete this item?"),
+        tr("Are you shure that you want to delete this item(s)?"),
         QMessageBox::No | QMessageBox::Yes);
 
     if (res == QMessageBox::Yes) {
-        bool remove = m_proxyModel->removeRow(index.row(), parent);
-        if (remove) {
-            selectionModel()->clearCurrentIndex();
-            selectionModel()->clearSelection();
-        } else {
-            QMessageBox::warning(this,
-                    tr("Public authorities"),
-                    tr("Could not remove the item."),
-                    QMessageBox::Ok);
+        const QModelIndexList &indexes = selectionModel()->selectedRows();
+
+        for (int i = 0; i < indexes.count(); ++i) {
+            const QModelIndex index = indexes.at(i);
+            QModelIndex parent = m_proxyModel->parent(index);
+
+            bool remove = m_proxyModel->removeRow(index.row(), parent);
+            if (remove) {
+                selectionModel()->clearCurrentIndex();
+                selectionModel()->clearSelection();
+            } else {
+                QMessageBox::warning(this,
+                        tr("Public authorities"),
+                        tr("Could not remove the items."),
+                        QMessageBox::Ok);
+            }
         }
     }
 }
@@ -165,6 +173,5 @@ void AuthorityView::removeRow(const QModelIndex &index)
 void AuthorityView::refresh()
 {
     m_model->select();
-    expandAll();
 }
 

@@ -52,24 +52,28 @@ void AFView::saveViewState()
 
 void AFView::contextMenu(BaseContextMenu &menu)
 {
-    QModelIndex index = indexAt(viewport()->mapFromGlobal(QCursor().pos()));
-
-    if(!index.isValid()) {
+    if(selectionModel()->selection().isEmpty()) {
+        menu.action(BaseContextMenu::Insert)->setDisabled(true);
         menu.action(BaseContextMenu::Edit)->setDisabled(true);
         menu.action(BaseContextMenu::Remove)->setDisabled(true);
     }
-
-    setCurrentIndex(index);
 }
 
-void AFView::currentChanged(const QModelIndex &current, const QModelIndex &)
+void AFView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    AFTreeModel::RecordNode *node = static_cast<AFTreeModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
+    if(!selected.isEmpty()) {
+        const QModelIndex current = selected.indexes().last();
+        AFTreeModel::RecordNode *node = static_cast<AFTreeModel::RecordNode*>(m_proxyModel->mapToSource(current).internalPointer());
+        setInsertEnabled(node->level != AFTreeModel::RecordLevel);
+    } else {
+        setInsertEnabled(false);
+    }
 
-    setInsertEnabled(node == nullptr || node->level != AFTreeModel::RecordLevel);
-    setEditEnabled(current.isValid());
-    setRemoveEnabled(current.isValid());
+    setEditEnabled(!selected.isEmpty());
+    setRemoveEnabled(!selected.isEmpty());
     setRefreshEnabled(true);
+
+    QTreeView::selectionChanged(selected, deselected);
 }
 
 void AFView::details()
@@ -132,9 +136,9 @@ void AFView::protocols()
     dialog.exec();
 }
 
-void AFView::insertRow(const QModelIndex &index)
+void AFView::insertRow()
 {
-    QModelIndex proxyParent = index;
+    QModelIndex proxyParent = currentIndex();
     QModelIndex sourceParent = m_proxyModel->mapToSource(proxyParent);
 
     if(!isExpanded(proxyParent)) {
@@ -159,27 +163,31 @@ void AFView::insertRow(const QModelIndex &index)
     }
 }
 
-void AFView::removeRow(const QModelIndex &index)
+void AFView::removeRows()
 {
-    if(m_proxyModel != nullptr) {
-        QModelIndex parent = m_proxyModel->parent(index);
-
-        int res = QMessageBox::critical(this,
-            tr("Deleting item"),
-            tr("Are you shure that you want to delete this item?"),
+    int res = QMessageBox::critical(this,
+        tr("Deleting item"),
+        tr("Are you shure that you want to delete this item(s)?"),
             QMessageBox::No | QMessageBox::Yes);
 
-        if (res == QMessageBox::Yes) {
+    if (res == QMessageBox::Yes) {
+        const QModelIndexList &indexes = selectionModel()->selectedRows();
+
+        for (int i = 0; i < indexes.count(); ++i) {
+            const QModelIndex index = indexes.at(i);
+            QModelIndex parent = m_proxyModel->parent(index);
+
             bool remove = m_proxyModel->removeRow(index.row(), parent);
             if (remove) {
                 //
             } else {
                 QMessageBox::warning(this,
-                        tr("Deleting item"),
-                        tr("Could not remove the item."),
-                        QMessageBox::Ok);
+                tr("Deleting item"),
+                tr("Could not remove the items."),
+                    QMessageBox::Ok);
             }
         }
+        clearSelection();
     }
 }
 

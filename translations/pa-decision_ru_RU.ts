@@ -204,7 +204,7 @@ Do you want to config now?</source>
     </message>
     <message>
         <location filename="../views/authorityview.cpp" line="170"/>
-        <source>Could not remove the item.</source>
+        <source>Could not remove the items.</source>
         <translation>Не удалось удалить элемент.</translation>
     </message>
 </context>
@@ -593,7 +593,7 @@ Do you want to config now?</source>
     </message>
     <message>
         <location filename="../views/decisionview.cpp" line="189"/>
-        <source>Could not remove the item.</source>
+        <source>Could not remove the items.</source>
         <translation type="unfinished">Не удалось удалить элемент.</translation>
     </message>
     <message>
@@ -1296,7 +1296,7 @@ Do you want to config now?</source>
     </message>
     <message>
         <location filename="../dialogs/treedialog.cpp" line="203"/>
-        <source>Could not remove the item.</source>
+        <source>Could not remove the items.</source>
         <translation>Не удалось удалить элемент.</translation>
     </message>
 </context>

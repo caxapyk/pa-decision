@@ -15,8 +15,8 @@ public:
 
     void _setModel(QSqlTableModel *model);
 
-    void insertRow(const QModelIndex &index) override;
-    void removeRow(const QModelIndex &index) override;
+    void insertRow() override;
+    void removeRows() override;
     void refresh() override;
 
 protected slots:

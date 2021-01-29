@@ -1,5 +1,7 @@
 #include "tablewidgetview.h"
 
+#include <QDebug>
+
 TableWidgetView::TableWidgetView(QWidget *parent) : QTableWidget(parent)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -7,6 +9,7 @@ TableWidgetView::TableWidgetView(QWidget *parent) : QTableWidget(parent)
     setSortingEnabled(true);
 
     setupShortcuts();
+    clearSelection();
 
     connect(this, &QMenu::customContextMenuRequested, this, &TableWidgetView::contextMenuRequested);
 }
@@ -23,19 +26,19 @@ void TableWidgetView::setupShortcuts()
 {
     m_insertShortcut = new QShortcut(QKeySequence::New, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_insertShortcut->setEnabled(true);
-    connect(m_insertShortcut, &QShortcut::activated, this, [=] { insertRow(currentRow()); });
+    connect(m_insertShortcut, &QShortcut::activated, this, &TableWidgetView::_insertRow);
 
     m_editShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this, nullptr, nullptr, Qt::WidgetShortcut);
     m_editShortcut->setEnabled(false);
-    connect(m_editShortcut, &QShortcut::activated, this, [=] { editRow(currentRow()); });
+    connect(m_editShortcut, &QShortcut::activated, this, &TableWidgetView::editRow);
 
     m_removeShortcut = new QShortcut(QKeySequence::Delete, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_removeShortcut->setEnabled(false);
-    connect(m_removeShortcut, &QShortcut::activated, this, [=] { removeRow(currentRow()); });
+    connect(m_removeShortcut, &QShortcut::activated, this, &TableWidgetView::removeRows);
 
     m_refreshShortcut = new QShortcut(QKeySequence::Refresh, this, nullptr, nullptr, Qt::WidgetShortcut);
     m_refreshShortcut->setEnabled(true);
-    connect(m_refreshShortcut, &QShortcut::activated, this, [=] { refresh(); });
+    connect(m_refreshShortcut, &QShortcut::activated, this, &TableWidgetView::refresh);
 }
 
 void TableWidgetView::contextMenuRequested(const QPoint &)
@@ -44,45 +47,42 @@ void TableWidgetView::contextMenuRequested(const QPoint &)
 
     QAction *insertAction = menu.action(BaseContextMenu::Insert);
     insertAction->setShortcut(m_insertShortcut->key());
-    insertAction->setEnabled(m_insertShortcut->isEnabled());
-    connect(insertAction, &QAction::triggered, this, [=] { insertRow(0); });
+    insertAction->setEnabled(m_insertEnabled);
+    connect(insertAction, &QAction::triggered, this, &TableWidgetView::_insertRow);
 
     QAction *editAction = menu.action(BaseContextMenu::Edit);
     editAction->setShortcut(m_editShortcut->key());
-    editAction->setEnabled(m_editShortcut->isEnabled());
-    connect(editAction, &QAction::triggered, this, [=] { editRow(currentRow()); });
+    editAction->setEnabled(m_editEnabled);
+    connect(editAction, &QAction::triggered, this, &TableWidgetView::editRow);
 
     QAction *removeAction = menu.action(BaseContextMenu::Remove);
     removeAction->setShortcut(m_removeShortcut->key());
-    removeAction->setEnabled(m_removeShortcut->isEnabled());
-    connect(removeAction, &QAction::triggered, this, [=] {
-        removeRow(currentRow());
-        removeRows(selectedRanges());
-    });
+    removeAction->setEnabled(m_removeEnabled);
+    connect(removeAction, &QAction::triggered, this, &TableWidgetView::removeRows);
 
     QAction *refreshAction = menu.action(BaseContextMenu::Refresh);
     refreshAction->setShortcut(m_refreshShortcut->key());
-    connect(refreshAction, &QAction::triggered, this, [=] { refresh(); });
+    refreshAction->setEnabled(m_refreshEnabled);
+    connect(refreshAction, &QAction::triggered, this, &TableWidgetView::refresh);
 
     contextMenu(menu);
     menu.exec(QCursor().pos());
 }
 
-void TableWidgetView::clear()
+void TableWidgetView::_clear()
 {
     clearContents();
     setRowCount(0);
 }
 
-void TableWidgetView::currentChanged(const QModelIndex &, const QModelIndex &)
+void TableWidgetView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    QList<QTableWidgetSelectionRange> ranges = selectedRanges();
+    setInsertEnabled(true);
+    setEditEnabled(!selected.isEmpty());
+    setRemoveEnabled(!selected.isEmpty());
+    setRefreshEnabled(true);
 
-    if(ranges.length() == 0)
-        setCurrentIndex(QModelIndex());
-
-    setEditEnabled(ranges.length() > 0);
-    setRemoveEnabled(ranges.length() > 0);
+    QTableView::selectionChanged(selected, deselected);
 }
 
 void TableWidgetView::setInsertEnabled(bool ok)

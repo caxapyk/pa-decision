@@ -31,10 +31,10 @@ public:
     void setShortcutsEnabled(bool);
     bool isShortcutsEnabled() const { return m_shortcutsEnabled; };
 
-    virtual void insertRow(int) {};
-    virtual void editRow(int) {};
-    virtual void removeRow(int) {};
-    virtual void removeRows(const QList<QTableWidgetSelectionRange> &) {};
+public slots:
+    virtual void _insertRow() {};
+    virtual void editRow() {};
+    virtual void removeRows() {};
     virtual void refresh() {};
 
 private:
@@ -46,8 +46,8 @@ private:
     void setupShortcuts();
 
     bool m_insertEnabled = true;
-    bool m_editEnabled = true;
-    bool m_removeEnabled = true;
+    bool m_editEnabled = false;
+    bool m_removeEnabled = false;
     bool m_refreshEnabled = true;
     bool m_contextMenuEnabled = true;
     bool m_shortcutsEnabled = true;
@@ -56,10 +56,10 @@ private slots:
     void contextMenuRequested(const QPoint &pos);
 
 protected slots:
-    virtual void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
+    virtual void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
 
 protected:
-    void clear();
+    void _clear();
 
     void virtual restoreViewState() {};
     void virtual saveViewState() {};

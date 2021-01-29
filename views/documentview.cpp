@@ -62,7 +62,7 @@ void DocumentView::refresh()
     if (!m_authorityId.isValid())
         return;
 
-    clear();
+    _clear();
 
     QString fieldName;
     switch (horizontalHeader()->sortIndicatorSection()) {
@@ -109,8 +109,9 @@ void DocumentView::refresh()
     updateTotal(0);
 }
 
-void DocumentView::editRow(int row)
+void DocumentView::editRow()
 {
+    int row = selectedRanges().last().bottomRow();
     const QVariant id = item(row, 0)->data(Qt::DisplayRole);
 
     DocumentFormDialog dialog;
@@ -127,14 +128,14 @@ void DocumentView::editRow(int row)
     }
 }
 
-void DocumentView::insertRow(int row)
+void DocumentView::_insertRow()
 {
     DocumentFormDialog dialog;
     dialog.setAuthorityId(m_authorityId);
     int res = dialog.exec();
 
     if(res == DocumentFormDialog::Accepted) {
-        insertRow(row);
+        insertRow(0);
 
         setItem(0, 0, new QTableWidgetItem(dialog.getId().toString()));
         setItem(0, 1, new QTableWidgetItem(dialog.getNumber().toString()));
@@ -147,19 +148,21 @@ void DocumentView::insertRow(int row)
     }
 }
 
-void DocumentView::removeRows(const QList<QTableWidgetSelectionRange> &ranges)
+void DocumentView::removeRows()
 {
+    const QList<QTableWidgetSelectionRange> range = selectedRanges();
+
     int res = QMessageBox::critical(this,
         tr("Documents"),
-        tr("Are you shure that you want to delete %1 item(s)?").arg(ranges.length()),
+        tr("Are you shure that you want to delete %1 item(s)?").arg(range.length()),
         QMessageBox::No | QMessageBox::Yes);
 
        if (res == QMessageBox::Yes) {
            QSqlQuery query;
            query.prepare("delete from pad_decision where id=?");
 
-            for (int i = 0; i < ranges.length(); ++i) {
-                int row = ranges.at(i).topRow() - i;
+           for (int i = 0; i < range.length(); ++i) {
+                int row = range.at(i).topRow() - i;
 
                 query.bindValue(0, item(row, 0)->text());
 
@@ -169,14 +172,12 @@ void DocumentView::removeRows(const QList<QTableWidgetSelectionRange> &ranges)
                     qDebug() << query.lastError().text();
                     QMessageBox::warning(this,
                             tr("Documents"),
-                            tr("Could not remove the item."),
+                            tr("Could not remove the items."),
                             QMessageBox::Ok);
                 }
 
                 query.finish();
             }
-
-            setCurrentIndex(QModelIndex());
     }
 }
 
@@ -186,11 +187,15 @@ void DocumentView::sort(int, Qt::SortOrder order)
     refresh();
 }
 
-/*void DocumentView::onSelectionChanged()
+void DocumentView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    //application->mainWindow()->action_edit->setEnabled(isEditEnabled());
-    //application->mainWindow()->action_remove->setEnabled(isRemoveEnabled());
-}*/
+    TableWidgetView::selectionChanged(selected, deselected);
+
+    application->mainWindow()->insertAction()->setEnabled(isInsertEnabled());
+    application->mainWindow()->editAction()->setEnabled(isEditEnabled());
+    application->mainWindow()->removeAction()->setEnabled(isRemoveEnabled());
+    application->mainWindow()->refreshAction()->setEnabled(isRefreshEnabled());
+}
 
 void DocumentView::updateTotal(int count)
 {

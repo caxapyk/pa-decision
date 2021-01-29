@@ -13,8 +13,8 @@ public:
     void contextMenu(BaseContextMenu &menu) override;
 
 public slots:
-    void insertRow(int row) override;
-    void removeRow(int row) override;
+    void _insertRow() override;
+    void removeRows() override;
 
 private:
     QStringList m_subjectHeaderLabels = {"Action", tr("ID"), tr("Type"), tr("Name"), tr("Address"), tr("Description")};

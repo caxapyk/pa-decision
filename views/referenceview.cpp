@@ -24,7 +24,7 @@ void ReferenceView::_setModel(QSqlTableModel *model)
 }
 
 
-void ReferenceView::insertRow(const QModelIndex &)
+void ReferenceView::insertRow()
 {
     bool insert = m_proxyModel->sourceModel()->insertRow(0);
 
@@ -34,8 +34,6 @@ void ReferenceView::insertRow(const QModelIndex &)
             resizeColumnToContents(i);
         }
 
-        selectionModel()->clearCurrentIndex();
-
         QModelIndex topLeft = m_proxyModel->mapFromSource(
                     m_proxyModel->sourceModel()->index(0, 0));
         QModelIndex bottomRight = m_proxyModel->mapFromSource(
@@ -43,13 +41,14 @@ void ReferenceView::insertRow(const QModelIndex &)
 
         QItemSelection selection(topLeft, bottomRight);
         selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
-        setCurrentIndex(topLeft);
         scrollTo(topLeft);
 
         for (int i=0; i < m_proxyModel->columnCount(); ++i) {
             if(isColumnHidden(i) == false) {
                 QModelIndex section = m_proxyModel->index(topLeft.row(), i);
+                setCurrentIndex(section);
                 edit(section);
+                break;
             }
         }
     } else {
@@ -60,24 +59,28 @@ void ReferenceView::insertRow(const QModelIndex &)
     }
 }
 
-void ReferenceView::removeRow(const QModelIndex &index)
+void ReferenceView::removeRows()
 {
-    if(m_proxyModel != nullptr) {
-        QModelIndex parent = m_proxyModel->parent(index);
-
-        int res = QMessageBox::critical(this,
-            tr("Deleting item"),
-            tr("Are you shure that you want to delete this item?"),
+    int res = QMessageBox::critical(this,
+        tr("Deleting item"),
+        tr("Are you shure that you want to delete this items?"),
             QMessageBox::No | QMessageBox::Yes);
 
-        if (res == QMessageBox::Yes) {
+    if (res == QMessageBox::Yes) {
+        const QModelIndexList &indexes = selectionModel()->selectedRows();
+
+        for (int i = 0; i < indexes.count(); ++i) {
+            const QModelIndex index = indexes.at(i);
+            QModelIndex parent = m_proxyModel->parent(index);
+
             bool remove = m_proxyModel->removeRow(index.row(), parent);
             if (remove) {
+                clearSelection();
                 refresh();
             } else {
                 QMessageBox::warning(this,
                         tr("Deleting item"),
-                        tr("Could not remove the item."),
+                        tr("Could not remove the items."),
                         QMessageBox::Ok);
             }
         }
@@ -87,9 +90,6 @@ void ReferenceView::removeRow(const QModelIndex &index)
 void ReferenceView::refresh()
 {
     if(m_proxyModel != nullptr) {
-        //m_proxyModel->invalidate();
-        //m_tree->sortByColumn(-1, Qt::AscendingOrder);
-
         QSqlTableModel *model = dynamic_cast<QSqlTableModel*>(m_proxyModel->sourceModel());
 
         if(model)

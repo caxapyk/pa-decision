@@ -22,13 +22,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    QAction *action_edit;
-    QAction *action_new;
-    QAction *action_print;
-    QAction *action_remove;
-    QAction *action_refresh;
-    QAction *action_tree;
-    QAction *action_record;
+    QAction *editAction() { return m_actionEdit; };
+    QAction *insertAction() { return m_actionInsert; };
+    QAction *printAction() { return m_actionPrint; };
+    QAction *removeAction() { return m_actionRemove; };
+    QAction *refreshAction() { return m_actionRefresh; };
+    QAction *treeAction() { return m_actionTree; };
+    QAction *afAction() { return m_actionAF; };
+
+    QWidget *searchPanel() { return m_searchPanel; };
 
 public slots:
     void openDialog(QDialog *dialog);
@@ -40,10 +42,18 @@ private:
     Explorer *m_explorer;
 
     ReferenceButton *m_referenceButton;
+    SearchPanel *m_searchPanel;
     StatusBarPanel *m_statusBarPanel;
-    //SearchPanel *m_searchPanel;
 
-    //QShortcut *m_searchShortcut;
+    QAction *m_actionEdit;
+    QAction *m_actionInsert;
+    QAction *m_actionPrint;
+    QAction *m_actionRemove;
+    QAction *m_actionRefresh;
+    QAction *m_actionTree;
+    QAction *m_actionAF;
+
+    QShortcut *m_searchShortcut;
 
     void initialize();
 

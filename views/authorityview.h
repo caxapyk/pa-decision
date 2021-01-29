@@ -15,8 +15,9 @@ public:
 
     QVariant id() const { return m_authorityId; };
 
-    void insertRow(const QModelIndex &index) override;
-    void removeRow(const QModelIndex &index) override;
+public slots:
+    void insertRow() override;
+    void removeRows() override;
     void refresh() override;
 
 private:
@@ -35,7 +36,7 @@ private:
     void saveViewState() override;
 
 private slots:
-    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
     void details();
 
 signals:

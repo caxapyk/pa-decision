@@ -19,10 +19,10 @@ public:
     void saveViewState() override;
 
 public slots:
-    void editRow(int row) override;
-    void insertRow(int row = 0) override;
+    void editRow() override;
+    void _insertRow() override;
     void refresh() override;
-    void removeRows(const QList<QTableWidgetSelectionRange> &ranges) override;
+    void removeRows() override;
 
 private:
     QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
@@ -34,6 +34,7 @@ private:
     void updateTotal(int count);
 
 private slots:
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
     void sort(int section, Qt::SortOrder order);
 };
 

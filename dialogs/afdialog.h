@@ -27,6 +27,7 @@ public:
 private:
     QPushButton *pB_details;
     QPushButton *pB_protocol;
+    QPushButton *pB_fund;
 
     AFView *m_view;
 
@@ -35,7 +36,7 @@ private:
     bool choiceButtonEnabled() override;
 
 private slots:
-    void onCurrentChanged(const QModelIndex &current, const QModelIndex &previous) override;
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
     QVariant choice(const QModelIndex &current) const override;
 };
 

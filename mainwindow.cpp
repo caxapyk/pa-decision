@@ -31,17 +31,17 @@ MainWindow::~MainWindow()
     delete m_authorityView;
     delete m_explorer;
     delete m_statusBarPanel;
-    //delete m_searchPanel;
+    delete m_searchPanel;
 
-    delete action_edit;
-    delete action_new;
-    delete action_print;
-    delete action_remove;
-    delete action_refresh;
-    delete action_tree;
-    delete action_record;
+    delete m_actionEdit;
+    delete m_actionInsert;
+    delete m_actionPrint;
+    delete m_actionRemove;
+    delete m_actionRefresh;
+    delete m_actionTree;
+    delete m_actionAF;
 
-    //delete m_searchShortcut;
+    delete m_searchShortcut;
 }
 
 void MainWindow::initialize()
@@ -57,10 +57,8 @@ void MainWindow::initialize()
     connect(m_authorityView, &AuthorityView::openInNewTabRequested, this, &MainWindow::openAuthorityInNewTab);
 
     m_explorer = new Explorer;
-    ui->vL_data->insertWidget(0, m_explorer);
-    //m_explorerView = new ExplorerView(ui->splitter_layout);
-    //m_authorityTreeView->setExplorer(m_explorerView);
 
+    ui->vL_data->insertWidget(0, m_explorer);
     ui->splitter_layout->setCollapsible(0, false);
 }
 
@@ -90,10 +88,10 @@ void MainWindow::saveAppState()
 
 void MainWindow::setupShortcuts()
 {
-    //m_searchShortcut = new QShortcut(QKeySequence::Find, this);
-    /*connect(m_searchShortcut, &QShortcut::activated, this, [=] {
+    m_searchShortcut = new QShortcut(QKeySequence::Find, this);
+    connect(m_searchShortcut, &QShortcut::activated, this, [=] {
         m_searchPanel->setFocus();
-    });*/
+    });
 }
 
 void MainWindow::setupStatusBar()
@@ -106,73 +104,101 @@ void MainWindow::setupStatusBar()
 
 void MainWindow::setupToolBar()
 {
-    action_new = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
-    action_new->setDisabled(true);
-    connect(action_new, &QAction::triggered, this, [=] {
-        //m_authorityTreeView->currentDecisionView()->insert();
+    m_actionInsert = new QAction(QIcon(":/icons/icons/new-24.png"), tr("New"));
+    m_actionInsert->setDisabled(true);
+    connect(m_actionInsert, &QAction::triggered, this, [=] {
+        Tab *tab = m_explorer->currentTab();
+        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+
+        if(dt != nullptr) {
+            dt->view()->_insertRow();
+        }
     });
 
-    action_print = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
-    action_print->setDisabled(true);
+    m_actionPrint = new QAction(QIcon(":/icons/icons/print-24.png"), tr("Print"));
+    m_actionPrint->setDisabled(true);
 
-    action_edit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
-    action_edit->setDisabled(true);
-    connect(action_edit, &QAction::triggered, this, [=] {
-        //m_authorityTreeView->currentDecisionView()->edit();
+    m_actionEdit = new QAction(QIcon(":/icons/icons/edit-24.png"), tr("Edit"));
+    m_actionEdit->setDisabled(true);
+    connect(m_actionEdit, &QAction::triggered, this, [=] {
+        Tab *tab = m_explorer->currentTab();
+        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+
+        if(dt != nullptr) {
+           dt->view()->editRow();
+        }
     });
 
-    action_remove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
-    action_remove->setDisabled(true);
-    connect(action_remove, &QAction::triggered, this, [=] {
-       // m_authorityTreeView->currentDecisionView()->remove();
+    m_actionRemove = new QAction(QIcon(":/icons/icons/remove-24.png"), tr("Remove"));
+    m_actionRemove->setDisabled(true);
+    connect(m_actionRemove, &QAction::triggered, this, [=] {
+        Tab *tab = m_explorer->currentTab();
+        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+
+        if(dt != nullptr) {
+            dt->view()->removeRows();
+        }
     });
 
-    action_refresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
-    action_refresh->setDisabled(true);
-    connect(action_refresh, &QAction::triggered, this, [=] {
-        //m_authorityTreeView->currentDecisionView()->refresh();
+    m_actionRefresh = new QAction(QIcon(":/icons/icons/refresh-24.png"), tr("Refresh"));
+    m_actionRefresh->setDisabled(true);
+    connect(m_actionRefresh, &QAction::triggered, this, [=] {
+        Tab *tab = m_explorer->currentTab();
+        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+
+        if(dt != nullptr) {
+            dt->view()->refresh();
+        }
     });
 
-    action_tree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Left panel"));
-    action_tree->setCheckable(true);
-    action_tree->setChecked(true);
-    connect(action_tree, &QAction::triggered, this, [=]{
-         ui->splitter_layout->widget(0)->setHidden(!action_tree->isChecked());
+    m_actionTree = new QAction(QIcon(":/icons/icons/tree-24.png"), tr("Left panel"));
+    m_actionTree->setCheckable(true);
+    m_actionTree->setChecked(true);
+    connect(m_actionTree, &QAction::triggered, this, [=]{
+         ui->splitter_layout->widget(0)->setHidden(!m_actionTree->isChecked());
     });
 
-    action_record = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
-    action_record->setDisabled(true);
-    connect(action_record, &QAction::triggered, this, &MainWindow::openAF);
+    m_actionAF = new QAction(QIcon(":/icons/icons/record-24.png"), tr("Records"));
+    m_actionAF->setDisabled(true);
+    connect(m_actionAF, &QAction::triggered, this, &MainWindow::openAF);
 
-    ui->toolBar->addAction(action_new);
-    ui->toolBar->addAction(action_edit);
-    ui->toolBar->addAction(action_remove);
+    ui->toolBar->addAction(m_actionInsert);
+    ui->toolBar->addAction(m_actionEdit);
+    ui->toolBar->addAction(m_actionRemove);
     ui->toolBar->addSeparator();
-    ui->toolBar->addAction(action_print);
-    ui->toolBar->addAction(action_refresh);
+    ui->toolBar->addAction(m_actionPrint);
+    ui->toolBar->addAction(m_actionRefresh);
     ui->toolBar->addSeparator();
-    ui->toolBar->addAction(action_tree);
+    ui->toolBar->addAction(m_actionTree);
     ui->toolBar->addSeparator();
 
-    ui->toolBar->addAction(action_record);
+    ui->toolBar->addAction(m_actionAF);
 
     m_referenceButton = new ReferenceButton;
     connect(m_referenceButton->actionDoctype(), &QAction::triggered, this, [=] { openDialog(new DocumentTypeDialog); });
     connect(m_referenceButton->actionSubjtype(), &QAction::triggered, this, [=] { openDialog(new SubjectTypeDialog); });
     ui->toolBar->addWidget(m_referenceButton);
 
-    //m_searchPanel = new SearchPanel;
-    //ui->toolBar->addWidget(m_searchPanel);
+    ui->toolBar->addSeparator();
+
+    m_searchPanel = new SearchPanel;
+    m_searchPanel->setDisabled(true);
+    ui->toolBar->addWidget(m_searchPanel);
 }
 
 void MainWindow::openAF()
 {
-    AFDialog dialog;
+    Tab *tab = m_explorer->currentTab();
+    DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
 
-    AFView *view = dynamic_cast<AFView*>(dialog.treeView());
-    view->model()->setAuthorityId(m_authorityView->id());
+    if(dt != nullptr) {
+        AFDialog dialog;
 
-    dialog.exec();
+        AFView *view = dynamic_cast<AFView*>(dialog.treeView());
+        view->model()->setAuthorityId(dt->view()->authorityId());
+
+        dialog.exec();
+    }
 }
 
 void MainWindow::openAuthorityInNewTab(const QVariant &id)

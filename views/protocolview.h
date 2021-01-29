@@ -13,8 +13,9 @@ public:
     ProtocolView(QWidget *parent = nullptr);
     ~ProtocolView();
 
-    void insertRow(const QModelIndex &index) override;
-    void removeRow(const QModelIndex &index) override;
+public slots:
+    void insertRow() override;
+    void removeRows() override;
     void refresh() override;
 
     ProtocolModel *model() { return m_model; };

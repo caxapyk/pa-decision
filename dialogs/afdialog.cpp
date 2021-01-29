@@ -23,13 +23,14 @@ AFDialog::AFDialog(QWidget *parent) : ChoiceDialog(parent)
     setWindowTitle(tr("Archive records"));
     setWindowIcon(QIcon(":/icons/icons/record-16.png"));
 
-    pB_details = new QPushButton(tr("Details"));
-    pB_details->setDisabled(true);
+    pB_fund = new QPushButton(tr("Create fund"));
+    pB_fund->setEnabled(true);
 
-    buttonLayout()->addWidget(pB_details);
+    buttonLayout()->addWidget(pB_fund);
 
-    connect(pB_details, &QPushButton::clicked, this, [=] {
-        m_view->details();
+    connect(pB_fund, &QPushButton::clicked, this, [=] {
+        m_view->setCurrentIndex(QModelIndex());
+        m_view->insertRow();
     });
 
     pB_protocol = new QPushButton(tr("Protocols"));
@@ -40,6 +41,15 @@ AFDialog::AFDialog(QWidget *parent) : ChoiceDialog(parent)
     connect(pB_protocol, &QPushButton::clicked, this, [=] {
         m_view->protocols();
     });
+
+    pB_details = new QPushButton(tr("Details"));
+    pB_details->setDisabled(true);
+
+    buttonLayout()->addWidget(pB_details);
+
+    connect(pB_details, &QPushButton::clicked, this, [=] {
+        m_view->details();
+    });
 }
 
 AFDialog::~AFDialog()
@@ -48,6 +58,7 @@ AFDialog::~AFDialog()
 
     delete pB_details;
     delete pB_protocol;
+    delete pB_fund;
 
     delete m_view;
 }
@@ -72,32 +83,42 @@ int AFDialog::exec()
 {
     m_view->refresh();
 
-    if(isChoiceMode())
+    if(isChoiceMode()) {
         m_view->expandAll();
+        pB_fund->setEnabled(choiceLevel() == AFTreeModel::FundLevel);
+    }
 
     return ChoiceDialog::exec();
 }
 
-void AFDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
+void AFDialog::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    AFTreeModel::RecordNode *node = static_cast<AFTreeModel::RecordNode*>(m_view->proxyModel()->mapToSource(current).internalPointer());
-    int level = (node == nullptr) ? AFTreeModel::FundLevel - 1 : node->level;
+    ChoiceDialog::selectionChanged(selected, deselected);
 
-    m_view->setInsertEnabled(m_view->isInsertEnabled() && (!isChoiceMode() || (isChoiceMode() && ((level < 0 && choiceLevel() == AFTreeModel::FundLevel) || (level == choiceLevel() - 1)))));
-    m_view->setEditEnabled(m_view->isEditEnabled() && (!isChoiceMode() || (isChoiceMode() && level == choiceLevel())));
-    m_view->setRemoveEnabled(m_view->isRemoveEnabled() && (!isChoiceMode() || (isChoiceMode() && level == choiceLevel())));
-    m_view->setRefreshEnabled(m_view->isRefreshEnabled());
-
-    pB_details->setEnabled(current.isValid());
-    pB_protocol->setEnabled(!isChoiceMode() && current.isValid() && level == AFTreeModel::RecordLevel);
-
-    if(current.isValid()) {
-        setInfoText(current.siblingAtColumn(3).data().toString());
-    } else {
+    if(selected.isEmpty()) {
         clearInfoText();
-    }
+        m_view->setInsertEnabled(false);
+        m_view->setEditEnabled(false);
+        m_view->setRemoveEnabled(false);
 
-    ChoiceDialog::onCurrentChanged(current, previous);
+    } else {
+        const QModelIndex current = selected.indexes().last();
+        setInfoText(current.siblingAtColumn(3).data().toString());
+
+        AFTreeModel::RecordNode *node = static_cast<AFTreeModel::RecordNode*>(m_view->proxyModel()->mapToSource(current).internalPointer());
+        int level = (node == nullptr) ? AFTreeModel::FundLevel - 1 : node->level;
+
+        if(isChoiceMode()) {
+            m_view->setInsertEnabled(level == choiceLevel() - 1);
+            m_view->setEditEnabled(level == choiceLevel());
+            m_view->setRemoveEnabled(level == choiceLevel());
+        } else {
+             pB_protocol->setEnabled(current.isValid() && level == AFTreeModel::RecordLevel);
+        }
+
+        pB_details->setEnabled(current.isValid());
+
+    }
 }
 
 void AFDialog::setChoiceLevel(AFTreeModel::Levels level)

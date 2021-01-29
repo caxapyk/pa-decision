@@ -12,12 +12,17 @@ public:
     AFView(QWidget *parent = nullptr);
     ~AFView();
 
-    void insertRow(const QModelIndex &index) override;
-    void removeRow(const QModelIndex &index) override;
-    void refresh() override;
 
     AFTreeModel *model() { return m_model; };
     QSortFilterProxyModel *proxyModel() { return m_proxyModel; };
+
+public slots:
+    void insertRow() override;
+    void removeRows() override;
+    void refresh() override;
+
+    void details();
+    void protocols();
 
 private:
     AFTreeModel *m_model;
@@ -27,12 +32,8 @@ private:
     void restoreViewState() override;
     void saveViewState() override;
 
-public slots:
-    void details();
-    void protocols();
-
 private slots:
-    void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
 };
 
 #endif // AFVIEW_H

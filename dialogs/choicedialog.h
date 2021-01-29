@@ -38,7 +38,7 @@ public:
     virtual bool choiceButtonEnabled() { return true; };
 
 protected slots:
-    virtual void onCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    virtual void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     virtual QVariant choice(const QModelIndex &) const { return QVariant(); };
 
 private:

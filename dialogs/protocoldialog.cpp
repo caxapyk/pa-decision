@@ -61,10 +61,10 @@ int ProtocolDialog::exec()
     return ChoiceDialog::exec();
 }
 
-void ProtocolDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
+void ProtocolDialog::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    pB_details->setEnabled(current.isValid());
-    ChoiceDialog::onCurrentChanged(current, previous);
+    pB_details->setEnabled(!selected.isEmpty());
+    ChoiceDialog::selectionChanged(selected, deselected);
 }
 
 bool ProtocolDialog::choiceButtonEnabled()

@@ -62,7 +62,7 @@ void ProtocolView::details()
     }
 }
 
-void ProtocolView::insertRow(const QModelIndex &)
+void ProtocolView::insertRow()
 {
     ProtocolDetailsDialog dialog;
     int res = dialog.exec();
@@ -104,25 +104,28 @@ void ProtocolView::insertRow(const QModelIndex &)
     }
 }
 
-void ProtocolView::removeRow(const QModelIndex &index)
+void ProtocolView::removeRows()
 {
-    if(m_proxyModel != nullptr) {
-        QModelIndex parent = m_proxyModel->parent(index);
-
-        int res = QMessageBox::critical(this,
-            tr("Deleting item"),
-            tr("Are you shure that you want to delete this item?"),
+    int res = QMessageBox::critical(this,
+        tr("Deleting item"),
+        tr("Are you shure that you want to delete this item(s)?"),
             QMessageBox::No | QMessageBox::Yes);
 
-        if (res == QMessageBox::Yes) {
+    if (res == QMessageBox::Yes) {
+        const QModelIndexList &indexes = selectionModel()->selectedRows();
+
+        for (int i = 0; i < indexes.count(); ++i) {
+            const QModelIndex index = indexes.at(i);
+            QModelIndex parent = m_proxyModel->parent(index);
+
             bool remove = m_proxyModel->removeRow(index.row(), parent);
             if (remove) {
-                    refresh();
+                refresh();
             } else {
                 QMessageBox::warning(this,
-                        tr("Deleting item"),
-                        tr("Could not remove the item."),
-                        QMessageBox::Ok);
+                tr("Deleting item"),
+                tr("Could not remove the items."),
+                    QMessageBox::Ok);
             }
         }
     }

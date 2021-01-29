@@ -28,7 +28,7 @@ void ChoiceDialog::setTreeView(TreeView *tv)
     m_view = tv;
     ui->hL_body->insertWidget(0, m_view);
 
-    connect(m_view->selectionModel(), &QItemSelectionModel::currentChanged, this, &ChoiceDialog::onCurrentChanged, Qt::UniqueConnection);
+    connect(m_view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ChoiceDialog::selectionChanged, Qt::UniqueConnection);
 }
 
 QBoxLayout *ChoiceDialog::buttonLayout()
@@ -59,9 +59,9 @@ void ChoiceDialog::setInfoIconVisible(bool ok)
     ui->label_infoIcon->setVisible(ok);
 }
 
-void ChoiceDialog::onCurrentChanged(const QModelIndex &current, const QModelIndex &)
+void ChoiceDialog::selectionChanged(const QItemSelection &selected, const QItemSelection &)
 {
-    m_choice = choice(current);
+    m_choice = choice(selected.isEmpty() ? QModelIndex() : selected.indexes().last());
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(choiceButtonEnabled());
 }
 
