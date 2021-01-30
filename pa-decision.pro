@@ -60,6 +60,7 @@ SOURCES += \
     widgets/colorrect.cpp \
     widgets/documenttab.cpp \
     widgets/explorer.cpp \
+    widgets/navpanel.cpp \
     widgets/paginator.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
@@ -108,6 +109,7 @@ HEADERS += \
     widgets/colorrect.h \
     widgets/documenttab.h \
     widgets/explorer.h \
+    widgets/navpanel.h \
     widgets/paginator.h \
     widgets/referencebutton.h \
     widgets/searchpanel.h \
@@ -124,6 +126,7 @@ FORMS += \
     dialogs/protocoldetailsdialog.ui \
     dialogs/recorddetailsdialog.ui \
     mainwindow.ui \
+    widgets/navpanel.ui \
     widgets/paginator.ui \
     widgets/referencebutton.ui \
     widgets/searchpanel.ui \

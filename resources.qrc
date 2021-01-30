@@ -37,6 +37,8 @@
         <file>icons/subject-16.png</file>
         <file>icons/protocol-24.png</file>
         <file>icons/record-24.png</file>
+        <file>icons/horizontal-16.png</file>
+        <file>icons/vertical-16.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file>translations/qt_ru.qm</file>

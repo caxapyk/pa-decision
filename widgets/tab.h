@@ -11,7 +11,7 @@ public:
     explicit Tab(QWidget *parent = nullptr);
     ~Tab();
 
-    QBoxLayout *layout() { return  m_layout; };
+    QBoxLayout *_layout() { return  m_layout; };
 
 private:
     QVBoxLayout *m_layout;

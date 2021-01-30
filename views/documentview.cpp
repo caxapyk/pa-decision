@@ -12,6 +12,8 @@
 
 DocumentView::DocumentView(QWidget *parent) : TableWidgetView(parent)
 {
+    setFrameStyle(QFrame::NoFrame);
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -24,6 +26,8 @@ DocumentView::DocumentView(QWidget *parent) : TableWidgetView(parent)
     setHorizontalHeaderLabels(m_headerLabels);
     hideColumn(0); //id
     horizontalHeader()->setSectionResizeMode(m_headerLabels.length() - 1, QHeaderView::Stretch);
+
+    connect(horizontalHeader(), &QHeaderView::sortIndicatorChanged, this, &DocumentView::sort);
 
     // save header state dynamicly
     connect(horizontalHeader(), &QHeaderView::sectionResized, [=] { saveViewState(); } );
@@ -106,7 +110,7 @@ void DocumentView::refresh()
                 QMessageBox::Ok);
     }
 
-    updateTotal(0);
+    updateTotal();
 }
 
 void DocumentView::editRow()
@@ -143,9 +147,9 @@ void DocumentView::_insertRow()
         setItem(0, 3, new QTableWidgetItem(dialog.getComment().toString()));
 
         selectRow(0);
-
-        updateTotal(m_total + 1);
     }
+
+    emit totalChanged(m_total + 1);
 }
 
 void DocumentView::removeRows()
@@ -168,6 +172,7 @@ void DocumentView::removeRows()
 
                 if(query.exec()) {
                     removeRow(row);
+                    emit totalChanged(m_total - 1);
                 } else {
                     qDebug() << query.lastError().text();
                     QMessageBox::warning(this,
@@ -195,22 +200,21 @@ void DocumentView::selectionChanged(const QItemSelection &selected, const QItemS
     application->mainWindow()->editAction()->setEnabled(isEditEnabled());
     application->mainWindow()->removeAction()->setEnabled(isRemoveEnabled());
     application->mainWindow()->refreshAction()->setEnabled(isRefreshEnabled());
+
+    emit _selected(selectedRanges());
 }
 
-void DocumentView::updateTotal(int count)
+void DocumentView::updateTotal()
 {
-    if(m_total < 0) {
-        QSqlQuery query;
-        query.prepare("select count(id) from pad_decision where authority_id=?");
-        query.bindValue(0, m_authorityId);
+    QSqlQuery query;
+    query.prepare("select count(id) from pad_decision where authority_id=?");
+    query.bindValue(0, m_authorityId);
 
-        query.exec();
-        if(query.isActive()) {
-            query.first();
+    query.exec();
+    if(query.isActive()) {
+        query.first();
 
-            m_total = query.value("count(id)").toInt();
-        }
-    } else {
-        m_total += count;
+        m_total = query.value("count(id)").toInt();
+        emit totalChanged(m_total);
     }
 }

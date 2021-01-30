@@ -31,11 +31,15 @@ private:
     QVariant m_authorityId;
     int m_total = -1;
 
-    void updateTotal(int count);
+    void updateTotal();
 
 private slots:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
     void sort(int section, Qt::SortOrder order);
+
+signals:
+    void _selected(const QList<QTableWidgetSelectionRange> &ranges);
+    void totalChanged(int total);
 };
 
 #endif // DOCUMENTVIEW_H

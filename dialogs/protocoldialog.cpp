@@ -66,10 +66,10 @@ int ProtocolDialog::exec()
     return ChoiceDialog::exec();
 }
 
-void ProtocolDialog::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void ProtocolDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
     pB_details->setEnabled(!selected.isEmpty());
-    ChoiceDialog::selectionChanged(selected, deselected);
+    ChoiceDialog::selected(selected, deselected);
 }
 
 bool ProtocolDialog::choiceButtonEnabled()

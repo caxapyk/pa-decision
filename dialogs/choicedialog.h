@@ -42,7 +42,7 @@ public slots:
     void reject() override;
 
 protected slots:
-    virtual void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    virtual void selected(const QItemSelection &selected, const QItemSelection &deselected);
     virtual QVariant choice(const QModelIndex &) const { return QVariant(); };
 
 private:

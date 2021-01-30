@@ -73,7 +73,8 @@ void AFView::selectionChanged(const QItemSelection &selected, const QItemSelecti
     setRemoveEnabled(!selected.isEmpty());
     setRefreshEnabled(true);
 
-    TreeView::selectionChanged(selected, deselected);
+    QTreeView::selectionChanged(selected, deselected);
+    emit _selected(selected, deselected);
 }
 
 void AFView::details()
@@ -187,6 +188,7 @@ void AFView::removeRows()
                     QMessageBox::Ok);
             }
         }
+
         clearSelection();
     }
 }

@@ -36,7 +36,7 @@ private:
     bool choiceButtonEnabled() override;
 
 private slots:
-    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
+    void selected(const QItemSelection &selected, const QItemSelection &deselected) override;
     QVariant choice(const QModelIndex &current) const override;
 };
 

@@ -46,6 +46,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
+    setDockNestingEnabled(true);
+
     setupShortcuts();
     setupToolBar();
     setupStatusBar();
@@ -58,7 +60,7 @@ void MainWindow::initialize()
 
     m_explorer = new Explorer;
 
-    ui->vL_data->insertWidget(0, m_explorer);
+    ui->w_explorer->layout()->addWidget(m_explorer);
     ui->splitter_layout->setCollapsible(0, false);
 }
 
@@ -71,7 +73,6 @@ void MainWindow::restoreAppState()
     restoreState(settings->value("MainWindow/windowState").toByteArray());
 
     ui->splitter_layout->restoreState(settings->value("MainWindow/splitter_layout").toByteArray());
-    ui->splitter_document->restoreState(settings->value("MainWindow/splitter_document").toByteArray());
 }
 
 void MainWindow::saveAppState()
@@ -82,7 +83,6 @@ void MainWindow::saveAppState()
     settings->setValue("geometry", saveGeometry());
     settings->setValue("windowState", saveState());
     settings->setValue("splitter_layout", ui->splitter_layout->saveState());
-    settings->setValue("splitter_document", ui->splitter_document->saveState());
     settings->endGroup();
 }
 

@@ -28,6 +28,9 @@
    </property>
    <item>
     <widget class="QPushButton" name="pB_previous">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="maximumSize">
       <size>
        <width>24</width>
@@ -51,6 +54,9 @@
    </item>
    <item>
     <widget class="QPushButton" name="pB_backward">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="maximumSize">
       <size>
        <width>24</width>
@@ -126,6 +132,9 @@
        <height>0</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:white;</string>
+     </property>
      <property name="frame">
       <bool>false</bool>
      </property>
@@ -184,8 +193,14 @@
      <property name="styleSheet">
       <string notr="true"/>
      </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
      <property name="text">
-      <string>Page 1/1</string>
+      <string>1 : 1</string>
      </property>
     </widget>
    </item>
@@ -206,7 +221,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="cB_perPage">
+       <property name="styleSheet">
+        <string notr="true">background-color:#333;color:#fff;</string>
+       </property>
        <property name="frame">
         <bool>true</bool>
        </property>

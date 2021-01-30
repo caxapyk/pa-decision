@@ -96,9 +96,9 @@ int AFDialog::exec()
     return ChoiceDialog::exec();
 }
 
-void AFDialog::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void AFDialog::selected(const QItemSelection &selected, const QItemSelection &deselected)
 {
-    ChoiceDialog::selectionChanged(selected, deselected);
+    ChoiceDialog::selected(selected, deselected);
 
     if(selected.isEmpty()) {
         clearInfoText();
@@ -138,12 +138,21 @@ void AFDialog::setChoiceLevel(AFTreeModel::Levels level)
 
 bool AFDialog::choiceButtonEnabled()
 {
-    AFTreeModel::RecordNode *node = static_cast<AFTreeModel::RecordNode*>(m_view->proxyModel()->mapToSource(m_view->currentIndex()).internalPointer());
-    return !isChoiceMode() || (node && node->level == choiceLevel());
+    if(isChoiceMode()) {
+        const QItemSelection selected = m_view->selectionModel()->selection();
+        if(selected.isEmpty())
+            return false;
+
+        AFTreeModel::RecordNode *node = static_cast<AFTreeModel::RecordNode*>(m_view->proxyModel()->mapToSource(m_view->currentIndex()).internalPointer());
+        return node && node->level == choiceLevel();
+    }
+
+    return true;
 }
 
 QVariant AFDialog::choice(const QModelIndex &current) const
 {
+
    if(current.isValid()) {
         return m_view->proxyModel()->mapToSource(current.siblingAtColumn(2)).data();
     }
