@@ -7,6 +7,9 @@ Paginator::Paginator(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->label_current->setText(QString::number(m_currentPage));
+    ui->label_total->setText(QString::number(m_totalPages));
+
     connect(ui->pB_toward, &QPushButton::clicked, this, &Paginator::toward);
     connect(ui->pB_backward, &QPushButton::clicked, this, &Paginator::backward);
     connect(ui->pB_next, &QPushButton::clicked, this, &Paginator::nextPage);
@@ -17,7 +20,7 @@ Paginator::Paginator(QWidget *parent) :
     });
 
     connect(ui->cB_perPage, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [=] {
-        emit showPerPage(QString(ui->cB_perPage->currentText()).toInt());
+        emit perPageChanged(QString(ui->cB_perPage->currentText()).toInt());
     });
 }
 
@@ -44,4 +47,16 @@ void Paginator::setNextEnabled(bool ok)
 void Paginator::setPreviousEnabled(bool ok)
 {
     ui->pB_previous->setEnabled(ok);
+}
+
+void Paginator::setCurrentPage(int page)
+{
+    m_currentPage = page;
+    ui->label_current->setText(QString::number(m_currentPage));
+}
+
+void Paginator::setTotalPages(int pages)
+{
+    m_totalPages = pages;
+    ui->label_total->setText(QString::number(m_totalPages));
 }

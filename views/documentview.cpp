@@ -68,6 +68,7 @@ void DocumentView::refresh()
 
     _clear();
 
+    // sorting
     QString fieldName;
     switch (horizontalHeader()->sortIndicatorSection()) {
     case 1: fieldName = "cast(number as unsigned)"; break;
@@ -79,8 +80,14 @@ void DocumentView::refresh()
 
     QString sort = fieldName + (m_order == Qt::AscendingOrder ? " asc" : " desc");
 
+    // pagination
+    QString limit = QString("limit %1,%2").arg(m_from).arg(m_count);
+
     QSqlQuery query;
-    query.prepare(QString("select id, number, name, comment from pad_decision where authority_id=? order by %1").arg(sort));
+    query.prepare(QString("select id, number, name, comment from pad_decision where authority_id=? order by %1 %2")
+                  .arg(sort)
+                  .arg(limit));
+
     query.bindValue(0, m_authorityId);
     query.exec();
 

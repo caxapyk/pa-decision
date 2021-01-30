@@ -14,8 +14,14 @@ DocumentTab::DocumentTab(const QVariant &authorityId, QWidget *parent) : Tab(par
 
     m_paginator = new Paginator;
     m_panel->_layout()->insertWidget(0, m_paginator);
+
+    //_paginator->setTotalPages(static_cast<int>(m_view->total() / count + 0.5));
+
     connect(m_paginator, &Paginator::backward, this, &DocumentTab::backward);
     connect(m_paginator, &Paginator::toward, this, &DocumentTab::toward);
+    connect(m_paginator, &Paginator::previousPage, this, &DocumentTab::previousPage);
+    connect(m_paginator, &Paginator::nextPage, this, &DocumentTab::nextPage);
+    connect(m_paginator, &Paginator::perPageChanged, this, &DocumentTab::perPageChanged);
 
     _layout()->addWidget(m_panel);
 
@@ -85,6 +91,14 @@ bool DocumentTab::isDockOpen()
     return m_dock->isVisible();
 }
 
+void DocumentTab::perPageChanged(int count) {
+    m_view->setFrom(0);
+    m_view->setCount(count);
+    m_view->refresh();
+
+    m_paginator->setTotalPages(static_cast<int>(m_view->total() / count + 0.5));
+}
+
 void DocumentTab::rangeSelected(const QList<QTableWidgetSelectionRange> &ranges)
 {
     if(!ranges.isEmpty()) {
@@ -93,6 +107,42 @@ void DocumentTab::rangeSelected(const QList<QTableWidgetSelectionRange> &ranges)
     } else {
         m_paginator->setBackwardEnabled(false);
     }
+}
+
+void DocumentTab::nextPage()
+{
+    int from = m_view->from() + m_view->count();
+
+    int total_pages = m_view->total() / m_view->count();
+    int page = from / m_view->count();
+
+    if(page < 0)
+        page = 1;
+
+    m_paginator->setPreviousEnabled(page > 0);
+    m_paginator->setNextEnabled(page < total_pages - 1);
+    m_paginator->setCurrentPage(page + 1);
+
+    m_view->setFrom(from);
+    m_view->refresh();
+}
+
+void DocumentTab::previousPage()
+{
+    int from = m_view->from() - m_view->count();
+
+    int total_pages = m_view->total() / m_view->count();
+    int page = from / m_view->count();
+
+    if(page < 0)
+        page = 1;
+
+    m_paginator->setPreviousEnabled(page > 0);
+    m_paginator->setNextEnabled(page < total_pages - 1);
+    m_paginator->setCurrentPage(page);
+
+    m_view->setFrom(from);
+    m_view->refresh();
 }
 
 void DocumentTab::backward()
