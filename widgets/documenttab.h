@@ -18,6 +18,7 @@ public:
     ~DocumentTab();
 
     DocumentView *view() { return m_view; };
+    bool isDockOpen();
 
 private:
     DocumentView *m_view;

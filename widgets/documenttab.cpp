@@ -5,7 +5,7 @@
 
 DocumentTab::DocumentTab(const QVariant &authorityId, QWidget *parent) : Tab(parent)
 {
-    _layout()->setSpacing(0);
+    _layout()->setSpacing(3);
 
     m_panel = new NavPanel;
     connect(m_panel, &NavPanel::orientationChanged, this, [=] (Qt::Orientation orient) {
@@ -33,6 +33,9 @@ DocumentTab::DocumentTab(const QVariant &authorityId, QWidget *parent) : Tab(par
 
     m_dock = new QDockWidget;
     m_dock->setFeatures(QDockWidget::DockWidgetClosable);
+    connect(m_dock, &QDockWidget::visibilityChanged, this, [=](bool visible){
+        application->mainWindow()->printAction()->setEnabled(visible);
+    });
     m_dock->hide();
 
     m_browser = new QTextBrowser;
@@ -77,6 +80,11 @@ void DocumentTab::restoreState()
     }
 }
 
+bool DocumentTab::isDockOpen()
+{
+    return m_dock->isVisible();
+}
+
 void DocumentTab::rangeSelected(const QList<QTableWidgetSelectionRange> &ranges)
 {
     if(!ranges.isEmpty()) {
@@ -111,10 +119,10 @@ void DocumentTab::toward()
 
 void DocumentTab::openBrowser(int row)
 {
-    const QVariant id  = QVariant(m_view->item(row, 0)->text());
+    const QString title  = m_view->item(row, 2)->text();
 
-    m_dock->setWindowTitle("Document card №" + id.toString());
-    m_browser->setText("Document with ID: " + id.toString());
+    m_dock->setWindowTitle(title);
+    m_browser->setText("Document with ID: " + m_view->item(row, 0)->text());
 
     m_dock->show();
 }

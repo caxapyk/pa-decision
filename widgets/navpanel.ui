@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>48</height>
+    <height>42</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: blanchedalmond;</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -44,44 +44,29 @@
       <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+      <enum>QFrame::Panel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
+      <enum>QFrame::Raised</enum>
      </property>
      <property name="midLineWidth">
       <number>0</number>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <property name="spacing">
-       <number>0</number>
-      </property>
       <property name="leftMargin">
-       <number>0</number>
+       <number>6</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>6</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>6</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>6</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="hL_panel">
-        <property name="leftMargin">
-         <number>9</number>
-        </property>
-        <property name="topMargin">
-         <number>9</number>
-        </property>
-        <property name="rightMargin">
-         <number>9</number>
-        </property>
-        <property name="bottomMargin">
-         <number>9</number>
-        </property>
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
@@ -89,68 +74,88 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
+            <width>634</width>
             <height>20</height>
            </size>
           </property>
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pB_vertical">
-          <property name="text">
-           <string/>
+         <layout class="QHBoxLayout" name="hL_orientation">
+          <property name="spacing">
+           <number>0</number>
           </property>
-          <property name="icon">
-           <iconset resource="../resources.qrc">
-            <normaloff>:/icons/icons/horizontal-16.png</normaloff>:/icons/icons/horizontal-16.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>16</width>
-            <height>16</height>
-           </size>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
-          </property>
-         </widget>
+          <item>
+           <widget class="QPushButton" name="pB_vertical">
+            <property name="toolTip">
+             <string>Show horizontal</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/icons/icons/horizontal-16.png</normaloff>:/icons/icons/horizontal-16.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pB_horizontal">
+            <property name="toolTip">
+             <string>Show vertical</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/icons/icons/vertical-16.png</normaloff>:/icons/icons/vertical-16.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pB_horizontal">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="../resources.qrc">
-            <normaloff>:/icons/icons/vertical-16.png</normaloff>:/icons/icons/vertical-16.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>16</width>
-            <height>16</height>
-           </size>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLCDNumber" name="lcdn_counter">
           <property name="toolTip">
-           <string>Records counter</string>
+           <string>Total</string>
           </property>
           <property name="layoutDirection">
            <enum>Qt::LeftToRight</enum>

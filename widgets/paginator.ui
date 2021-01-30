@@ -190,6 +190,9 @@
    </item>
    <item>
     <widget class="QLabel" name="label">
+     <property name="toolTip">
+      <string>Page : Total pages</string>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -216,7 +219,7 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Show</string>
+        <string>Per page</string>
        </property>
       </widget>
      </item>

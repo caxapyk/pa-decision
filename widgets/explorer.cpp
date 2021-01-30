@@ -40,8 +40,7 @@ void Explorer::tabChanged(int index)
     application->mainWindow()->editAction()->setEnabled(false);
     application->mainWindow()->removeAction()->setEnabled(false);
     application->mainWindow()->refreshAction()->setEnabled(dt != nullptr ? true : false);
-
+    application->mainWindow()->printAction()->setEnabled(dt != nullptr && dt->isDockOpen());
     application->mainWindow()->afAction()->setEnabled(dt != nullptr ? true : false);
-
     application->mainWindow()->searchPanel()->setEnabled(dt != nullptr ? true : false);
 }
