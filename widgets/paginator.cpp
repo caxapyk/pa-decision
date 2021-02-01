@@ -59,4 +59,5 @@ void Paginator::setTotalPages(int pages)
 {
     m_totalPages = pages;
     ui->label_total->setText(QString::number(m_totalPages));
+    ui->sB_gotoPage->setMaximum(pages);
 }

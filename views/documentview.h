@@ -2,6 +2,7 @@
 #define DOCUMENTVIEW_H
 
 #include "tablewidgetview.h"
+#include "math.h"
 
 class DocumentView : public TableWidgetView
 {
@@ -15,11 +16,8 @@ public:
     void setAuthorityId(const QVariant &id) { m_authorityId = id; };
 
     int total() { return m_total; };
-
-    int from() { return m_from; }
-    void setFrom(int from) { m_from = from; }
-    int count() { return m_count; }
-    void setCount(int count) { m_count = count; }
+    int page() { return ceil(static_cast<double>(m_from)/static_cast<double>(m_count)); };
+    int totalPages() { return ceil(static_cast<double>(m_total)/static_cast<double>(m_count));  };
 
     void restoreViewState() override;
     void saveViewState() override;
@@ -30,6 +28,13 @@ public slots:
     void refresh() override;
     void removeRows() override;
 
+    void backward();
+    void toward();
+    void nextPage();
+    void previousPage();
+    void gotoPage(int page);
+    void perPage(int count);
+
 private:
     QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
 
@@ -38,10 +43,9 @@ private:
 
     int m_from = 0;
     int m_count = 20;
-
     int m_total = -1;
-    void updateTotal();
 
+    void updateTotal();
     void contextMenu(BaseContextMenu &menu) override;
 
 private slots:
@@ -49,8 +53,8 @@ private slots:
     void sort(int section, Qt::SortOrder order);
 
 signals:
-    void _selected(const QList<QTableWidgetSelectionRange> &ranges);
     void totalChanged(int total);
+    void refreshed();
 };
 
 #endif // DOCUMENTVIEW_H

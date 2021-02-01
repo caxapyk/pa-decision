@@ -29,13 +29,8 @@ private:
     QDockWidget *m_dock;
 
 private slots:
-    void rangeSelected(const QList<QTableWidgetSelectionRange> &ranges);
-    void backward();
-    void toward();
-    void nextPage();
-    void previousPage();
-
-    void perPageChanged(int count);
+    void refreshed();
+    void clicked();
 
     void openBrowser(int row);
 

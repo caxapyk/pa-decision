@@ -147,6 +147,12 @@
      <property name="showGroupSeparator" stdset="0">
       <bool>false</bool>
      </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>1</number>
+     </property>
      <property name="value">
       <number>1</number>
      </property>
@@ -191,7 +197,7 @@
    <item>
     <widget class="QLabel" name="label_current">
      <property name="toolTip">
-      <string>Page : Total pages</string>
+      <string/>
      </property>
      <property name="styleSheet">
       <string notr="true"/>

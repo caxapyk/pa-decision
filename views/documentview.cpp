@@ -118,6 +118,8 @@ void DocumentView::refresh()
     }
 
     updateTotal();
+
+    emit refreshed();
 }
 
 void DocumentView::editRow()
@@ -207,8 +209,50 @@ void DocumentView::selectionChanged(const QItemSelection &selected, const QItemS
     application->mainWindow()->editAction()->setEnabled(isEditEnabled());
     application->mainWindow()->removeAction()->setEnabled(isRemoveEnabled());
     application->mainWindow()->refreshAction()->setEnabled(isRefreshEnabled());
+}
 
-    emit _selected(selectedRanges());
+void DocumentView::backward()
+{
+    const QList<QTableWidgetSelectionRange> range = selectedRanges();
+
+    int row = range.isEmpty() ? 1 : range.first().topRow();
+    int prev = row - 1;
+    selectRow(prev);
+}
+
+void DocumentView::toward()
+{
+    const QList<QTableWidgetSelectionRange> range = selectedRanges();
+
+    int row = range.isEmpty() ? -1 : range.last().bottomRow();
+    int next = row + 1;
+    selectRow(next);
+}
+
+void DocumentView::nextPage()
+{
+    m_from += m_count;
+    refresh();
+}
+
+void DocumentView::previousPage()
+{
+    m_from -= m_count;
+    refresh();
+}
+
+void DocumentView::gotoPage(int page)
+{
+   m_from = m_count * (page - 1);
+   qDebug() << m_from;
+   refresh();
+}
+
+void DocumentView::perPage(int count)
+{
+    m_from = 0;
+    m_count = count;
+    refresh();
 }
 
 void DocumentView::updateTotal()
@@ -225,3 +269,4 @@ void DocumentView::updateTotal()
         emit totalChanged(m_total);
     }
 }
+

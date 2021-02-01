@@ -9,6 +9,8 @@
 
 AuthorityView::AuthorityView(QWidget *parent) : TreeView(parent)
 {
+    setMinimumWidth(250);
+
     m_model = new AuthorityModel;
     m_proxyModel = new AuthoritySortModel;
 

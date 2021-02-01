@@ -15,14 +15,6 @@ DocumentTab::DocumentTab(const QVariant &authorityId, QWidget *parent) : Tab(par
     m_paginator = new Paginator;
     m_panel->_layout()->insertWidget(0, m_paginator);
 
-    //_paginator->setTotalPages(static_cast<int>(m_view->total() / count + 0.5));
-
-    connect(m_paginator, &Paginator::backward, this, &DocumentTab::backward);
-    connect(m_paginator, &Paginator::toward, this, &DocumentTab::toward);
-    connect(m_paginator, &Paginator::previousPage, this, &DocumentTab::previousPage);
-    connect(m_paginator, &Paginator::nextPage, this, &DocumentTab::nextPage);
-    connect(m_paginator, &Paginator::perPageChanged, this, &DocumentTab::perPageChanged);
-
     _layout()->addWidget(m_panel);
 
     m_splitter = new QSplitter;
@@ -31,8 +23,17 @@ DocumentTab::DocumentTab(const QVariant &authorityId, QWidget *parent) : Tab(par
     m_view = new DocumentView;
     m_view->setAuthorityId(authorityId);
     connect(m_view, &DocumentView::totalChanged, m_panel, &NavPanel::setTotal);
-    connect(m_view, &DocumentView::_selected, this, &DocumentTab::rangeSelected);
+    connect(m_view, &DocumentView::cellClicked, this, &DocumentTab::clicked);
     connect(m_view, &DocumentView::cellDoubleClicked, this, &DocumentTab::openBrowser);
+    connect(m_view, &DocumentView::refreshed, this, &DocumentTab::refreshed);
+
+    connect(m_paginator, &Paginator::previousPage, m_view, &DocumentView::previousPage);
+    connect(m_paginator, &Paginator::nextPage, m_view, &DocumentView::nextPage);
+    connect(m_paginator, &Paginator::perPageChanged, m_view, &DocumentView::perPage);
+    connect(m_paginator, &Paginator::backward, m_view, &DocumentView::backward);
+    connect(m_paginator, &Paginator::toward, m_view, &DocumentView::toward);
+    connect(m_paginator, &Paginator::gotoPage, m_view, &DocumentView::gotoPage);
+
     m_view->refresh();
 
     m_splitter->addWidget(m_view);
@@ -53,6 +54,13 @@ DocumentTab::DocumentTab(const QVariant &authorityId, QWidget *parent) : Tab(par
     _layout()->addWidget(m_splitter);
 
     restoreState();
+
+    connect(m_paginator, &Paginator::backward, this, [=] {
+        openBrowser(m_view->selectedRanges().first().topRow());
+    });
+    connect(m_paginator, &Paginator::toward, this, [=] {
+                openBrowser(m_view->selectedRanges().last().bottomRow());
+    });
 }
 
 DocumentTab::~DocumentTab()
@@ -86,85 +94,32 @@ void DocumentTab::restoreState()
     }
 }
 
+void DocumentTab::refreshed()
+{
+    int page = m_view->page();
+    int total = m_view->totalPages();
+
+    m_paginator->setCurrentPage(page + 1);
+    m_paginator->setTotalPages(total);
+    m_paginator->setPreviousEnabled(page > 0);
+    m_paginator->setNextEnabled(page < total - 1);
+}
+
 bool DocumentTab::isDockOpen()
 {
     return m_dock->isVisible();
 }
 
-void DocumentTab::perPageChanged(int count) {
-    m_view->setFrom(0);
-    m_view->setCount(count);
-    m_view->refresh();
-
-    m_paginator->setTotalPages(static_cast<int>(m_view->total() / count + 0.5));
-}
-
-void DocumentTab::rangeSelected(const QList<QTableWidgetSelectionRange> &ranges)
+void DocumentTab::clicked()
 {
+    const QList<QTableWidgetSelectionRange> &ranges = m_view->selectedRanges();
+
     if(!ranges.isEmpty()) {
         m_paginator->setBackwardEnabled(ranges.first().topRow() > 0);
         m_paginator->setTowardEnabled(ranges.last().bottomRow() < m_view->rowCount() - 1);
     } else {
         m_paginator->setBackwardEnabled(false);
     }
-}
-
-void DocumentTab::nextPage()
-{
-    int from = m_view->from() + m_view->count();
-
-    int total_pages = m_view->total() / m_view->count();
-    int page = from / m_view->count();
-
-    if(page < 0)
-        page = 1;
-
-    m_paginator->setPreviousEnabled(page > 0);
-    m_paginator->setNextEnabled(page < total_pages - 1);
-    m_paginator->setCurrentPage(page + 1);
-
-    m_view->setFrom(from);
-    m_view->refresh();
-}
-
-void DocumentTab::previousPage()
-{
-    int from = m_view->from() - m_view->count();
-
-    int total_pages = m_view->total() / m_view->count();
-    int page = from / m_view->count();
-
-    if(page < 0)
-        page = 1;
-
-    m_paginator->setPreviousEnabled(page > 0);
-    m_paginator->setNextEnabled(page < total_pages - 1);
-    m_paginator->setCurrentPage(page);
-
-    m_view->setFrom(from);
-    m_view->refresh();
-}
-
-void DocumentTab::backward()
-{
-    const QList<QTableWidgetSelectionRange> range = m_view->selectedRanges();
-
-    int row = range.isEmpty() ? 1 : range.first().topRow();
-    int prev = row - 1;
-    m_view->selectRow(prev);
-
-    openBrowser(prev);
-}
-
-void DocumentTab::toward()
-{
-    const QList<QTableWidgetSelectionRange> range = m_view->selectedRanges();
-
-    int row = range.isEmpty() ? -1 : range.last().bottomRow();
-    int next = row + 1;
-    m_view->selectRow(next);
-
-    openBrowser(next);
 }
 
 void DocumentTab::openBrowser(int row)
