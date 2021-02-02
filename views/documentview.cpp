@@ -163,35 +163,35 @@ void DocumentView::_insertRow()
 
 void DocumentView::removeRows()
 {
-    const QList<QTableWidgetSelectionRange> range = selectedRanges();
+    QList<int> rows = selectedRows();
 
     int res = QMessageBox::critical(this,
         tr("Documents"),
-        tr("Are you shure that you want to delete %1 item(s)?").arg(range.length()),
+        tr("Are you shure that you want to delete %1 item(s)?").arg(rows.count()),
         QMessageBox::No | QMessageBox::Yes);
 
-       if (res == QMessageBox::Yes) {
-           QSqlQuery query;
-           query.prepare("delete from pad_decision where id=?");
+    if (res == QMessageBox::Yes) {
+    QSqlQuery query;
+    query.prepare("delete from pad_decision where id=?");
 
-           for (int i = 0; i < range.length(); ++i) {
-                int row = range.at(i).topRow() - i;
+        for (int i = 0; i < rows.count(); ++i) {
+            int row = rows.at(i);
+            query.bindValue(0, item(row, 0)->text());
 
-                query.bindValue(0, item(row, 0)->text());
-
-                if(query.exec()) {
-                    removeRow(row);
-                    emit totalChanged(m_total - 1);
-                } else {
-                    qDebug() << query.lastError().text();
+            if(query.exec()) {
+                removeRow(row);
+                row -= i;
+                emit totalChanged(m_total - 1);
+            } else {
+                qDebug() << query.lastError().text();
                     QMessageBox::warning(this,
                             tr("Documents"),
                             tr("Could not remove the items."),
                             QMessageBox::Ok);
-                }
-
-                query.finish();
             }
+
+            query.finish();
+        }
     }
 }
 

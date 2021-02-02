@@ -31,6 +31,8 @@ public:
     void setShortcutsEnabled(bool);
     bool isShortcutsEnabled() const { return m_shortcutsEnabled; };
 
+    QList<int> selectedRows() const;
+
 public slots:
     virtual void _insertRow() {};
     virtual void editRow() {};

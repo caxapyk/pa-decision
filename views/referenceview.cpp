@@ -53,7 +53,7 @@ void ReferenceView::insertRow()
         }
     } else {
         QMessageBox::warning(this,
-                tr("Creating items"),
+                tr("References"),
                 tr("Could not create item."),
                 QMessageBox::Ok);
     }
@@ -62,7 +62,7 @@ void ReferenceView::insertRow()
 void ReferenceView::removeRows()
 {
     int res = QMessageBox::critical(this,
-        tr("Deleting item"),
+        tr("References"),
         tr("Are you shure that you want to delete this items?"),
             QMessageBox::No | QMessageBox::Yes);
 
@@ -79,7 +79,7 @@ void ReferenceView::removeRows()
                 refresh();
             } else {
                 QMessageBox::warning(this,
-                        tr("Deleting item"),
+                        tr("References"),
                         tr("Could not remove the items."),
                         QMessageBox::Ok);
             }

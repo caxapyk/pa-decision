@@ -62,6 +62,8 @@ private:
     QVariant m_authorityId;
     QVariant m_id;
 
+    bool m_stateChanged = false;
+
     QVector<QVariant> m_authorityIds;
     QVector<QVariant> m_doctypeIds;
     QVector<QVariant> m_fundIds;
@@ -76,7 +78,6 @@ private:
     void updateFund();
 
     bool saveForm();
-    bool saveSubjects();
 
 private slots:
     void updateInventory(int fundIndex);
@@ -90,6 +91,8 @@ private slots:
 
     void useProtocolStateChanged(bool checked);
     void accessStateChanged(int index);
+
+    void stateChanged();
 };
 
 #endif // DOCUMENTFORMDIALOG_H

@@ -158,7 +158,7 @@ void AFView::insertRow()
         edit(currentIndex());
     } else {
         QMessageBox::warning(this,
-                tr("Archive records"),
+                tr("Archive fund"),
                 tr("Could not create item."),
                 QMessageBox::Ok);
     }
@@ -167,7 +167,7 @@ void AFView::insertRow()
 void AFView::removeRows()
 {
     int res = QMessageBox::critical(this,
-        tr("Deleting item"),
+        tr("Archive fund"),
         tr("Are you shure that you want to delete this item(s)?"),
             QMessageBox::No | QMessageBox::Yes);
 
@@ -183,7 +183,7 @@ void AFView::removeRows()
                 //
             } else {
                 QMessageBox::warning(this,
-                tr("Deleting item"),
+                tr("Archive fund"),
                 tr("Could not remove the items."),
                     QMessageBox::Ok);
             }

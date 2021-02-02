@@ -107,7 +107,7 @@ void ProtocolView::insertRow()
 void ProtocolView::removeRows()
 {
     int res = QMessageBox::critical(this,
-        tr("Deleting item"),
+        tr("Protocols"),
         tr("Are you shure that you want to delete this item(s)?"),
             QMessageBox::No | QMessageBox::Yes);
 
@@ -123,7 +123,7 @@ void ProtocolView::removeRows()
                 refresh();
             } else {
                 QMessageBox::warning(this,
-                tr("Deleting item"),
+                tr("Protocols"),
                 tr("Could not remove the items."),
                     QMessageBox::Ok);
             }

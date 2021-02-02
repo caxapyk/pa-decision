@@ -11,13 +11,25 @@ public:
     ~SubjectView();
 
     void contextMenu(BaseContextMenu &menu) override;
+    void setDocumentId(const QVariant &id) { m_docId = id; }
+
+    void refresh() override;
+    bool save();
+    bool validate();
 
 public slots:
     void _insertRow() override;
     void removeRows() override;
 
 private:
-    QStringList m_subjectHeaderLabels = {"Action", tr("ID"), tr("Type"), tr("Name"), tr("Address"), tr("Description")};
+    QStringList m_subjectHeaderLabels = {"Action", tr("ID"), tr("Type"), tr("Name"), tr("Address"), tr("Description"), tr("Pages")};
+    QVariant m_docId;
+
+    void restoreViewState() override;
+    void saveViewState() override;
+
+private slots:
+    void _itemChanged(QTableWidgetItem *item);
 };
 
 #endif // SUBJECTVIEW_H

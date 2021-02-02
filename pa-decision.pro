@@ -52,6 +52,7 @@ SOURCES += \
     views/documentview.cpp \
     views/protocolview.cpp \
     views/referenceview.cpp \
+    views/subjectdelegate.cpp \
     views/subjecttypeview.cpp \
     views/subjectview.cpp \
     views/tablewidgetview.cpp \
@@ -101,6 +102,7 @@ HEADERS += \
     views/documentview.h \
     views/protocolview.h \
     views/referenceview.h \
+    views/subjectdelegate.h \
     views/subjecttypeview.h \
     views/subjectview.h \
     views/tablewidgetview.h \

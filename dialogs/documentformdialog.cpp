@@ -11,7 +11,6 @@
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QStringListModel>
 #include <QComboBox>
 
 DocumentFormDialog::DocumentFormDialog(QWidget *parent) :
@@ -21,6 +20,7 @@ DocumentFormDialog::DocumentFormDialog(QWidget *parent) :
     ui->setupUi(this);
 
     m_subjectView = new SubjectView;
+    ui->tab_subject->layout()->addWidget(m_subjectView);
 
     restoreDialogState();
 }
@@ -56,12 +56,10 @@ int DocumentFormDialog::exec()
 
 void DocumentFormDialog::initialize()
 {
-    ui->tab_subject->layout()->addWidget(m_subjectView);
-
     ui->dE_date->setDate(QDate::currentDate());
     ui->lE_protcolPage->setValidator(new QRegExpValidator(QRegExp("\\d+")));
 
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
+    ui->buttonBox->button(QDialogButtonBox::Apply)->setDisabled(true);
 
     connect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::updateInventory);
     connect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::updateRecord);
@@ -87,8 +85,30 @@ void DocumentFormDialog::initialize()
     updateDoctype();
     updateFund();
 
-    if(m_id.isValid())
+    if(m_id.isValid()) {
         setValues();
+
+        m_subjectView->setDocumentId(m_id);
+        m_subjectView->refresh();
+    }
+
+    // change state
+    connect(ui->cB_doctype, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::stateChanged);
+    connect(ui->lE_number, &QLineEdit::textChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->dE_date, &QDateEdit::dateChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->lE_pages, &QLineEdit::textChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->cB_annexes, &QCheckBox::stateChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->pTE_title, &QPlainTextEdit::textChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->pTE_content, &QPlainTextEdit::textChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->pTE_comment, &QPlainTextEdit::textChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->cB_fund, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::stateChanged);
+    connect(ui->cB_inventory, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::stateChanged);
+    connect(ui->cB_record, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::stateChanged);
+    connect(ui->gB_protocol, &QGroupBox::clicked, this, &DocumentFormDialog::stateChanged);
+    connect(ui->cB_protocol, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::stateChanged);
+    connect(ui->lE_protcolPage, &QLineEdit::textChanged, this, &DocumentFormDialog::stateChanged);
+    connect(m_subjectView, &SubjectView::itemChanged, this, &DocumentFormDialog::stateChanged);
+    connect(ui->cB_access, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DocumentFormDialog::stateChanged);
 }
 
 void DocumentFormDialog::setValues()
@@ -374,13 +394,18 @@ bool DocumentFormDialog::validate()
 
 void DocumentFormDialog::save()
 {
-    if(!validate())
+    if(!validate() || !m_subjectView->validate())
         return;
 
     QSqlDatabase db = QSqlDatabase::database();
     db.transaction();
-    if(saveForm() && saveSubjects()) {
+    if(saveForm() && m_subjectView->save()) {
         db.commit();
+
+        m_stateChanged = false;
+        ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->setDisabled(true);
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     } else {
         db.rollback();
         QMessageBox::warning(this,
@@ -420,8 +445,11 @@ bool DocumentFormDialog::saveForm()
     query.exec();
 
     if(query.isActive()) {
-        if(m_id.isNull())
+        if(m_id.isNull()) {
             m_id = query.lastInsertId();
+
+            m_subjectView->setDocumentId(m_id);
+        }
 
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     } else {
@@ -432,24 +460,14 @@ bool DocumentFormDialog::saveForm()
     return true;
 }
 
-bool DocumentFormDialog::saveSubjects()
+void DocumentFormDialog::stateChanged()
 {
-   /* QSqlQuery query;
-
-    query.prepare("insert into pad_subjects values (:id, :authority_id, :fund_id, :inventory_id, :record_id, :doctype_id, :protocol_id, :number, :date, :name, :pages, :protocol_page, :annexes, :content, :comment, :access)");
-    query.exec();
-
-    if(query.isActive()) {
-        if(m_id.isNull())
-            m_id = query.lastInsertId();
-
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-    } else {
-        qDebug() << query.lastError().text();
-        return false;
-    }*/
-
-    return true;
+    if(!m_stateChanged) {
+        m_stateChanged = true;
+        ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(true);
+        ui->buttonBox->button(QDialogButtonBox::Cancel)->setEnabled(true);
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
+    }
 }
 
 QVariant DocumentFormDialog::getAuthority() const
@@ -539,12 +557,15 @@ void DocumentFormDialog::accept()
 
 void DocumentFormDialog::reject()
 {
-    int res = QMessageBox::critical(this,
-                                    tr("Document form"),
-                                    tr("Are you shure that you want to dicard all changes?"),
-                                    QMessageBox::No | QMessageBox::Yes);
+    if(m_stateChanged) {
+        int res = QMessageBox::critical(this,
+                                        tr("Document form"),
+                                        tr("Are you shure that you want to dicard all changes?"),
+                                        QMessageBox::No | QMessageBox::Yes);
 
-    if (res == QMessageBox::Yes) {
+        if (res == QMessageBox::Yes)
+            QDialog::reject();
+    } else {
         QDialog::reject();
     }
 }

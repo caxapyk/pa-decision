@@ -130,3 +130,23 @@ void TableWidgetView::setShortcutsEnabled(bool ok)
         m_refreshShortcut->setEnabled(false);
     }
 }
+
+QList<int> TableWidgetView::selectedRows() const
+{
+    const QList<QTableWidgetSelectionRange> range = selectedRanges();
+
+    QList<int> rows;
+
+    for(int i = 0; i < range.count(); ++i) {
+        const QTableWidgetSelectionRange r = range.at(i);
+        int topRow = r.topRow();
+        int bottomRow = r.bottomRow();
+
+        while(topRow <= bottomRow) {
+            rows.append(topRow);
+            ++topRow;
+        }
+    }
+
+    return rows;
+}

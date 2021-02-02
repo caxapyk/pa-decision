@@ -73,17 +73,27 @@
      </property>
      <item>
       <property name="text">
+       <string>All</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>In titles</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>In members</string>
+       <string>In subjects</string>
       </property>
      </item>
      <item>
       <property name="text">
        <string>In addresses</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>In content</string>
       </property>
      </item>
     </widget>
