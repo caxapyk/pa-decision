@@ -1,14 +1,14 @@
-QT       += core gui sql
+QT       += core gui sql printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION=0.1
+VERSION=1.0
 
 QMAKE_TARGET_COMPANY = Alexander Sakharuk
-QMAKE_TARGET_PRODUCT = Archival topographic pointer
-QMAKE_TARGET_DESCRIPTION = Archival topographic pointer
+QMAKE_TARGET_PRODUCT = Public authority decisions
+QMAKE_TARGET_DESCRIPTION = Public authority decisions
 QMAKE_TARGET_COPYRIGHT = (c) Alexander Sakharuk
 
 DEFINES += APP_VERSION=$$VERSION
@@ -44,6 +44,7 @@ SOURCES += \
     models/documenttypemodel.cpp \
     models/protocolmodel.cpp \
     models/subjecttypemodel.cpp \
+    utils/htmltemplate.cpp \
     utils/itemcounter.cpp \
     utils/stringsort.cpp \
     views/afview.cpp \
@@ -57,6 +58,7 @@ SOURCES += \
     views/subjectview.cpp \
     views/tablewidgetview.cpp \
     views/treeview.cpp \
+    views/view.cpp \
     widgets/basecontextmenu.cpp \
     widgets/colorrect.cpp \
     widgets/documenttab.cpp \
@@ -94,6 +96,7 @@ HEADERS += \
     models/documenttypemodel.h \
     models/protocolmodel.h \
     models/subjecttypemodel.h \
+    utils/htmltemplate.h \
     utils/itemcounter.h \
     utils/stringsort.h \
     views/afview.h \
@@ -107,6 +110,7 @@ HEADERS += \
     views/subjectview.h \
     views/tablewidgetview.h \
     views/treeview.h \
+    views/view.h \
     widgets/basecontextmenu.h \
     widgets/colorrect.h \
     widgets/documenttab.h \
@@ -138,11 +142,96 @@ TRANSLATIONS += \
     translations/pa-decision_ru_RU.ts
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+#qnx: target.path = /tmp/$${TARGET}/bin
+#else: unix:!android: target.path = /opt/$${TARGET}/bin
+#!isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
     resources.qrc
 
-DISTFILES +=
+#DISTFILES += \
+#    assets/padecision.sh \
+#    assets/icon.ico \
+#    assets/padecision.desktop \
+#    assets/padecision.svg \
+#    assets/tmp/documentform.css \
+#    assets/tmp/documentform.html
+
+unix {
+    DEPLOY_DIR = $$OUT_PWD/padecision_v"$$VERSION"_"$$QMAKE_HOST.os"_"$$QMAKE_HOST.arch"
+
+    target.path += $$DEPLOY_DIR
+
+    shortcutfiles.files += assets/padecision.sh \
+                        assets/padecision.desktop
+    shortcutfiles.path = $$DEPLOY_DIR
+
+    icons.files += assets/padecision.svg
+    icons.path = $$DEPLOY_DIR
+
+    licence.files += LICENSE
+    licence.path = $$DEPLOY_DIR
+
+    templates.files += $$files(assets/tmp/*.*)
+    templates.path = $$DEPLOY_DIR/templates
+
+    libs.files += $$[QT_INSTALL_PREFIX]/lib/libicudata.so.5* \
+                $$[QT_INSTALL_PREFIX]/lib/libicui18n.so.5* \
+                $$[QT_INSTALL_PREFIX]/lib/libicuuc.so.5* \
+                $$[QT_INSTALL_PREFIX]/lib/libQt5Core.so.5 \
+                $$[QT_INSTALL_PREFIX]/lib/libQt5Sql.so.5 \
+                $$[QT_INSTALL_PREFIX]/lib/libQt5DBus.so.5 \
+                $$[QT_INSTALL_PREFIX]/lib/libQt5Gui.so.5 \
+                $$[QT_INSTALL_PREFIX]/lib/libQt5Widgets.so.5 \
+                $$[QT_INSTALL_PREFIX]/lib/libQt5PrintSupport.so.5 \
+                $$[QT_INSTALL_PREFIX]/lib/libQt5XcbQpa.so.5
+    libs.path = $$DEPLOY_DIR
+
+    platforms.files += $$[QT_INSTALL_PREFIX]/plugins/platforms/libqxcb.so
+    platforms.path = $$DEPLOY_DIR/platforms
+
+    printsupport.files += $$[QT_INSTALL_PREFIX]/plugins/printsupport/libcupsprintersupport.so
+    printsupport.path = $$DEPLOY_DIR/printsupport
+
+    sqldrivers.files += $$[QT_INSTALL_PREFIX]/plugins/sqldrivers/libqsqlmysql.so
+    sqldrivers.path = $$DEPLOY_DIR/sqldrivers
+
+    INSTALLS += target \
+                shortcutfiles \
+                icons \
+                templates \
+                licence \
+                libs \
+                platforms \
+                printsupport \
+                sqldrivers
+}
+
+win32 {
+    DEPLOY_DIR = $$OUT_PWD/padecision_v"$$VERSION"_"$$QMAKE_HOST.os"_"$$QMAKE_HOST.arch"
+
+    target.path += $$DEPLOY_DIR
+
+    icons.files += assets/icon.ico
+    icons.path = $$DEPLOY_DIR
+
+    templates.files += $$files(assets/tmp/*.*)
+    templates.path = $$DEPLOY_DIR/templates
+
+    licence.files += LICENSE
+    licence.path = $$DEPLOY_DIR
+
+    libs.files += $$files(assets/libs/*.dll)
+    libs.path = $$DEPLOY_DIR
+
+    QMAKE_EXTRA_TARGETS += deploy
+    deploy.commands = $$(QTDIR)/bin/windeployqt --no-quick-import --no-system-d3d-compiler --no-virtualkeyboard --no-webkit2 --no-angle --no-opengl-sw $$DEPLOY_DIR
+    deploy.depends += install
+
+    INSTALLS += target \
+                icons \
+                templates \
+                licence \
+                libs
+}
+

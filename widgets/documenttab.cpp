@@ -1,5 +1,6 @@
 #include "documenttab.h"
 #include "application.h"
+#include "utils/htmltemplate.h"
 
 #include <QDebug>
 
@@ -25,6 +26,7 @@ DocumentTab::DocumentTab(const QVariant &authorityId, QWidget *parent) : Tab(par
     connect(m_view, &DocumentView::totalChanged, m_panel, &NavPanel::setTotal);
     connect(m_view, &DocumentView::cellClicked, this, &DocumentTab::clicked);
     connect(m_view, &DocumentView::cellDoubleClicked, this, &DocumentTab::openBrowser);
+    connect(m_view, &DocumentView::viewDocument, this, &DocumentTab::openBrowser);
     connect(m_view, &DocumentView::refreshed, this, &DocumentTab::refreshed);
 
     connect(m_paginator, &Paginator::previousPage, m_view, &DocumentView::previousPage);
@@ -129,5 +131,22 @@ void DocumentTab::openBrowser(int row)
     m_dock->setWindowTitle(title);
     m_browser->setText("Document with ID: " + m_view->item(row, 0)->text());
 
+    QMap<QString, QVariant> vars;
+    HtmlTemplate templ("templates/documentform");
+
+    //vars.insert("[[shelving]]", m_proxyModel->index(0, 5).data());
+    //vars.insert("[[corpus]]", m_proxyModel->index(0, 1).data());
+    //vars.insert("[[storage]]",  m_proxyModel->index(0, 2).data());
+    //vars.insert("[[compartment]]",  m_proxyModel->index(0, 4).data());
+
+    //vars.insert("[[rows]]", th.makeTableRows(m_proxyModel, QVector<int>() << 6 << 7 << 8 << 9 << 10 << 11));
+
+    //printF(th, vars);
+
     m_dock->show();
+}
+
+void DocumentTab::print()
+{
+
 }

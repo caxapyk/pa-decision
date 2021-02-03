@@ -545,8 +545,8 @@ Do you want to config now?</source>
         <location filename="../dialogs/documentformdialog.cpp" line="382"/>
         <location filename="../dialogs/documentformdialog.cpp" line="385"/>
         <location filename="../dialogs/documentformdialog.cpp" line="388"/>
-        <location filename="../dialogs/documentformdialog.cpp" line="412"/>
-        <location filename="../dialogs/documentformdialog.cpp" line="562"/>
+        <location filename="../dialogs/documentformdialog.cpp" line="414"/>
+        <location filename="../dialogs/documentformdialog.cpp" line="564"/>
         <source>Document form</source>
         <translation>Форма документа</translation>
     </message>
@@ -699,17 +699,17 @@ Do you want to config now?</source>
         <translation>Комментарий слишком длинный.</translation>
     </message>
     <message>
-        <location filename="../dialogs/documentformdialog.cpp" line="413"/>
+        <location filename="../dialogs/documentformdialog.cpp" line="415"/>
         <source>Could not save data.</source>
         <translation>Не удалось сохранить данные.</translation>
     </message>
     <message>
-        <location filename="../dialogs/documentformdialog.cpp" line="413"/>
+        <location filename="../dialogs/documentformdialog.cpp" line="415"/>
         <source>Could not create item.</source>
         <translation>Не удалось создать элемент.</translation>
     </message>
     <message>
-        <location filename="../dialogs/documentformdialog.cpp" line="563"/>
+        <location filename="../dialogs/documentformdialog.cpp" line="565"/>
         <source>Are you shure that you want to dicard all changes?</source>
         <translation>Вы уверены, что хотите закрыть окно?</translation>
     </message>
@@ -758,44 +758,49 @@ Do you want to config now?</source>
 <context>
     <name>DocumentView</name>
     <message>
-        <location filename="../views/documentview.cpp" line="115"/>
-        <location filename="../views/documentview.cpp" line="169"/>
-        <location filename="../views/documentview.cpp" line="188"/>
+        <location filename="../views/documentview.cpp" line="22"/>
+        <source>View</source>
+        <translation type="unfinished">Просмотр</translation>
+    </message>
+    <message>
+        <location filename="../views/documentview.cpp" line="126"/>
+        <location filename="../views/documentview.cpp" line="180"/>
+        <location filename="../views/documentview.cpp" line="199"/>
         <source>Documents</source>
         <translation>Документы</translation>
     </message>
     <message>
-        <location filename="../views/documentview.cpp" line="116"/>
+        <location filename="../views/documentview.cpp" line="127"/>
         <source>Could not fetch data.</source>
         <translation>Не удалось загрузить данные.</translation>
     </message>
     <message>
-        <location filename="../views/documentview.cpp" line="170"/>
+        <location filename="../views/documentview.cpp" line="181"/>
         <source>Are you shure that you want to delete %1 item(s)?</source>
         <translation>Вы уверены, что хотите удалить %1 элемент(ов)?</translation>
     </message>
     <message>
-        <location filename="../views/documentview.cpp" line="189"/>
+        <location filename="../views/documentview.cpp" line="200"/>
         <source>Could not remove the items.</source>
         <translation>Не удалось удалить элемент(ы).</translation>
     </message>
     <message>
-        <location filename="../views/documentview.h" line="39"/>
+        <location filename="../views/documentview.h" line="40"/>
         <source>ID</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/documentview.h" line="39"/>
+        <location filename="../views/documentview.h" line="40"/>
         <source>Number</source>
         <translation>№ док.-та</translation>
     </message>
     <message>
-        <location filename="../views/documentview.h" line="39"/>
+        <location filename="../views/documentview.h" line="40"/>
         <source>Name</source>
         <translation>Заголовок</translation>
     </message>
     <message>
-        <location filename="../views/documentview.h" line="39"/>
+        <location filename="../views/documentview.h" line="40"/>
         <source>Comment</source>
         <translation>Комментарий</translation>
     </message>

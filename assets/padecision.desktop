@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=РОГВ.Десктоп
+Comment=
+Exec=padecision.sh
+Icon=padecision
+Terminal=false
+StartupNotify=false
+Categories=Office;
+Name[ru_RU.utf8]=РОГВ.Десктоп

@@ -403,6 +403,8 @@ void DocumentFormDialog::save()
         db.commit();
 
         m_stateChanged = false;
+        m_applied = true;
+
         ui->buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
         ui->buttonBox->button(QDialogButtonBox::Cancel)->setDisabled(true);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);

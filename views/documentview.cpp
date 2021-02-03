@@ -19,6 +19,8 @@ DocumentView::DocumentView(QWidget *parent) : TableWidgetView(parent)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
+    m_viewAction = new QAction(tr("View"));
+
     setSortingEnabled(false);
     horizontalHeader()->setSortIndicatorShown(true);
     setColumnCount(m_headerLabels.length());
@@ -36,7 +38,7 @@ DocumentView::DocumentView(QWidget *parent) : TableWidgetView(parent)
 
 DocumentView::~DocumentView()
 {
-
+    delete m_viewAction;
 }
 
 void DocumentView::restoreViewState()
@@ -58,7 +60,16 @@ void DocumentView::saveViewState()
 
 void DocumentView::contextMenu(BaseContextMenu &menu)
 {
-    menu.addAction("Open");
+    QList<int> rows = selectedRows();
+
+    m_viewAction->setEnabled(rows.count() == 1);
+    menu.insertAction(menu.action(BaseContextMenu::Insert), m_viewAction);
+
+    connect(m_viewAction, &QAction::triggered, this, [=] {
+        emit viewDocument(rows.last());
+    });
+
+    menu.insertSeparator(menu.action(BaseContextMenu::Insert));
 }
 
 void DocumentView::refresh()
@@ -130,9 +141,9 @@ void DocumentView::editRow()
     DocumentFormDialog dialog;
     dialog.setAuthorityId(m_authorityId);
     dialog.setId(id);
-    int res = dialog.exec();
+    dialog.exec();
 
-    if(res == DocumentFormDialog::Accepted) {
+    if(dialog.isApplied()) {
         int row = currentRow();
         item(row, 0)->setText(dialog.getId().toString());
         item(row, 1)->setText(dialog.getNumber().toString());
@@ -145,9 +156,9 @@ void DocumentView::_insertRow()
 {
     DocumentFormDialog dialog;
     dialog.setAuthorityId(m_authorityId);
-    int res = dialog.exec();
+    dialog.exec();
 
-    if(res == DocumentFormDialog::Accepted) {
+    if(dialog.isApplied()) {
         insertRow(0);
 
         setItem(0, 0, new QTableWidgetItem(dialog.getId().toString()));

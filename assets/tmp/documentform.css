@@ -1,0 +1,26 @@
+body {
+	font-family: Arial;
+	font-size: 8pt;
+}
+.header {
+	width: 100%;
+}
+
+.datatable {
+	margin-top: 25px;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.datatable th {
+	border: 1px solid black;
+	font-weight: normal;
+	text-align: center;
+	padding: 5px;
+}
+
+.datatable td {
+	border: 1px solid black;
+	font-weight: normal;
+	padding: 10px;
+}

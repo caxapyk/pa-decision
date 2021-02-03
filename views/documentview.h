@@ -36,6 +36,7 @@ public slots:
     void perPage(int count);
 
 private:
+    QAction *m_viewAction;
     QStringList m_headerLabels = {tr("ID"), tr("Number"), tr("Name"), tr("Comment")};
 
     Qt::SortOrder m_order = Qt::AscendingOrder;
@@ -53,6 +54,7 @@ private slots:
     void sort(int section, Qt::SortOrder order);
 
 signals:
+    void viewDocument(int row);
     void totalChanged(int total);
     void refreshed();
 };

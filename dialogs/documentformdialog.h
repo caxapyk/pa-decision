@@ -23,6 +23,8 @@ public:
     void restoreDialogState();
     void saveDialogState();
 
+    bool isApplied() { return m_applied; }
+
     QVariant authorityId() const { return m_authorityId; };
     void setAuthorityId(const QVariant &id) { m_authorityId = id; };
 
@@ -63,6 +65,7 @@ private:
     QVariant m_id;
 
     bool m_stateChanged = false;
+    bool m_applied = false;
 
     QVector<QVariant> m_authorityIds;
     QVector<QVariant> m_doctypeIds;

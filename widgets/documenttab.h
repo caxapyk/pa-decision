@@ -20,6 +20,9 @@ public:
     DocumentView *view() { return m_view; };
     bool isDockOpen();
 
+public slots:
+    void print();
+
 private:
     DocumentView *m_view;
     Paginator *m_paginator;
