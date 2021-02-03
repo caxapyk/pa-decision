@@ -1,7 +1,7 @@
 #ifndef EXPLORER_H
 #define EXPLORER_H
 
-#include "widgets/tab.h"
+#include "views/tab.h"
 
 #include <QTabWidget>
 

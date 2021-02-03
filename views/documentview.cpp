@@ -34,6 +34,8 @@ DocumentView::DocumentView(QWidget *parent) : TableWidgetView(parent)
     // save header state dynamicly
     connect(horizontalHeader(), &QHeaderView::sectionResized, [=] { saveViewState(); } );
     connect(horizontalHeader(), &QHeaderView::sortIndicatorChanged, [=] { saveViewState(); } );
+
+    restoreViewState();
 }
 
 DocumentView::~DocumentView()

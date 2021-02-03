@@ -1,10 +1,12 @@
 #ifndef TAB_H
 #define TAB_H
 
+#include "view.h"
+
 #include <QVBoxLayout>
 #include <QWidget>
 
-class Tab : public QWidget
+class Tab : public View
 {
     Q_OBJECT
 public:

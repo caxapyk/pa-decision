@@ -715,6 +715,26 @@ Do you want to config now?</source>
     </message>
 </context>
 <context>
+    <name>DocumentTabView</name>
+    <message>
+        <location filename="../views/documenttabview.cpp" line="180"/>
+        <location filename="../views/documenttabview.cpp" line="181"/>
+        <location filename="../views/documenttabview.cpp" line="182"/>
+        <source>Not set</source>
+        <translation>Не задано</translation>
+    </message>
+    <message>
+        <location filename="../views/documenttabview.cpp" line="182"/>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <location filename="../views/documenttabview.cpp" line="182"/>
+        <source>No</source>
+        <translation>Нет</translation>
+    </message>
+</context>
+<context>
     <name>DocumentTable</name>
     <message>
         <source>Number</source>
@@ -760,27 +780,27 @@ Do you want to config now?</source>
     <message>
         <location filename="../views/documentview.cpp" line="22"/>
         <source>View</source>
-        <translation type="unfinished">Просмотр</translation>
+        <translation>Просмотр</translation>
     </message>
     <message>
-        <location filename="../views/documentview.cpp" line="126"/>
-        <location filename="../views/documentview.cpp" line="180"/>
-        <location filename="../views/documentview.cpp" line="199"/>
+        <location filename="../views/documentview.cpp" line="128"/>
+        <location filename="../views/documentview.cpp" line="182"/>
+        <location filename="../views/documentview.cpp" line="201"/>
         <source>Documents</source>
         <translation>Документы</translation>
     </message>
     <message>
-        <location filename="../views/documentview.cpp" line="127"/>
+        <location filename="../views/documentview.cpp" line="129"/>
         <source>Could not fetch data.</source>
         <translation>Не удалось загрузить данные.</translation>
     </message>
     <message>
-        <location filename="../views/documentview.cpp" line="181"/>
+        <location filename="../views/documentview.cpp" line="183"/>
         <source>Are you shure that you want to delete %1 item(s)?</source>
         <translation>Вы уверены, что хотите удалить %1 элемент(ов)?</translation>
     </message>
     <message>
-        <location filename="../views/documentview.cpp" line="200"/>
+        <location filename="../views/documentview.cpp" line="202"/>
         <source>Could not remove the items.</source>
         <translation>Не удалось удалить элемент(ы).</translation>
     </message>

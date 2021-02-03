@@ -1,6 +1,5 @@
 #include "htmltemplate.h"
 
-#include <QTextDocument>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QTextStream>
@@ -10,6 +9,8 @@
 HtmlTemplate::HtmlTemplate(const QString &path, QObject *parent) :
     QObject(parent)
 {
+    m_doc = new QTextDocument;
+
     QFile tmpl(path + ".html");
     QFile stylesheet(path + ".css");
 
@@ -30,11 +31,26 @@ HtmlTemplate::HtmlTemplate(const QString &path, QObject *parent) :
     }
 }
 
-void HtmlTemplate::setVars(const QMap<QString, QVariant> &vars)
+HtmlTemplate::~HtmlTemplate()
 {
-    for(int i = 0; i < vars.size(); ++i) {
-        m_html.replace(vars.keys().at(i), vars.values().at(i).toString());
+    delete m_doc;
+}
+
+void HtmlTemplate::set(const QString &key, const QVariant &value)
+{
+    m_vars.insert(key, value);
+}
+
+QTextDocument *HtmlTemplate::render()
+{
+    for(int i = 0; i < m_vars.size(); ++i) {
+        m_html.replace(QString("{{%1}}").arg(m_vars.keys().at(i)), m_vars.values().at(i).toString());
     }
+
+    m_doc->setDefaultStyleSheet(m_stylesheet);
+    m_doc->setHtml(m_html);
+
+    return m_doc;
 }
 
 void HtmlTemplate::print()
@@ -44,11 +60,9 @@ void HtmlTemplate::print()
 
     QPrintDialog printDialog(&printer);
     if (printDialog.exec() == QDialog::Accepted) {
-        QTextDocument td;
-        td.setPageSize(QSizeF(printer.pageRect().size()));
-        td.setDefaultStyleSheet(m_stylesheet);
-        td.setHtml(m_html);
-
-        td.print(&printer);
+        QTextDocument *td = render();
+        td->print(&printer);
+        td->setPageSize(QSizeF(printer.pageRect().size()));
+        td->print(&printer);
     }
 }

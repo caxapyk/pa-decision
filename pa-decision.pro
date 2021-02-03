@@ -49,6 +49,7 @@ SOURCES += \
     utils/stringsort.cpp \
     views/afview.cpp \
     views/authorityview.cpp \
+    views/documenttabview.cpp \
     views/documenttypeview.cpp \
     views/documentview.cpp \
     views/protocolview.cpp \
@@ -56,19 +57,18 @@ SOURCES += \
     views/subjectdelegate.cpp \
     views/subjecttypeview.cpp \
     views/subjectview.cpp \
+    views/tab.cpp \
     views/tablewidgetview.cpp \
     views/treeview.cpp \
     views/view.cpp \
     widgets/basecontextmenu.cpp \
     widgets/colorrect.cpp \
-    widgets/documenttab.cpp \
     widgets/explorer.cpp \
     widgets/navpanel.cpp \
     widgets/paginator.cpp \
     widgets/referencebutton.cpp \
     widgets/searchpanel.cpp \
     widgets/statusbarpanel.cpp \
-    widgets/tab.cpp
 
 HEADERS += \
     application.h \
@@ -101,6 +101,7 @@ HEADERS += \
     utils/stringsort.h \
     views/afview.h \
     views/authorityview.h \
+    views/documenttabview.h \
     views/documenttypeview.h \
     views/documentview.h \
     views/protocolview.h \
@@ -108,12 +109,12 @@ HEADERS += \
     views/subjectdelegate.h \
     views/subjecttypeview.h \
     views/subjectview.h \
+    views/tab.h \
     views/tablewidgetview.h \
     views/treeview.h \
     views/view.h \
     widgets/basecontextmenu.h \
     widgets/colorrect.h \
-    widgets/documenttab.h \
     widgets/explorer.h \
     widgets/navpanel.h \
     widgets/paginator.h \
@@ -149,13 +150,13 @@ TRANSLATIONS += \
 RESOURCES += \
     resources.qrc
 
-#DISTFILES += \
+DISTFILES += \
 #    assets/padecision.sh \
 #    assets/icon.ico \
 #    assets/padecision.desktop \
 #    assets/padecision.svg \
-#    assets/tmp/documentform.css \
-#    assets/tmp/documentform.html
+    assets/tmp/documentform.css \
+    assets/tmp/documentform.html
 
 unix {
     DEPLOY_DIR = $$OUT_PWD/padecision_v"$$VERSION"_"$$QMAKE_HOST.os"_"$$QMAKE_HOST.arch"

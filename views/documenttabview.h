@@ -1,5 +1,5 @@
-#ifndef DECISIONTAB_H
-#define DECISIONTAB_H
+#ifndef DOCUMENTTAB_H
+#define DOCUMENTTAB_H
 
 #include "tab.h"
 #include "views/documentview.h"
@@ -10,12 +10,12 @@
 #include <QDockWidget>
 #include <QSplitter>
 
-class DocumentTab : public Tab
+class DocumentTabView : public Tab
 {
     Q_OBJECT
 public:
-    DocumentTab(const QVariant &authorityId, QWidget *parent = nullptr);
-    ~DocumentTab();
+    DocumentTabView(const QVariant &authorityId, QWidget *parent = nullptr);
+    ~DocumentTabView();
 
     DocumentView *view() { return m_view; };
     bool isDockOpen();
@@ -41,4 +41,4 @@ private slots:
     void saveState();
 };
 
-#endif // DECISIONTAB_H
+#endif // DOCUMENTTAB_H

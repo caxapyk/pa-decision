@@ -8,7 +8,7 @@
 #include "dialogs/protocoldialog.h"
 #include "dialogs/subjecttypedialog.h"
 #include "views/afview.h"
-#include "widgets/documenttab.h"
+#include "views/documenttabview.h"
 
 #include <QDebug>
 
@@ -108,7 +108,7 @@ void MainWindow::setupToolBar()
     m_actionInsert->setDisabled(true);
     connect(m_actionInsert, &QAction::triggered, this, [=] {
         Tab *tab = m_explorer->currentTab();
-        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+        DocumentTabView *dt = qobject_cast<DocumentTabView*>(tab);
 
         if(dt != nullptr) {
             dt->view()->_insertRow();
@@ -122,7 +122,7 @@ void MainWindow::setupToolBar()
     m_actionEdit->setDisabled(true);
     connect(m_actionEdit, &QAction::triggered, this, [=] {
         Tab *tab = m_explorer->currentTab();
-        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+        DocumentTabView *dt = qobject_cast<DocumentTabView*>(tab);
 
         if(dt != nullptr) {
            dt->view()->editRow();
@@ -133,7 +133,7 @@ void MainWindow::setupToolBar()
     m_actionRemove->setDisabled(true);
     connect(m_actionRemove, &QAction::triggered, this, [=] {
         Tab *tab = m_explorer->currentTab();
-        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+        DocumentTabView *dt = qobject_cast<DocumentTabView*>(tab);
 
         if(dt != nullptr) {
             dt->view()->removeRows();
@@ -144,7 +144,7 @@ void MainWindow::setupToolBar()
     m_actionRefresh->setDisabled(true);
     connect(m_actionRefresh, &QAction::triggered, this, [=] {
         Tab *tab = m_explorer->currentTab();
-        DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+        DocumentTabView *dt = qobject_cast<DocumentTabView*>(tab);
 
         if(dt != nullptr) {
             dt->view()->refresh();
@@ -189,7 +189,7 @@ void MainWindow::setupToolBar()
 void MainWindow::openAF()
 {
     Tab *tab = m_explorer->currentTab();
-    DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+    DocumentTabView *dt = qobject_cast<DocumentTabView*>(tab);
 
     if(dt != nullptr) {
         AFDialog dialog;
@@ -205,7 +205,7 @@ void MainWindow::openAuthorityInNewTab(const QVariant &id)
 {
     if(id.isValid()) {
         const QModelIndex v = m_authorityView->currentIndex();
-        DocumentTab *tab = new DocumentTab(id);
+        DocumentTabView *tab = new DocumentTabView(id);
         QIcon icon(v.data(Qt::DecorationRole).toString());
 
         m_explorer->createTab(tab, v.data().toString(), icon);

@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-Tab::Tab(QWidget *parent) : QWidget(parent)
+Tab::Tab(QWidget *parent) : View(parent)
 {
     m_layout = new QVBoxLayout(this);
     m_layout->setMargin(0);

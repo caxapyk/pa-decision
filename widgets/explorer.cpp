@@ -1,6 +1,6 @@
 #include "explorer.h"
 #include "application.h"
-#include "widgets/documenttab.h"
+#include "views/documenttabview.h"
 
 #include <QDebug>
 
@@ -34,7 +34,7 @@ Tab *Explorer::currentTab()
 void Explorer::tabChanged(int index)
 {
     Tab *tab = dynamic_cast<Tab*>(widget(index));
-    DocumentTab *dt = qobject_cast<DocumentTab*>(tab);
+    DocumentTabView *dt = qobject_cast<DocumentTabView*>(tab);
 
     application->mainWindow()->insertAction()->setEnabled(dt != nullptr ? true : false);
     application->mainWindow()->editAction()->setEnabled(false);
