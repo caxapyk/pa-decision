@@ -182,8 +182,8 @@ void MainWindow::setupToolBar()
     ui->toolBar->addSeparator();
 
     m_searchPanel = new SearchPanel;
-    m_searchPanel->setDisabled(true);
-    ui->toolBar->addWidget(m_searchPanel);
+    //m_searchPanel->setDisabled(true);
+    //ui->toolBar->addWidget(m_searchPanel);
 }
 
 void MainWindow::openAF()
